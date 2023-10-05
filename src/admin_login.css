@@ -1,0 +1,144 @@
+/* Reset some default styles */
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF;
+    color: #000000;
+    margin-top: 40px;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.container {
+    margin-bottom: 50px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #333;
+    margin-bottom: 10px;
+}
+
+.leftnav span {
+    padding-left: 50px;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.rightnav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.rightnav a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.rightnav a.admin {
+    background-color: #A7C8A3;
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: black;
+}
+
+.adminlogin {
+    background-color: rgb(217, 217, 217, 0.12);
+    padding: 20px 20px 90px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    margin: 50px auto 50px;
+    height: 500px;
+}
+
+.adminlogin h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: black;
+}
+
+.enteremail,
+.enterpass {
+    background-color: #84D2F3;
+    padding: 15px;
+    border: 1px solid #000;
+    margin-bottom: 20px;
+    text-align: left;
+    border-radius: 20px;
+    width: 100%;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    margin: 0 auto;
+    padding: 15px;
+    display: block;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button[type="submit"],
+button[type="button"] {
+    background-color: #A7C8A3;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+button[type="submit"]:hover,
+button[type="button"]:hover {
+    background-color: #59a351;
+}
+
+.bottom_div {
+    background-color: #A7C8A3;
+    height: 30px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.error-message {
+    color: red;
+}

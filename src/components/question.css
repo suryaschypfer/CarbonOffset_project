@@ -1,0 +1,95 @@
+/* Apply styles to the outermost div */
+div.outer-container {
+    width: 1440px;
+    height: 1706px;
+    position: relative;
+    background: white;
+  }
+  
+  /* Apply styles to the div with a black border */
+  div.border-div {
+    width: 1451px;
+    height: 0;
+    left: -5px;
+    top: 134px;
+    position: absolute;
+    border: 1px black solid;
+  }
+  
+  /* Apply styles to the first inner div */
+  div.first-inner {
+    width: 585px;
+    height: 659px;
+    left: 751px;
+    top: 221px;
+    position: absolute;
+  }
+  
+  /* Apply styles to the second inner div with a background color and border-radius */
+  div.second-inner {
+    width: 1185px;
+    height: 1415px;
+    left: 106px;
+    top: 198px;
+    position: absolute;
+    background: rgba(217, 217, 217, 0.12);
+    border-radius: 30px;
+  }
+  
+  /* ... Repeat this process for each inner div with its respective styles ... */
+  
+  /* Apply styles to the "Questions" text */
+  div.questions-text {
+    left: 674px;
+    top: 208px;
+    position: absolute;
+    color: black;
+    font-size: 20px;
+    font-family: 'Outfit';
+    font-weight: 600;
+    word-wrap: break-word;
+  }
+  
+  /* Apply styles to the various question texts */
+  div.question-text {
+    width: 832px;
+    height: 31px;
+    position: absolute;
+    color: black;
+    font-size: 20px;
+    font-family: 'Outfit';
+    font-weight: 400;
+    word-wrap: break-word;
+  }
+  
+  /* Apply styles to the "BACK" and "SAVE" buttons */
+  div.button {
+    width: 150.66px;
+    height: 57.11px;
+    position: absolute;
+    background: #A3C7A0;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border: 1px black solid;
+    border-radius: 300px;
+  }
+  
+  /* Apply styles to the text inside the buttons */
+  div.button-text {
+    width: 139.56px;
+    height: 25.50px;
+    position: absolute;
+    color: black;
+    font-size: 20px;
+    font-family: 'Outfit';
+    font-weight: 600;
+    word-wrap: break-word;
+  }
+  
+  /* Apply styles to the navigation bar at the top */
+  div.nav-bar {
+    width: 1234px;
+    height: 29px;
+    left: 106px;
+    top: 105px;
+    position: fixed;
+  }
