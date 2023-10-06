@@ -15,6 +15,8 @@ import reportWebVitals from './reportWebVitals';
 import AdminLogin from './components/admin_login';
 import ForgotPassword from './components/ForgotPassword';
 import Questions from './components/questions';
+import Landing_Page from './components/landing_page';
+import First_Question from './components/firstquestion';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -23,7 +25,9 @@ root.render(
       <Router> {/* Use BrowserRouter as a top-level Router */}
         <Routes> {/* Use Routes to define your routes */}
           <Route path="/" element={<App />}>
-            <Route index={true} path="/" element={<AdminLogin />} />
+            <Route index={true} path="/" element={<Landing_Page />} />
+            <Route path="/firstquestion" element={<First_Question />} />
+            <Route path="/admin" element={<AdminLogin />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/questions" element={<Questions />} />
           </Route>
