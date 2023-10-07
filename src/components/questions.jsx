@@ -1,9 +1,17 @@
 import './question.css'; 
 import React from 'react';
 import  { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios library
 
 export function Questions(props) {
+//   const navigate = useNavigate();
+//     const handlevalues = () => {
+//         navigate('/values'); 
+//     };
+//   const handleadmin = () => {
+//     navigate('/admin'); 
+// };
   const [questions, setQuestions] = useState([]);
   // Function to fetch questions from the server
   const fetchQuestions = async () => {
@@ -48,10 +56,9 @@ export function Questions(props) {
   
   return (
     <div style={{width: 1440, height: 1706, position: 'relative', background: 'white'}}>
-    <div style={{width: 1451, height: 0, left: -5, top: 134, position: 'absolute', border: '1px black solid'}}></div>
     <div style={{width: 585, height: 659, left: 751, top: 221, position: 'absolute'}} />
-    <div style={{width: 1185, height: 1415, left: 106, top: 198, position: 'absolute', background: 'rgba(217, 217, 217, 0.12)', borderRadius: 30}} />
-    <div style={{width: 1164, height: 1290, left: 137, top: 255, position: 'absolute'}}>
+    <div style={{width: 1185, height: 1415, left: 106, top: 10, position: 'absolute', background: 'rgba(217, 217, 217, 0.12)', borderRadius: 30}} />
+    <div style={{width: 1164, height: 1290, left: 137, top: 100, position: 'absolute'}}>
     
      <div style={{ left: 500, top: -50, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word' }}>Questions</div>
         {questions.map((question, index) => (
@@ -71,15 +78,19 @@ export function Questions(props) {
           </div>
         ))}
    </div>
-    <div style={{width: 189.56, height: 57.11, left: 1133, top: 1612, position: 'absolute'}}>
+   <div style={{width: 150.66, height: 57.11, left: 1159, top: -10, position: 'absolute'}}>
+      <div style={{width: 150.66, height: 57.11, left: 0, top: 0, position: 'absolute', background: '#A3C7A0', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: 300, border: '1px black solid'}}></div>
+      <div style={{width: 139.56, height: 25.50, left: 9, top: 14, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>Add a question</div>
+    </div>
+    <div style={{width: 189.56, height: 57.11, left: 1133, top: 1500, position: 'absolute'}}>
       <div style={{width: 150.66, height: 57.11, left: 0, top: 0, position: 'absolute', background: '#A3C7A0', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: 300, border: '1px black solid'}}></div>
       <div style={{width: 139.56, height: 25.50, left: 50, top: 16.18, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>SAVE</div>
     </div>
-    <div style={{width: 189.56, height: 57.11, right: 1133, top: 1612, position: 'absolute'}}>
+    <div style={{width: 189.56, height: 57.11, right: 1133, top: 1500, position: 'absolute'}}>
       <div style={{width: 150.66, height: 57.11, left: 0, top: 0, position: 'absolute', background: '#A3C7A0', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: 300, border: '1px black solid'}}></div>
       <div style={{width: 139.56, height: 25.50, left: 50, top: 16.18, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>BACK</div>
     </div>
-    <div style={{width: 1234, height: 29, left: 106, top: 105, position: 'absolute'}}>
+    {/* <div style={{width: 1234, height: 29, left: 106, top: 105, position: 'absolute'}}>
       <div style={{width: 1127, height: 29, left: 0, top: 0, position: 'absolute'}}>
         <div style={{left: 1053, top: 2, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>Support</div>
         <div style={{width: 1006.25, height: 29, left: 0, top: 0, position: 'absolute'}}>
@@ -94,11 +105,8 @@ export function Questions(props) {
         </div>
       </div>
       <div style={{left: 1165, top: 0, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>LogOut</div>
-    </div>
-    <div style={{width: 150.66, height: 57.11, left: 1159, top: 171, position: 'absolute'}}>
-      <div style={{width: 150.66, height: 57.11, left: 0, top: 0, position: 'absolute', background: '#A3C7A0', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: 300, border: '1px black solid'}}></div>
-      <div style={{width: 139.56, height: 25.50, left: 9, top: 14, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>Add a question</div>
-    </div>
+    </div> */}
+   
   </div>
   );
 }

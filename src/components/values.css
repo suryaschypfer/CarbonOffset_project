@@ -1,0 +1,191 @@
+/* App.css */
+/* App.css */
+/* App.css */
+
+@import "/node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.navbar {
+  background-color: white;
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 10px 0 10px rgba(0, 0, 0, 0.1);
+ 
+}
+
+.navbar-left span {
+  font-weight: bold;
+  padding: 35px;
+  color: black;
+}
+
+.navbar-right a {
+  text-decoration: none;
+  color: black;
+  margin-left: 10px;
+  padding: 5px 15px 15px 15px;
+  border-radius: 0px;
+}
+
+.navbar-right a:hover {
+  background-color: #9FC1A2;
+}
+
+.navbar-right a.selected {
+  background-color: #4caf50;
+  color: rgb(35, 183, 141);
+  font-weight: bold; /* Add this line to make the text bold */
+
+}
+
+/* src/App.css */
+
+/* ... (previous styles) */
+
+.values-page {
+  display: flex;
+}
+
+
+
+/* ... (rest of your styles) */
+
+/* src/App.css */
+
+/* ... (previous styles) */
+
+.values-page {
+  display: flex;
+}
+
+.side-panel {
+  margin-top: -30px; 
+  width: 100px;
+  background-color: #29ae57;
+  padding: 20px;
+  margin-left: -10px;
+  overflow-x: hidden; /* Hide the text overflow when collapsed */
+  transition: width 0.3s; /* Add transition for smooth width change */
+}
+
+.side-panel a {
+  display: block;
+  padding: 10px;
+  margin-bottom: 5px;
+  color: #29ae57;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.side-panel a.selected {
+  background-color: #ddd;
+}
+
+.expand-button {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.values-page.panel-expanded .side-panel {
+  width: 250px; /* Expanded width */
+}
+
+/* ... (rest of your styles) */
+/* App.css */
+
+/* ... (previous styles) */
+/* App.css */
+
+/* ... (previous styles) */
+
+.values-page {
+  display: flex;
+}
+
+.side-panel {
+  width: 75px;
+  height: 95vh; /* Set the height to 100% of the viewport height */
+  background-color: #9FC1A2;
+  padding: 0;
+  overflow-x: hidden; /* Hide the text overflow when collapsed */
+  transition: width 0.1s; /* Add transition for smooth width change */
+  display: flex;
+  flex-direction: column; /* Display links in a column */
+  justify-content: space-between;
+  /* align-items: center; */
+
+}
+
+.side-panel a {
+  flex: 1; /* Distribute remaining space equally among links */
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #0b0a0a;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 22px; /* Adjust the font size to 36px */
+  font-weight: bold;
+}
+
+.side-panel a.selected {
+  background-color: #272c2826;
+  
+  
+}
+
+.expand-button {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  
+  margin-left: 15px;
+  
+}
+
+.values-page.panel-expanded .side-panel {
+  width: 200px; /* Expanded width */
+}
+
+.main-window {
+  flex: 1;
+  padding: 0;
+}
+
+/* ... (rest of your styles) */
+
+
+/* ... (rest of your styles) */
+.navbar-right a.selected {
+  background-color: #4caf50;
+  color: rgb(35, 183, 141);
+  font-weight: bold; /* Add this line to make the text bold */
+}
+
+.text-box-content{
+  font-size: 18px;
+  text-wrap: pretty;
+  padding-left: 10%;
+  padding-right: 10%;
+  font-weight: bold;
+  padding-top: 75px;
+}
+/* LineGraph.css */
+.traffic-comp{
+  padding-left: 10%;
+  padding-right:20px;
+}

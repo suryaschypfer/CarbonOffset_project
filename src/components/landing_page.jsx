@@ -7,10 +7,10 @@ import axios from 'axios'; // Import Axios library
 export function Landing_Page(props) {
     const navigate = useNavigate();
     const handlefirstquestion = () => {
-        navigate('/firstquestion'); // Use navigate to go to the desired route
+        navigate('/firstquestion'); 
     };
     const handleadmin = () => {
-        navigate('/admin'); // Use navigate to go to the desired route
+        navigate('/admin'); 
     };
   return (
     <div style={{width: '100%', height: '100%', position: 'relative', background: 'white'}}>
