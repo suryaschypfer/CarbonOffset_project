@@ -17,6 +17,7 @@ import ForgotPassword from './components/ForgotPassword';
 import Questions from './components/questions';
 import Landing_Page from './components/landing_page';
 import First_Question from './components/firstquestion';
+import Utility from './components/Utility';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -30,6 +31,7 @@ root.render(
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/questions" element={<Questions />} />
+            <Route path="/utility" element={<Utility />} />
           </Route>
         </Routes>
       </Router>

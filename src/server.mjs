@@ -9,10 +9,10 @@ app.use(bodyParser.json());
 
 const port = 3000;
 const dbConfig = {
-    HOST: '127.0.0.1',
-    USER: 'root',
-    PASSWORD: 'carbonoffset123',
-    DB: 'CRBN',
+    HOST: "127.0.0.1",
+    USER: "root",
+    PASSWORD: "Saiteja17@",
+    DB: "CarbnOffset"
 };
 
 // Create a MySQL connection
@@ -88,6 +88,23 @@ app.post('/api/updateToggleState', (req, res) => {
       res.json({ message: 'Toggle state updated successfully' });
     });
   });
+
+  // Define a route to retrieve Utility table from the database
+app.get('/api/Utility', cors(),(req, res) => {
+    const sql = 'SELECT * FROM CarbnOffset.Utility';
+
+    // Execute the SQL query using the MySQL connection
+    mysqlConnection.query(sql, (error, results) => {
+        if (error) {
+            console.error('Error executing SQL query:', error.message);
+            res.status(500).json({ error: 'Error retrieving questions from the database' });
+            return;
+        }
+
+        // Send the retrieved questions as a JSON response
+        res.json(results);
+    });
+});
 
 // Start the server
 app.listen(port, () => {
