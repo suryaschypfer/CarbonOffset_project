@@ -9,10 +9,10 @@ app.use(bodyParser.json());
 
 const port = 3000;
 const dbConfig = {
-    HOST: "127.0.0.1",
-    USER: "root",
-    PASSWORD: "Saiteja17@",
-    DB: "CarbnOffset"
+    HOST: '127.0.0.1',
+    USER: 'root',
+    PASSWORD: 'Carbon@123',
+    DB: 'CRBN',
 };
 
 // Create a MySQL connection
@@ -89,7 +89,7 @@ app.post('/api/updateToggleState', (req, res) => {
     });
   });
 
-  // Define a route to retrieve Utility table from the database
+    // Define a route to retrieve Utility table from the database
 app.get('/api/Utility', cors(),(req, res) => {
     const sql = 'SELECT * FROM CarbnOffset.Utility';
 

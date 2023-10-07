@@ -56,7 +56,7 @@ const Utility =() => {
 
   return (
     <div>
-      <div className="top-nav">
+      {/* <div className="top-nav">
       <div style={{width: 250, height: 24.07, left: 50, top: 95, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '800', wordWrap: 'break-word'}}>OFFSET CRBN ADMIN</div>
         <a href="#"><span className="Home">
           Home</span>
@@ -66,7 +66,7 @@ const Utility =() => {
         <a href="#"><span className="Contact">Contact</span></a>
         <a href="#"><span className="Support">Support</span></a>
         <a href="#"><span className="Logout" onClick={handleadmin}>Logout</span></a>
-        </div>
+        </div> */}
 
       <div className="action">
         <div className="action-item">Action item:</div>
