@@ -50,7 +50,7 @@ function AdminLogin() {
         <div className="container">
             <nav className="nav-bar">
                 <div class="leftnav">
-                    <span>Carbon Offset</span>
+                    <span>OFFSET CRBN</span>
                 </div>
                 <div class="rightnav">
                     <a href="#">Home</a>
