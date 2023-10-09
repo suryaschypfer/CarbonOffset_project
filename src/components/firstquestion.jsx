@@ -79,7 +79,13 @@ export function First_Question(props) {
           }}>
             {question}
           </div>
-                  <input type="text" style={{ width: '402.53px', height: '66px', left: '141.24px', top: '106px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }} placeholder="Enter amount here" />
+                  <input type="text" style={{ width: '402.53px', height: '66px', left: '141.24px', top: '106px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }} placeholder="Enter amount here" onInput={(e) => {e.target.value = e.target.value.replace(/[^0-9]/g, ''); if (e.target.value.length > 5) {e.target.value = e.target.value.slice(0, 5);}}}/>
+
+
+                  
+
+
+                  
     </div>
     <div style={{ width: '685px', height: '22px', left: '100px', top: '107px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 500, wordWrap: 'break-word' }}>Answering the below questions will help in determining your Carbon Footprint</div>
     <div style={{ width: '237px', height: '23px', left: '148px', top: '512px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 400, wordWrap: 'break-word' }}>Average carbon footprint of an individual</div>

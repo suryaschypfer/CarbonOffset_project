@@ -90,23 +90,6 @@ export function Questions(props) {
       <div style={{width: 150.66, height: 57.11, left: 0, top: 0, position: 'absolute', background: '#A3C7A0', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: 300, border: '1px black solid'}}></div>
       <div style={{width: 139.56, height: 25.50, left: 50, top: 16.18, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>BACK</div>
     </div>
-    {/* <div style={{width: 1234, height: 29, left: 106, top: 105, position: 'absolute'}}>
-      <div style={{width: 1127, height: 29, left: 0, top: 0, position: 'absolute'}}>
-        <div style={{left: 1053, top: 2, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>Support</div>
-        <div style={{width: 1006.25, height: 29, left: 0, top: 0, position: 'absolute'}}>
-          <div style={{width: 110, height: 29, left: 793, top: 0, position: 'absolute', background: '#A7C8A3'}} />
-          <div style={{width: 1006.25, height: 27, left: 0, top: 2, position: 'absolute'}}>
-            <div style={{width: 54.18, height: 24.07, left: 619.11, top: 0, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>Home</div>
-            <div style={{width: 250, height: 24.07, left: 0, top: 0.48, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '800', wordWrap: 'break-word'}}>OFFSET CRBN ADMIN</div>
-            <div style={{width: 60.20, height: 24.07, left: 709, top: 2, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>Values</div>
-            <div style={{width: 73.25, height: 24.07, left: 933, top: 0, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>Contact</div>
-            <div style={{left: 802, top: 2, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>Questions</div>
-          </div>
-        </div>
-      </div>
-      <div style={{left: 1165, top: 0, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'Outfit', fontWeight: '600', wordWrap: 'break-word',cursor: 'pointer'}}>LogOut</div>
-    </div> */}
-   
   </div>
   );
 }
