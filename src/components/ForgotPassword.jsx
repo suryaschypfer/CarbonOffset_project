@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
-
-
+import './forgotpassword.css';
 function ForgotPassword() {
     const [email, setEmail] = useState('');
     const [resetMessage, setResetMessage] = useState('');
@@ -11,13 +9,12 @@ function ForgotPassword() {
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
-
     const handleResetPassword = async (e) => {
         e.preventDefault();
 
         try {
             // Send a request to the backend to initiate password reset
-            const response = await axios.post('/api/forgot-password', { email });
+            const response = await axios.post('/api/forgotpassword', { email });
 
             if (response.status === 200) {
                 setResetMessage('Password reset email sent. Check your inbox.');
@@ -33,10 +30,10 @@ function ForgotPassword() {
     return (
         <div className="container">
             <nav className="nav-bar">
-                <div class="leftnav">
+                <div className="leftnav">
                     <span>Carbon Offset</span>
                 </div>
-                <div class="rightnav">
+                <div className="rightnav">
                     <a href="#">Home</a>
                     <a href="#">About Us</a>
                     <a href="#">Calculator</a>
@@ -45,20 +42,24 @@ function ForgotPassword() {
                 </div>
 
             </nav>
-            <div className="forgot-password">
+            <div className="forgot_password">
                 <h2>Forgot Password</h2>
                 <form onSubmit={handleResetPassword}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        required
-                    />
-                    <button type="submit">Reset Password</button>
+                    <div className="enteremail">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={handleEmailChange}
+                            required
+                        />
+                    </div>
+                    <div className="buttonclass">
+                        <button type="submit">Reset Password</button>
+                    </div>
                 </form>
                 <p className="reset-message">{resetMessage}</p>
                 <p className="reset-error">{resetError}</p>
@@ -67,7 +68,5 @@ function ForgotPassword() {
         </div>
     );
 }
-
 export default ForgotPassword;
-
 

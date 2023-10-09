@@ -21,6 +21,9 @@ function AdminLogin() {
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     };
+    const handleForgotPasswordClick = () => {
+        navigate('/forgotpassword'); // Use navigate to go to the desired route
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -45,11 +48,6 @@ function AdminLogin() {
             setLoginError('Invalid credentials. Please try again.');
         }
     };
-
-    const handleForgotPasswordClick = () => {
-        navigate('/forgot-password'); // Use navigate to go to the desired route
-    };
-
     return (
         <div className="container">
             <nav className="nav-bar">
