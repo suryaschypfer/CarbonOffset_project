@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'; // Add this line to parse JSON request bod
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -13,8 +14,8 @@ const port = 3000;
 const dbConfig = {
     HOST: '127.0.0.1',
     USER: 'root',
-    PASSWORD: 'Suresh-praveena97',
-    DB: 'CRBN',
+    PASSWORD: 'Vamsi@9490437848',
+    DB: 'Offset_Carbon',
 };
 
 // Create a MySQL connection
@@ -57,7 +58,7 @@ app.post('/api/admin/login', cors(), (req, res) => {
 
 // Define a route to retrieve questions from the database
 app.get('/api/questions', cors(),(req, res) => {
-    const sql = 'SELECT * FROM CRBN.questions';
+    const sql = 'SELECT * FROM Offset_Carbon.Questions_Table';
 
     // Execute the SQL query using the MySQL connection
     mysqlConnection.query(sql, (error, results) => {
@@ -71,6 +72,80 @@ app.get('/api/questions', cors(),(req, res) => {
         res.json(results);
     });
 });
+
+
+app.get('/api/questions/:id', cors(), async (req, res) => {
+    try {
+        const questionId = req.params.id;  // Get the ID from the route parameter
+        const [results] = await mysqlConnection.promise().query("SELECT * FROM Offset_Carbon.Questions_Table WHERE ques_id = ?", [questionId]);
+        if (results.length > 0) {
+            res.json(results[0]); // Send back the specific question
+        } else {
+            res.status(404).send('Question not found');
+        }
+    } catch (error) {
+        console.error('Error fetching specific question:', error);
+        res.status(500).send('Server error');
+    }
+});
+// API for random fact fetching
+app.get('/api/randomfact', async (req, res) => {
+    try {
+        const [rows, fields] = await mysqlConnection.promise().query("SELECT fact FROM Offset_Carbon.facts ORDER BY RAND() LIMIT 1;");
+        
+        if (rows && rows.length > 0) {
+            return res.json(rows[0]);
+        } else {
+            return res.status(404).json({ message: "No fact found" });
+        }
+    } catch (error) {
+        console.error("Error fetching random fact:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+// Route to calculate total number of qustions to display progress bar percentage in each question page
+app.get('/api/totalquestions', cors(), async (req, res) => {
+    try {
+        const [results] = await mysqlConnection.promise().query("SELECT COUNT(*) as total FROM Offset_Carbon.Questions_Table");
+        if (results.length > 0) {
+            res.json(results[0].total);
+        } else {
+            res.status(404).send('No questions found');
+        }
+    } catch (error) {
+        console.error('Error fetching total number of questions:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+
+// Define a route to retrieve utility data based on the zipcode
+app.get('/api/utility/:zipcode', cors(), (req, res) => {
+    const zipcode = req.params.zipcode; // Extract zipcode from the request parameters
+
+    // SQL query to fetch utility data for the given zipcode
+    const sql = 'SELECT * FROM Offset_Carbon.Utility WHERE Zipcode = ?';
+
+    // Execute the SQL query using the MySQL connection
+    mysqlConnection.query(sql, [zipcode], (error, results) => {
+        if (error) {
+            console.error('Error executing SQL query:', error.message);
+            res.status(500).json({ error: 'Error retrieving utility data from the database' });
+            return;
+        }
+
+        // If results are found, return them, otherwise, return a 404 with an error message
+        if (results.length > 0) {
+            res.json(results[0]);
+        } else {
+            res.status(404).json({ error: 'Utility not found for the given zipcode' });
+        }
+    });
+});
+
+
+
+
 
 // Middleware for parsing JSON request body
 app.use(express.json());
@@ -91,22 +166,7 @@ app.post('/api/updateToggleState', (req, res) => {
     });
   });
 
-    // Define a route to retrieve Utility table from the database
-app.get('/api/Utility', cors(),(req, res) => {
-    const sql = 'SELECT * FROM CarbnOffset.Utility';
-
-    // Execute the SQL query using the MySQL connection
-    mysqlConnection.query(sql, (error, results) => {
-        if (error) {
-            console.error('Error executing SQL query:', error.message);
-            res.status(500).json({ error: 'Error retrieving questions from the database' });
-            return;
-        }
-
-        // Send the retrieved questions as a JSON response
-        res.json(results);
-    });
-});
+   
 
 // Route to handle "Forgot Password" request
 app.post('/api/forgotpassword', cors(), async (req, res) => {
