@@ -20,8 +20,8 @@ import Questions from './components/questions';
 import Landing_Page from './components/landing_page';
 import First_Question from './components/firstquestion';
 import SecondQuestion from './components/secondquestion';
+import Third_Question from './components/thirdquestion';
 import ForgotPassword from './components/ForgotPassword';
-import ContactUs from "./components/ContactUs";
 import ValuesLandingPage from './components/valuesLandingpage.tsx';
 import { ValuesPage, Values } from "./components/valuespage";
 import Utility from './components/Utility';
@@ -39,11 +39,11 @@ root.render(
             <Route index={true} path="/" element={<Landing_Page />} />
             <Route path="/firstquestion" element={<First_Question />} />
             <Route path="/secondquestion" element={<SecondQuestion />} />
+            <Route path="/thirdquestion" element={<Third_Question />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/questions" element={<Questions />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
-            <Route path="/contactus" element={<ContactUs />} />
           </Route>
         </Routes>
       </Router>

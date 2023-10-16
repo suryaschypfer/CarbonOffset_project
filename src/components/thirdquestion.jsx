@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export function Second_Question(props) {
+export function Third_Question(props) {
     
     const navigate = useNavigate();
     const [question, setQuestion] = useState("");
@@ -16,10 +16,7 @@ export function Second_Question(props) {
     // Navigation functions
     const handlelandingpage = () => navigate('/');
     const handleadmin = () => navigate('/admin');
-    const handlePreviousPage = () => navigate('/firstquestion');
-    const handleProceed = () => {
-        navigate('/thirdquestion'); // This will navigate to the secondquestion page
-    };
+    const handlePreviousPage = () => navigate('/secondquestion');
 
     useEffect(() => {
         async function fetchData(endpoint, setStateFunction) {
@@ -40,7 +37,7 @@ export function Second_Question(props) {
 
     
 
-    const currentQuestionNumber = 2;
+    const currentQuestionNumber = 3;
     const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
     const roundedPercentage = parseFloat(progressPercentage.toFixed(2));
     
@@ -85,7 +82,7 @@ export function Second_Question(props) {
         </div>
         <div style={{ width: '496px', height: '496px', cursor: 'pointer' }}>
             <div style={{ width: '185px', height: '56px', left: '460px', top: '406px', position: 'absolute', background: 'rgba(97.05, 197.20, 240.12, 0.78)', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: '300px', border: '1px black solid' }}>
-                <div style={{ left: '21px', top: '15px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 400, wordWrap: 'break-word' }}onClick={handleProceed}>Submit & Proceed</div>
+                <div style={{ left: '21px', top: '15px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 400, wordWrap: 'break-word' }}>Submit & Proceed</div>
             </div>
             <div style={{ width: '322px', height: '136px', left: '480px', top: '499px', position: 'absolute', background: '#D9D9D9', borderRadius: '15px' }}>
                 <div style={{ width: '237px', height: '23px', left: '50px', top: '15px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 400, wordWrap: 'break-word' }}>Your carbon footprint</div>
@@ -129,4 +126,4 @@ export function Second_Question(props) {
       );
 }
 
-export default Second_Question;
+export default Third_Question;
