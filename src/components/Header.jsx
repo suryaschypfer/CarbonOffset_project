@@ -7,6 +7,9 @@ function Header(props) {
     const handleAdminNavigation = () => {
         navigate('/admin');
     };
+    const handleContactUsNavigation = () => {
+        navigate('/ContactUs');
+    };
     return (
         <>
             <div style={{width: '110px', height: '29px', left: '820.50px', top: '62px', position: 'absolute', background: '#A7C8A3'}}></div>
@@ -17,7 +20,7 @@ function Header(props) {
                 <div style={{left: '716px', top: '5px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer'}}>Home</div>
                 <div style={{left: '831px', top: '5px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer'}}>About Us</div>
                 <div style={{left: '975px', top: '5px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer'}}onClick={handleAdminNavigation}>Admin</div>
-                <div style={{left: '1078px', top: '5px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer'}}>Contact Us</div>
+                <div style={{left: '1078px', top: '5px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer'}}onClick={handleContactUsNavigation}>Contact Us</div>
             </div>
         </>
     );

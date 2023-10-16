@@ -1,0 +1,130 @@
+.container{
+    padding: 0% !important;
+    margin-top: 6vh;
+    margin-bottom: 0%;
+    border-bottom: 6.1vh solid #A7C8A3 !important; /* Adding a bottom border with color #A7C8A3 */
+    border-radius: 0vh !important;
+}
+
+body {
+    padding-left: 0px !important;
+    margin-top: 0px !important;
+}
+
+.leftnav{
+    margin-left: 5vw;
+}
+
+.rightnav a.ContactUs {
+    background-color: #A7C8A3;
+    /* border-radius: 8px; */
+    color: black;
+    margin-right: 4vw;
+}
+
+
+.page {
+    display: flex;
+    width: 100%;
+  }
+
+.text-container{
+    margin-top: 3.5vh;
+    margin-left: 8.5vw;
+    width: 50%;
+    float: left;
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.contact{
+    font-size: large;
+    font-weight: 700;
+}
+
+.conv{
+    font-size:medium !important;
+    font-weight: 500 !important;
+}
+  
+  
+.image-container {
+    flex: 6;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+.image {
+    margin-right: 10vw;
+    margin-top: 10vw;
+    width: 75%; /* Adjust the width of the image as needed */
+    height: 70%;
+  }
+
+.custdetails{
+    margin-top: 2vh;
+    padding-top: 1vh;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 70%; /* Adjust the width as needed */
+    /* background-color: rgb(167, 206, 223); */
+    border-radius: 10px;
+    padding-bottom: 2vh;
+}
+
+.custdetails input[type="text"] {
+    width: 90%; /* Adjust the width of the input box */
+}
+
+.FName,.LName,.Email,.Query{
+    padding: 1.5vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    background-color: rgba(132, 210, 243, 1);
+    border-radius: 10px;
+    font-size: medium;
+    font-weight: 500;
+}
+
+.send-button{
+    display: block;
+    text-align: center;
+    background-color: #A7C8A3;
+    /* background-color: rgba(132, 210, 243, 1); */
+    width: 100px; /* Adjust the width as needed */
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 0 auto;
+    margin-top: 2.0vh !important;
+}
+
+.error-message {
+    position: fixed;
+    bottom: 8px; /* Adjust the bottom position as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #dc6b6b;
+    color: #ffffff; /* White text color for visibility */
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .success-message {
+    position: fixed;
+    bottom: 8px; /* Adjust the bottom position as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #A7C8A3;
+    color: #ffffff; /* White text color for visibility */
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  
