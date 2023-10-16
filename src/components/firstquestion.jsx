@@ -64,7 +64,10 @@ export function First_Question(props) {
     fetchTotalQuestions();
 }, []);
 const currentQuestionNumber = 1;  // 2 for Second_Question, 1 for First_Question, 3 for Third_Question
-const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
+
+const progressPercentage = parseFloat(((currentQuestionNumber / totalQuestions) * 100).toFixed(2));
+
+
 
   
 
@@ -86,7 +89,7 @@ const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
     <div style={{ width: '885px', height: '17px', left: '0px', top: '38px', position: 'absolute' }}>
         <div style={{ width: '885px', height: '17px', left: '0px', top: '0px', position: 'absolute', background: '#EAE4E3', borderRadius: '10px' }}></div>
         <div style={{ width: `${progressPercentage * 8.85}px`, height: '17px', left: '0px', top: '0px', position: 'absolute', background: '#9FC1A2', borderRadius: '10px' }}></div>
-        <div style={{ width: '58px', height: '16px', left: '427px', top: '0px', position: 'absolute', color: 'black', fontSize: '14px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word' }}>{((currentQuestionNumber / totalQuestions) * 100)}%</div>
+        <div style={{ width: '58px', height: '16px', left: '427px', top: '0px', position: 'absolute', color: 'black', fontSize: '14px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word' }}>{progressPercentage}%</div>
     </div>
     <div style={{ left: '400px', top: '18px', position: 'absolute', color: 'black', fontSize: '14px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word' }}>
         Progress Bar<br />
