@@ -14,8 +14,10 @@ const port = 3000;
 const dbConfig = {
     HOST: '127.0.0.1',
     USER: 'root',
-    PASSWORD: 'Vamsi@9490437848',
-    DB: 'Offset_Carbon',
+    PASSWORD: "Saiteja17@",
+    DB: "CarbnOffset"
+    // PASSWORD: 'Vamsi@9490437848',
+    // DB: 'Offset_Carbon',
 };
 
 // Create a MySQL connection
@@ -53,6 +55,50 @@ app.post('/api/admin/login', cors(), (req, res) => {
             // Authentication failed
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+    });
+});
+
+app.post('/api/ContactUs', cors(), (req, res) => {
+    const { email, query, firstName, lastName } = req.body;
+
+    // 1) Adding query to the Enquiry table
+    const insertEnquirySql = 'INSERT INTO CarbnOffset.Enquiry (enquiry_question, enquiry_flag) VALUES (?, ?)';
+    mysqlConnection.query(insertEnquirySql, [query, 1], (err, result) => {
+        if (err) {
+            console.error('Error inserting into Enquiry table:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        const enquiryId = result.insertId;
+
+        // 2) Inserting a new entry into the Customer table
+        const insertCustomerSql = `INSERT INTO CarbnOffset.Customer (date_answered, session_id, first_name, last_name, email, total_carbon_footprint, answers, number_of_trees, enquiry_id) 
+        VALUES (CURDATE(), "N/A", ?, ?, ?, 0, "N/A", 0, ?)`;
+        mysqlConnection.query(insertCustomerSql, [firstName, lastName, email, enquiryId], (err, insertResult) => {
+            if (err) {
+                console.error('Error inserting into Customer table:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            return res.status(200).json({ message: 'Enquiry and Customer added successfully' });
+        });
+    });
+});
+
+// Define a route to retrieve questions from the database
+app.get('/api/questions', cors(),(req, res) => {
+    const sql = 'SELECT * FROM Offset_Carbon.Questions_Table';
+
+    // Execute the SQL query using the MySQL connection
+    mysqlConnection.query(sql, (error, results) => {
+        if (error) {
+            console.error('Error executing SQL query:', error.message);
+            res.status(500).json({ error: 'Error retrieving questions from the database' });
+            return;
+        }
+
+        // Send the retrieved questions as a JSON response
+        res.json(results);
     });
 });
 
