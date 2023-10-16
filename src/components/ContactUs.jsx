@@ -7,6 +7,9 @@ import axios from 'axios';
 export const ContactUs = () => {
     const navigate = useNavigate();
     const [ErrorMessage, setErrorMessage] = useState('');
+    const [FErrorMessage, setFErrorMessage] = useState('');
+    const [LErrorMessage, setLErrorMessage] = useState('');
+    const [EErrorMessage, setEErrorMessage] = useState('');
     const [SuccessMessage, setSuccessMessage] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -17,19 +20,43 @@ export const ContactUs = () => {
         navigate('/');
     };
 
-    const handleNameChange = (e) => {
+    const handleFNameChange = (e) => {
         const { name, value } = e.target;
         const regex = /^[a-zA-Z ]+$/; // Regular expression to match only alphabets and spaces
         if (!regex.test(value) && value !== '') {
-            setErrorMessage('Please enter only alphabets');
+            setFErrorMessage('Please enter only alphabets');
+            setTimeout(() => {
+                setFErrorMessage('');
+            }, 1000);
             e.target.value = '';
         } else {
-            setErrorMessage('');
+            setFErrorMessage('');
             if (name === 'firstName') {
                 setFirstName(value);
-            } else if (name === 'lastName') {
-                setLastName(value);
+            } 
+            // else if (name === 'lastName') {
+            //     setLastName(value);
+            // }
+        }
+    };
+
+    const handleLNameChange = (e) => {
+        const { name, value } = e.target;
+        const regex = /^[a-zA-Z ]+$/; // Regular expression to match only alphabets and spaces
+        if (!regex.test(value) && value !== '') {
+            setLErrorMessage('Please enter only alphabets');
+            e.target.value = '';
+            setTimeout(() => {
+                setLErrorMessage('');
+            }, 1000);
+        } else {
+            setLErrorMessage('');
+            if (name === 'firstName') {
+                setFirstName(value);
             }
+            //  else if (name === 'lastName') {
+            //     setLastName(value);
+            // }
         }
     };
 
@@ -39,21 +66,39 @@ export const ContactUs = () => {
         const email = document.querySelector('.Email input').value;
         const query = document.querySelector('.Query input').value;
 
-        if (!firstName || !lastName || !email) {
-            setErrorMessage('Please fill in all the required fields');
+        if (!firstName) {
+            setFErrorMessage('First Name is a required');
             setTimeout(() => {
-                setErrorMessage('');
+                setFErrorMessage('');
               }, 1000);
             return;
         }
+        
+        if (!lastName) {
+            setLErrorMessage('Last Name is a required');
+            setTimeout(() => {
+                setLErrorMessage('');
+              }, 1000);
+            return;
+        }
+
+        if (!email) {
+            setEErrorMessage('Email is required');
+            setTimeout(() => {
+                setEErrorMessage('');
+              }, 1000);
+            return;
+        }
+
+
 
         
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(email)) {
-        setErrorMessage('Please enter a valid email address');
+        setEErrorMessage('Please enter a valid email address');
          setTimeout(() => {
-            setErrorMessage('');
+            setEErrorMessage('');
         }, 1000);
         return;
         }
@@ -121,17 +166,20 @@ export const ContactUs = () => {
                         <div className ="FName">
                             First Name*
                             <br />
-                            <input type="text" placeholder="Enter your first name" onChange={handleNameChange} />
+                            <input type="text" placeholder="Enter your first name" onChange={handleFNameChange} />
+                            {FErrorMessage && <div className="error-message">{FErrorMessage}</div>}
                         </div>
                         <div className ="LName">
                             Last Name*
                             <br />
-                            <input type="text" placeholder="Enter your last name" onChange={handleNameChange} />
+                            <input type="text" placeholder="Enter your last name" onChange={handleLNameChange} />
+                            {LErrorMessage && <div className="error-message">{LErrorMessage}</div>}
                         </div>
                         <div className='Email'>
                             Email*
                             <br />
                             <input type="text" placeholder="Your email please" />
+                            {EErrorMessage && <div className="error-message">{EErrorMessage}</div>}
                         </div>
                         <div className='Query'>
                             Query
@@ -147,8 +195,9 @@ export const ContactUs = () => {
                 <div className="image-container">
                     <img src="landingPageImage.png" alt="image" className="image" />
                 </div>
+                <footer className="bottom_div"></footer>
             </div>
-            {ErrorMessage && <div className="error-message">{ErrorMessage}</div>}
+            {/* {ErrorMessage && <div className="error-message">{ErrorMessage}</div>} */}
             {SuccessMessage && <div className="success-message">{SuccessMessage}</div>}
         </div>
     );
