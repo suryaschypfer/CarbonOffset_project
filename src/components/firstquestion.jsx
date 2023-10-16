@@ -19,23 +19,27 @@ export function First_Question(props) {
     const handleProceed = () => {
       navigate('/secondquestion', { state: { zip: zip, familySize: familySize, userInput: enteredValue } }); // This will navigate to the secondquestion page
   };
+
+
+  const [question, setQuestion] = useState(""); // We expect a single question string
+
+useEffect(() => {
+    async function fetchQuestion() {
+        try {
+            const response = await axios.get('/api/questions'); // Changed the endpoint
+            if (response.data && response.data[0]) {
+                setQuestion(response.data[0].questions);
+            }
+        } catch (error) {
+            console.error('Error fetching active questions:', error);
+        }
+    }
+    fetchQuestion();
+}, []);
+
   
 
-    const [question, setQuestion] = useState(""); // We expect a single question string
-
-    useEffect(() => {
-      async function fetchQuestion() {
-        try {
-          const response = await axios.get('/api/questions');
-          if (response.data && response.data[0]) {
-            setQuestion(response.data[0].questions);
-          }
-        } catch (error) {
-          console.error('Error fetching questions:', error);
-        }
-      }
-      fetchQuestion();
-    }, []);
+    
 
     const [fact, setFact] = useState("");
     useEffect(() => {
@@ -65,6 +69,8 @@ export function First_Question(props) {
 }, []);
 const currentQuestionNumber = 1;  // 2 for Second_Question, 1 for First_Question, 3 for Third_Question
 const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
+const roundedPercentage = parseFloat(progressPercentage.toFixed(2));
+
 
   
 
@@ -86,7 +92,7 @@ const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
     <div style={{ width: '885px', height: '17px', left: '0px', top: '38px', position: 'absolute' }}>
         <div style={{ width: '885px', height: '17px', left: '0px', top: '0px', position: 'absolute', background: '#EAE4E3', borderRadius: '10px' }}></div>
         <div style={{ width: `${progressPercentage * 8.85}px`, height: '17px', left: '0px', top: '0px', position: 'absolute', background: '#9FC1A2', borderRadius: '10px' }}></div>
-        <div style={{ width: '58px', height: '16px', left: '427px', top: '0px', position: 'absolute', color: 'black', fontSize: '14px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word' }}>{((currentQuestionNumber / totalQuestions) * 100)}%</div>
+        <div style={{ width: '58px', height: '16px', left: '427px', top: '0px', position: 'absolute', color: 'black', fontSize: '14px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word' }}>{roundedPercentage}%</div>
     </div>
     <div style={{ left: '400px', top: '18px', position: 'absolute', color: 'black', fontSize: '14px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word' }}>
         Progress Bar<br />
