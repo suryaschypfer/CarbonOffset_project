@@ -88,6 +88,34 @@ app.get('/api/questions/:id', cors(), async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+app.post('/api/ContactUs', cors(), (req, res) => {
+    const { email, query, firstName, lastName } = req.body;
+
+    // 1) Adding query to the Enquiry table
+    const insertEnquirySql = 'INSERT INTO CarbnOffset.Enquiry (enquiry_question, enquiry_flag) VALUES (?, ?)';
+    mysqlConnection.query(insertEnquirySql, [query, 1], (err, result) => {
+        if (err) {
+            console.error('Error inserting into Enquiry table:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        const enquiryId = result.insertId;
+
+        // 2) Inserting a new entry into the Customer table
+        const insertCustomerSql = `INSERT INTO CarbnOffset.Customer (date_answered, session_id, first_name, last_name, email, total_carbon_footprint, answers, number_of_trees, enquiry_id) 
+        VALUES (CURDATE(), "N/A", ?, ?, ?, 0, "N/A", 0, ?)`;
+        mysqlConnection.query(insertCustomerSql, [firstName, lastName, email, enquiryId], (err, insertResult) => {
+            if (err) {
+                console.error('Error inserting into Customer table:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            return res.status(200).json({ message: 'Enquiry and Customer added successfully' });
+        });
+    });
+});
+
 // API for random fact fetching
 app.get('/api/randomfact', async (req, res) => {
     try {
