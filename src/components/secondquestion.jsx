@@ -30,7 +30,7 @@ export function Second_Question(props) {
                 console.error(`Error fetching data from ${endpoint}:`, error);
             }
         }
-        fetchData('/api/questions/2', data => setQuestion(data.questions));
+        fetchData('/api/questions', data => setQuestion(data[1].questions));
         fetchData('/api/randomfact', data => setFact(data.fact));
         fetchData('/api/questions', data => setTotalQuestions(data.length));
         
