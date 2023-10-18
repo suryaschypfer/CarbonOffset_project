@@ -4,37 +4,72 @@ import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios library
 
-export function First_Question(props) {
+export function DynamicQuestionPage(props) {
 
-  const [enteredValue, setEnteredValue] = useState("");
+    const [answers, setAnswers] = useState([]);
+    const handleInputChange = (value) => {
+        let updatedAnswers = [...answers];
+        updatedAnswers[currentQuestionIndex] = value;
+        setAnswers(updatedAnswers);
+    };
+
   const zip = props.location?.state?.zip || "";
   const familySize = props.location?.state?.familySize || "";
       const navigate = useNavigate();
-    const handlelandingpage = () => {
-        navigate('/'); // Use navigate to go to the desired route
+      
+
+      const navigateToHome = () => {
+        navigate('/');
+    }
+    
+
+      // Naviagtion if user clicks on previous page
+      const handlelandingpage = () => { 
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex(prevIndex => prevIndex - 1);
+        } else {
+            // If it's the first question, go back to landing page or any other desired action
+            navigate('/');
+        }
     };
     const handleadmin = () => {
         navigate('/admin'); // Use navigate to go to the desired route
     };
     const handleProceed = () => {
-      navigate('/secondquestion', { state: { zip: zip, familySize: familySize, userInput: enteredValue } }); // This will navigate to the secondquestion page
-  };
+        if (currentQuestionIndex < questions.length - 1) {
+          setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        } else {
+          // Redirect to your final page and pass the accumulated data
+          navigate('/finalpage', { state: { zip: zip, familySize: familySize, answers: answers } });
+        }
+      };
+      const handlePrevious = () => {
+        if (currentQuestionIndex > 0) {
+          setCurrentQuestionIndex(prevIndex => prevIndex - 1);
+        } else {
+          // If it's the first question, go back to landing page or any other desired action
+          navigate('/', { state: { zip: zip, familySize: familySize, answers: answers } });
+        }
+      };
+      
+      
 
 
-  const [question, setQuestion] = useState(""); // We expect a single question string
+  const [questions, setQuestions] = useState([]); // We expect a multiple question array
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
 useEffect(() => {
-    async function fetchQuestion() {
+    async function fetchActiveQuestions() {
         try {
             const response = await axios.get('/api/questions'); // Changed the endpoint
-            if (response.data && response.data[0]) {
-                setQuestion(response.data[0].questions);
+            if (response.data) {
+                setQuestions(response.data);
             }
         } catch (error) {
             console.error('Error fetching active questions:', error);
         }
     }
-    fetchQuestion();
+    fetchActiveQuestions();
 }, []);
 
   
@@ -67,7 +102,7 @@ useEffect(() => {
 
     fetchTotalQuestions();
 }, []);
-const currentQuestionNumber = 1;  // 2 for Second_Question, 1 for First_Question, 3 for Third_Question
+const currentQuestionNumber = currentQuestionIndex + 1;  // 2 for Second_Question, 1 for First_Question, 3 for Third_Question
 const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
 const roundedPercentage = parseFloat(progressPercentage.toFixed(2));
 
@@ -79,14 +114,15 @@ const roundedPercentage = parseFloat(progressPercentage.toFixed(2));
     <div style={{  background: 'white' }}>
     
     <div style={{ width: '1178px', height: '5px', left: '128px', top: '106px', position: 'absolute' }}>
-        <div style={{ left: '614px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={handlelandingpage}>Home</div>
+        <div style={{ left: '614px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={navigateToHome}>Home</div>
         <div style={{ left: '0px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 800, wordWrap: 'break-word', cursor: 'pointer' }}>OFFSET CRBN</div>
         <div style={{ left: '711px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}>About Us</div>
+        <div style={{width: '110px', height: '29px', left: '820.50px', top: '0px', position: 'absolute', background: '#A7C8A3'}}></div>
         <div style={{ left: '837px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}>Calculator</div>
         <div style={{ left: '1078px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}>Contact Us</div>
     </div>
     <div style={{ width: '1522px', height: '100px', left: '-10px', top: '975px', position: 'absolute', background: '#9FC1A2', border: '1px black solid', backdropFilter: 'blur(4px)' }}></div>
-    <div style={{ width: '1451px', height: '0px', left: '-5px', top: '134px', position: 'absolute', border: '1px black solid' }}></div>
+    <div style={{ width: '1451px', height: '0px', left: '-5px', top: '135px', position: 'absolute', border: '1px black solid' }}></div>
     <div style={{ width: '916px', height: '848px', left: '128px', top: '225px', position: 'absolute' }}>
     <div style={{ width: '885px', height: '655px', left: '1px', top: '0px', position: 'absolute', background: 'rgba(217, 217, 217, 0.12)', borderRadius: '30px' }}></div>
     <div style={{ width: '885px', height: '17px', left: '0px', top: '38px', position: 'absolute' }}>
@@ -123,15 +159,12 @@ const roundedPercentage = parseFloat(progressPercentage.toFixed(2));
             width: '409.62px', height: '50px', left: '137.69px', top: '30px', position: 'absolute',
             textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 400, wordWrap: 'break-word' 
           }}>
-            {question}
+            {questions[currentQuestionIndex]?.questions}
           </div>
-                  <input type="text" style={{ width: '402.53px', height: '66px', left: '141.24px', top: '106px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }} placeholder="Enter amount here" value={enteredValue} onChange={(e) => {e.target.value = e.target.value.replace(/[^0-9]/g, ''); if (e.target.value.length > 5) {e.target.value = e.target.value.slice(0, 5);}setEnteredValue(e.target.value);}}/>
-
-
-                  
-
-
-                  
+                  <input type="text" style={{ width: '402.53px', height: '66px', left: '141.24px', top: '106px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }} placeholder="Enter amount here" value={answers[currentQuestionIndex] || ''}
+ onChange={(e) => {e.target.value = e.target.value.replace(/[^0-9]/g, ''); if (e.target.value.length > 5) {e.target.value = e.target.value.slice(0, 5);} let updatedAnswers = [...answers];
+ updatedAnswers[currentQuestionIndex] = e.target.value;
+ setAnswers(updatedAnswers);}}/>             
     </div>
     <div style={{ width: '685px', height: '22px', left: '100px', top: '107px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 500, wordWrap: 'break-word' }}>Answering the below questions will help in determining your Carbon Footprint</div>
     <div style={{ width: '237px', height: '23px', left: '148px', top: '512px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 400, wordWrap: 'break-word' }}>Average carbon footprint of an individual</div>
@@ -152,4 +185,4 @@ const roundedPercentage = parseFloat(progressPercentage.toFixed(2));
   );
 }
 
-export default First_Question;
+export default DynamicQuestionPage;
