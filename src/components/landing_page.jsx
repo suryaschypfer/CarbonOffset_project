@@ -30,7 +30,7 @@ const handleFirstQuestion = () => {
       axios.get(`http://localhost:3000/api/utility/${zipCode}`)
           .then(response => {
               // If response contains data, navigate to the first question page
-              navigate('/firstquestion', { state: { zip: zipCode, familySize: familyMembers } });
+              navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
               console.log('Navigating to the next page...');
           })
           .catch(error => {

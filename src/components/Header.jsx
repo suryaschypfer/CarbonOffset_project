@@ -14,8 +14,8 @@ function Header(props) {
 
     return (
         <>
-            <div style={{width: '110px', height: '29px', left: '820.50px', top: '62px', position: 'absolute', background: '#A7C8A3'}}></div>
-            <div style={{width: '1451px', height: '0px', left: '-11px', top: '90px', position: 'absolute', border: '1px black solid'}}></div>
+            <div style={{width: '110px', height: '29px', left: '820.50px', top: '50px', position: 'absolute', background: '#A7C8A3'}}></div>
+            <div style={{width: '1451px', height: '0px', left: '-11px', top: '79px', position: 'absolute', border: '1px black solid'}}></div>
 
             <div style={{width: '1178px', height: '30px', left: '131px', position: 'absolute'}}>
                 <div style={{left: '0px', top: '5px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: 'Outfit', fontWeight: 800, wordWrap: 'break-word', cursor: 'pointer'}}>OFFSET CRBN</div>

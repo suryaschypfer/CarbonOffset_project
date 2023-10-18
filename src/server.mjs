@@ -14,8 +14,8 @@ const port = 3000;
 const dbConfig = {
     HOST: '127.0.0.1',
     USER: 'root',
-    PASSWORD: "Saiteja17@",
-    DB: "CarbnOffset"
+    PASSWORD: "Vamsi@9490437848",
+    DB: "Offset_Carbon"
 };
 
 // Create a MySQL connection

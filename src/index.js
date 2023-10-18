@@ -18,7 +18,7 @@ import reportWebVitals from './reportWebVitals';
 import AdminLogin from './components/admin_login';
 import Questions from './components/questions';
 import Landing_Page from './components/landing_page';
-import First_Question from './components/firstquestion';
+import DynamicQuestionPage from './components/DynamicQuestionPage';
 import SecondQuestion from './components/secondquestion';
 import Third_Question from './components/thirdquestion';
 import ForgotPassword from './components/ForgotPassword';
@@ -38,7 +38,7 @@ root.render(
         <Routes> {/* Use Routes to define your routes */}
           <Route path="/" element={<App />}>
             <Route index={true} path="/" element={<Landing_Page />} />
-            <Route path="/firstquestion" element={<First_Question />} />
+            <Route path="/question" element={<DynamicQuestionPage />} />
             <Route path="/secondquestion" element={<SecondQuestion />} />
             <Route path="/thirdquestion" element={<Third_Question />} />
             <Route path="/admin" element={<AdminLogin />} />
