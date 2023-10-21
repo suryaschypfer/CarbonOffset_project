@@ -21,5 +21,6 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "references": [{ "path": "/Users/schypfer/611/carbon/src/tsconfig.json" }]
+  "references": [{ "path": "/Users/vamsikrishnakaranam/Downloads/WorkingProjectFile/CarbonOffset_project/src/" }]
 }
+
