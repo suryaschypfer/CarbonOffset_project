@@ -45,7 +45,7 @@ div.outer-container {
     position: absolute;
     color: black;
     font-size: 20px;
-    font-family: 'Outfit';
+    font-family: '"Helvetica Neue", sans-serif';
     font-weight: 600;
     word-wrap: break-word;
   }
@@ -57,7 +57,7 @@ div.outer-container {
     position: absolute;
     color: black;
     font-size: 20px;
-    font-family: 'Outfit';
+    font-family: '"Helvetica Neue", sans-serif';
     font-weight: 400;
     word-wrap: break-word;
   }
@@ -80,7 +80,7 @@ div.outer-container {
     position: absolute;
     color: black;
     font-size: 20px;
-    font-family: 'Outfit';
+    font-family: '"Helvetica Neue", sans-serif';
     font-weight: 600;
     word-wrap: break-word;
   }

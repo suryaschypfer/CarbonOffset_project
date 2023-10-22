@@ -4,7 +4,7 @@ body {
 }
 
 .top-nav{
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: large;
     font-weight: 500;
     margin-top: 40px;
@@ -17,7 +17,7 @@ body {
 }
 
 .Values{
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size:large;
     font-weight: 750;
     color: black;
@@ -27,7 +27,7 @@ body {
 }
 
 .Home{
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size:large;
     font-weight: 750;
     font-family: Arial, sans-serif;
@@ -36,7 +36,7 @@ body {
 }
 
 .Questions{
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size:large;
     font-weight: 750;
     color: black;
@@ -44,7 +44,7 @@ body {
 }
 
 .Contact{
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size:large;
     font-weight: 750;
     color: black;
@@ -52,7 +52,7 @@ body {
 }
 
 .Support{
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size:large;
     font-weight: 750;
     color: black;
@@ -60,7 +60,7 @@ body {
 }
 
 .Logout{
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size:large;
     font-weight: 750;
     color: black;
@@ -108,7 +108,7 @@ img {
 
 .utilities{
     /*margin-top: 25px;*/
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size:larger;
     font-weight: 750;
     display: inline;

@@ -19,6 +19,7 @@ import AdminLogin from './components/admin_login';
 import Questions from './components/questions';
 import Landing_Page from './components/landing_page';
 import DynamicQuestionPage from './components/DynamicQuestionPage';
+import FinalPage from './components/FinalPage.jsx';
 import SecondQuestion from './components/secondquestion';
 import Third_Question from './components/thirdquestion';
 import ForgotPassword from './components/ForgotPassword';
@@ -39,6 +40,7 @@ root.render(
           <Route path="/" element={<App />}>
             <Route index={true} path="/" element={<Landing_Page />} />
             <Route path="/question" element={<DynamicQuestionPage />} />
+            <Route path="/finalpage" element={<FinalPage />} />
             <Route path="/secondquestion" element={<SecondQuestion />} />
             <Route path="/thirdquestion" element={<Third_Question />} />
             <Route path="/admin" element={<AdminLogin />} />
