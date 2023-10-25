@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import axiosInstance from './axiosconfig';
+
 
 export function DynamicQuestionPage(props) {
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ export function DynamicQuestionPage(props) {
 
   const fetchActiveQuestions = async () => {
     try {
-      const response = await axios.get('/api/questions');
+      const response = await axiosInstance.get('/api/questions');
       if (response.data) {
         setQuestions(response.data);
       }
@@ -35,7 +37,7 @@ export function DynamicQuestionPage(props) {
 
   const fetchRandomFact = async () => {
     try {
-        const response = await axios.get('/api/randomfact');
+        const response = await axiosInstance.get('/api/randomfact');
         if (response.data && response.data.fact) {
             setFact(response.data.fact);
         }
@@ -46,7 +48,7 @@ export function DynamicQuestionPage(props) {
 };
 
   const fetchTotalQuestions = async () => {
-    const response = await axios.get('/api/totalquestions');
+    const response = await axiosInstance.get('/api/totalquestions');
         setTotalQuestions(response.data);
   };
 
