@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const port = 3000;
+const port = 3306;
 const dbConfig = {
     HOST: '127.0.0.1',
     USER: 'root',

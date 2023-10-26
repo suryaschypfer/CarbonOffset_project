@@ -4,6 +4,8 @@ import Header from './Header';
 import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios library
+import axiosInstance from './axiosconfig';
+
 
 export function Landing_Page(props) {
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ const handleFirstQuestion = () => {
       return; // Don't navigate
   } else {
       // Make an Axios call to the utility API endpoint with the entered zipCode
-      axios.get(`http://localhost:3000/api/utility/${zipCode}`)
+      axiosInstance.get(`/api/utility/${zipCode}`)
           .then(response => {
               // If response contains data, navigate to the first question page
               navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
