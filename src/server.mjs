@@ -58,7 +58,7 @@ app.post('/api/admin/login', cors(), (req, res) => {
 
 // Define a route to retrieve questions with a specific flag from the database
 app.get('/api/questions', cors(),(req, res) => {
-    const sql = 'SELECT * FROM Offset_Carbon.Questions_Table WHERE question_flag = 1';
+    const sql = 'SELECT * FROM Offset_Carbon.Questions_Table WHERE question_flag = 1 ORDER BY label, ques_id';
 
     // Execute the SQL query using the MySQL connection
     mysqlConnection.query(sql, (error, results) => {
@@ -117,10 +117,12 @@ app.post('/api/ContactUs', cors(), (req, res) => {
 });
 
 // API for random fact fetching
-app.get('/api/randomfact', async (req, res) => {
+app.get('/api/randomfact/:index', async (req, res) => {
     try {
-        const [rows, fields] = await mysqlConnection.promise().query("SELECT fact FROM Offset_Carbon.facts ORDER BY RAND() LIMIT 1;");
-        
+        const questionIndex = req.params.index;
+        const [rows] = await mysqlConnection.promise().query("SELECT fact FROM Offset_Carbon.facts ORDER BY RAND() LIMIT 1;");
+        // console.log(rows);  // log the entire result
+
         if (rows && rows.length > 0) {
             return res.json(rows[0]);
         } else {
@@ -172,6 +174,48 @@ app.get('/api/utility/:zipcode', cors(), (req, res) => {
 });
 
 
+// Accept user answers, calculate, and return carbon footprint and trees required
+app.post('/api/calculateFootprint', cors(), async (req, res) => {
+    const answers = req.body; // Array or object containing question IDs and user answers
+    console.log("Received answers:", answers);
+
+
+    let totalCarbonFootprint = 0;
+    
+    try {
+        for (let answer of answers) {
+            const ques_id = answer.ques_id;
+            const userValue = answer.value; 
+            console.log("Querying for ques_id:", ques_id);
+
+            
+            // Fetch ref (constant or formula) for the question
+            const [results] = await mysqlConnection.promise().query("SELECT refs FROM Offset_Carbon.Questions_Table WHERE ques_id = ?", [ques_id]);
+            if(results.length === 0) {
+                console.error(`No data found for ques_id: ${ques_id}`);
+                continue;  // Skip the rest of this iteration and proceed to next ques_id in the loop
+            }
+            console.log("Results from database:", results);
+            const refValue = parseFloat(results[0].refs);
+
+            // Calculate carbon footprint for this answer
+            const carbonValue = refValue * userValue; // Modify this line if refs stores complex data
+
+            totalCarbonFootprint += Math.ceil(carbonValue);
+        }
+
+        const CO2_PER_TREE_PER_YEAR = 48;
+        const totalTreesRequired = Math.ceil(totalCarbonFootprint / CO2_PER_TREE_PER_YEAR);
+
+        res.json({
+            carbonFootprint: totalCarbonFootprint,
+            numberOfTrees: totalTreesRequired
+        });
+    } catch (error) {
+        console.error("Error calculating values:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 
 

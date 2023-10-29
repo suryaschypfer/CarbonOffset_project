@@ -19,30 +19,31 @@ export function Landing_Page(props) {
 // Logic to enter into firstquestion only if valid inputs(zipcode and family members) are given
 const handleFirstQuestion = () => {
   // Check if the zipCode is empty
-  if (!zipCode) {
+  if (!zipCode || !familyMembers) {
       setErrorMessage('Please enter the Zip Code');
-      return; // Don't navigate
-  } else if (!familyMembers) { // Check if familyMembers is empty
       setFamilyErrorMessage('Please enter this mandatory field');
       return; // Don't navigate
-  } else {
-      // Make an Axios call to the utility API endpoint with the entered zipCode
-      axios.get(`http://localhost:3000/api/utility/${zipCode}`)
-          .then(response => {
-              // If response contains data, navigate to the first question page
-              navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
-              console.log('Navigating to the next page...');
-          })
-          .catch(error => {
-              // If an error occurs, most likely the zipcode is not found in the utility table
-              if (error.response && error.response.status === 404) {
-                  setErrorMessage('Not a valid Zipcode');
-              } else {
-                  // Handle other errors such as server errors or network issues
-                  console.error("Error fetching the utility table:", error);
-                  setErrorMessage('An error occurred. Please try again.');
-              }
-          });
+  } 
+  else {
+    navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
+    console.log('Navigating to the next page...');
+      // // Make an Axios call to the utility API endpoint with the entered zipCode
+      // axios.get(`http://localhost:3000/api/utility/${zipCode}`)
+      //     .then(response => {
+      //         // If response contains data, navigate to the first question page
+      //         navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
+      //         console.log('Navigating to the next page...');
+      //     })
+      //     .catch(error => {
+      //         // If an error occurs, most likely the zipcode is not found in the utility table
+      //         if (error.response && error.response.status === 404) {
+      //             setErrorMessage('Not a valid Zipcode');
+      //         } else {
+      //             // Handle other errors such as server errors or network issues
+      //             console.error("Error fetching the utility table:", error);
+      //             setErrorMessage('An error occurred. Please try again.');
+      //         }
+      //     });
   }
 };
 
