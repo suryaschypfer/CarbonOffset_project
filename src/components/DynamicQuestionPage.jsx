@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import axiosInstance from './axiosconfig';
 
 
 export function DynamicQuestionPage(props) {
   const navigate = useNavigate();
-  const [answers, setAnswers] = useState([]);
+  const [answers, setAnswers] = useState({});
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [fact, setFact] = useState("");
@@ -15,19 +14,27 @@ export function DynamicQuestionPage(props) {
   const zip = props.location?.state?.zip || "";
   const familySize = props.location?.state?.familySize || "";
 
+  const [selectedUnit, setSelectedUnit] = useState('');  // State for selected unit
+  const [unitChoices, setUnitChoices] = useState([]);   // Choices specific to the selected unit
+
+  const [carbonFootprint, setCarbonFootprint] = useState(0);
+  const [numberOfTrees, setNumberOfTrees] = useState(0);
+
   const currentQuestionNumber = currentQuestionIndex + 1;
   const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
+  console.log(questions[currentQuestionIndex]);
 
   useEffect(() => {
     fetchActiveQuestions();
     fetchRandomFact();
     fetchTotalQuestions();
-  }, []);
+  }, [currentQuestionIndex]);
 
   const fetchActiveQuestions = async () => {
     try {
       const response = await axiosInstance.get('/api/questions');
       if (response.data) {
+        console.log("Questions Data:", response.data);
         setQuestions(response.data);
       }
     } catch (error) {
@@ -37,9 +44,14 @@ export function DynamicQuestionPage(props) {
 
   const fetchRandomFact = async () => {
     try {
-        const response = await axiosInstance.get('/api/randomfact');
+      const randomValue = Math.random();
+      const response = await axiosInstance.get(`/api/randomfact/${currentQuestionIndex}?nocache=${randomValue}`);
+
+        
         if (response.data && response.data.fact) {
             setFact(response.data.fact);
+            //console.log("Full Response:", response);
+            //console.log("Fetched Fact:", response.data.fact);
         }
     } catch (error) {
         console.error('Error fetching random fact:', error);
@@ -52,12 +64,72 @@ export function DynamicQuestionPage(props) {
         setTotalQuestions(response.data);
   };
 
+  const handleSubmitAnswers = async (answers) => {
+    try {
+        const response = await axiosInstance.post('/api/calculateFootprint', answers);
+        const data = response.data;
+        
+        if (data) {
+            // Update the state with the received data
+            setCarbonFootprint(data.carbonFootprint);
+            setNumberOfTrees(data.numberOfTrees);
+            console.log("Updated Footprint:", data.carbonFootprint);
+
+        }
+    } catch (error) {
+        console.error("Error fetching calculation results:", error);
+    }
+}
+
     
-  const handleInputChange = (value) => {
-        let updatedAnswers = [...answers];
-        updatedAnswers[currentQuestionIndex] = value;
-        setAnswers(updatedAnswers);
-    };
+const handleInputChange = (event) => {
+    const currentQuestionId = questions[currentQuestionIndex]?.ques_id;
+    if (!currentQuestionId) return;
+
+    let newAnswerValue = event.target.value;
+
+    // If the event target is a radio input, save its value directly
+    if (event.target.type === "radio") {
+        setAnswers(prevAnswers => ({ ...prevAnswers, [currentQuestionId]: newAnswerValue }));
+        return;
+    }
+
+    // Handle text inputs for questionType 1 or 2
+    if ([1, 2].includes(questions[currentQuestionIndex]?.questionType)) {
+        newAnswerValue = newAnswerValue.replace(/[^0-9.]/g, '');  // Accept only numeric values and dot
+        if (newAnswerValue.length > 5) {
+            newAnswerValue = newAnswerValue.slice(0, 5);
+        }
+    }
+    console.log("Text input value:", newAnswerValue);  // Log for debugging
+    setAnswers(prevAnswers => ({ ...prevAnswers, [currentQuestionId]: newAnswerValue }));
+};
+
+
+
+
+
+
+const handleUnitSelection = (unit) => {
+    setSelectedUnit(unit);
+    
+    // If it's not questionType=2 and choiceAns=2, simply set the choices as they are
+    if (questions[currentQuestionIndex]?.questionType !== 2 || questions[currentQuestionIndex]?.choiceAns !== "2") {
+        setUnitChoices(questions[currentQuestionIndex]?.choices || []);
+        return;
+    }
+
+    // For questionType=2 and choiceAns=2, parse choices
+    let parsedChoices = [];
+    try {
+        parsedChoices = JSON.parse(questions[currentQuestionIndex]?.choices || '{}');
+        setUnitChoices(parsedChoices[unit] || []);
+    } catch (error) {
+        console.error("Error parsing choices JSON:", error);
+    }
+}
+
+  
       
       
 
@@ -81,14 +153,21 @@ export function DynamicQuestionPage(props) {
     const handleContactUs = () => {
         navigate('/ContactUs'); // Use navigate to go to the desired route
     };
-  const handleProceed = () => {
+    const handleProceed = async () => {
         if (currentQuestionIndex < questions.length - 1) {
-          setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+            // Transform the answers object to the desired format
+            const formattedAnswers = Object.entries(answers).map(([ques_id, value]) => ({ ques_id: Number(ques_id), value }));
+    
+            // Fetch and update the carbon footprint here based on the submitted answer
+            await handleSubmitAnswers(formattedAnswers);
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
         } else {
-          // Redirect to your final page and pass the accumulated data
-          navigate('/FinalPage', { state: { zip: zip, familySize: familySize, answers: answers } });
+            // If it's the last question, navigate to the FinalPage
+            navigate('/FinalPage', { state: { zip: zip, familySize: familySize, answers: answers, carbonFootprint: carbonFootprint, numberOfTrees: numberOfTrees } });
         }
-      };
+    };
+    
+    
   const handlePrevious = () => {
         if (currentQuestionIndex > 0) {
           setCurrentQuestionIndex(prevIndex => prevIndex - 1);
@@ -100,6 +179,38 @@ export function DynamicQuestionPage(props) {
       
    const roundedPercentage = parseFloat(progressPercentage.toFixed(2));
 
+   let parsedChoices = {};
+try {
+    parsedChoices = typeof questions[currentQuestionIndex]?.choices === "string" 
+        ? JSON.parse(questions[currentQuestionIndex]?.choices) 
+        : questions[currentQuestionIndex]?.choices;
+} catch (error) {
+    console.error("Failed to parse choices:", error);
+}
+
+const unitSpecificChoices = (selectedUnit && parsedChoices) ? parsedChoices[selectedUnit] || [] : [];
+
+const fetchCarbonFootprintAndTrees = async () => {
+    try {
+        // You should adjust the structure of the 'answers' payload according to how you've structured your state and components
+        const answers = [ /* An array or object of the user's answers. E.g., { ques_id: 1, value: 10 }, ... */ ];
+        
+        const response = await axiosInstance.post('/api/calculateFootprint', answers);
+        
+        if (response.status === 200) {
+            const { carbonFootprint, numberOfTrees } = response.data;
+            setCarbonFootprint(carbonFootprint);
+            setNumberOfTrees(numberOfTrees);
+            
+            // If you have a way to navigate to the FinalPage after this, invoke that logic here.
+            // For instance, if you're using react-router, you'd navigate to the FinalPage route.
+        } else {
+            console.error("Failed to calculate carbon footprint and trees.");
+        }
+    } catch (error) {
+        console.error("Error fetching carbon footprint and trees:", error);
+    }
+};
 
   
 
@@ -139,7 +250,7 @@ export function DynamicQuestionPage(props) {
         <div style={{ width: '322px', height: '136px', left: '480px', top: '499px', position: 'absolute', background: '#D9D9D9', borderRadius: '15px' }}>
             <div style={{ width: '237px', height: '23px', left: '50px', top: '15px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>Your carbon footprint</div>
             <div style={{ width: '119px', height: '40px', left: '181px', top: '220px', position: 'absolute' }}>
-                <div style={{ left: '-20px', top: '-140px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '32px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 700, wordWrap: 'break-word' }}>0</div>
+                <div style={{ left: '-80px', top: '-140px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '32px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 700, wordWrap: 'break-word' }}>{carbonFootprint}</div>
                 <div style={{ width: '60px', height: '26px', left: '25px', top: '-129px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>lbs</div>
         </div>
     </div>
@@ -150,29 +261,120 @@ export function DynamicQuestionPage(props) {
     <div style={{ width: '683px', height: '167px', left: '102px', top: '120px', position: 'absolute' }}></div>
     <div style={{ width: '685px', height: '200px', left: '100px', top: '152px', position: 'absolute' }}>
         <div style={{ width: '1.41px', height: '24px', left: '443.48px', top: '148px', position: 'absolute' }}></div>
-        <div style={{ width: '685px', height: '200px', left: '0px', top: '0px', position: 'absolute', background: '#84D2F3', borderRadius: '15px' }}></div>
+        
         <div style={{ 
             width: '409.62px', height: '50px', left: '137.69px', top: '30px', position: 'absolute',
             textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' 
           }}>
             {questions[currentQuestionIndex]?.questions}
           </div>
+
+          {questions[currentQuestionIndex]?.questionType === 1 && (!questions[currentQuestionIndex]?.choiceAns || questions[currentQuestionIndex]?.choiceAns === "1" || questions[currentQuestionIndex]?.choiceAns === "null" || questions[currentQuestionIndex]?.choiceAns === "NULL" || questions[currentQuestionIndex]?.choiceAns === "") && (
+                <input 
+                    type="text" 
+                    style={{ width: '402.53px', height: '66px', left: '141.24px', top: '106px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }} 
+                    placeholder="Enter amount here" 
+                    value={answers[questions[currentQuestionIndex]?.ques_id] || ''}
+                    onChange={handleInputChange}
+
+                />
+            )}
+
+            {questions[currentQuestionIndex]?.questionType === 1 && questions[currentQuestionIndex]?.choiceAns === "2" && (
+                <div style={{ 
+                  width: '409.62px', marginTop: '88px', left: '137.69px', position: 'absolute',
+                  textAlign: 'left', 
+              }}>
+                    {questions[currentQuestionIndex]?.choices.map((choice, index) => (
+                        <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                            <input type="radio" id={`choice-${index}`} name="choice" value={choice} style={{ marginRight: '10px'}} onChange={handleInputChange} />
+                            <label htmlFor={`choice-${index}`}>{choice}</label>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+{
+    questions[currentQuestionIndex]?.questionType === 2 && (
+        <div style={{ width: '400px', marginTop: '60px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-around' }}>
+            {['Miles/Week', 'Miles/Year', 'Gallon', '1000 cubic feet', 'KWH', 'Therms', 'Dollars'].map(unit => (
+                <div 
+                    key={unit} 
+                    style={{
+                        padding: '10px',
+                        border: '1px solid',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        backgroundColor: selectedUnit === unit ? 'lightgreen' : 'white'
+                    }}
+                    onClick={() => handleUnitSelection(unit)}
+                >
+                    {unit}
+                </div>
+            ))}
+        </div>
+    )
+}
+
+{
+    questions[currentQuestionIndex]?.questionType === 2 && (questions[currentQuestionIndex]?.choiceAns === "1" || !questions[currentQuestionIndex]?.choiceAns || questions[currentQuestionIndex]?.choiceAns === "null" || questions[currentQuestionIndex]?.choiceAns === "NULL") && (
+        <input 
+            type="text" 
+            style={{ width: '402.53px', height: '66px', left: '141.24px', top: '160px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }} 
+            placeholder="Enter value here for selected units" 
+            value={answers[questions[currentQuestionIndex]?.ques_id] || ''}
+            onChange={handleInputChange}
+
+        />
+    )
+}
+
+
+
+
+{
+    questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "2" && (
+        <div style={{ width: '400px', marginTop: '165px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
+            
+            {/* Left Side */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {unitSpecificChoices.slice(0,2).map((choice, index) => (
+                    <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                        <input type="radio" id={`choice-${index}`} name="choice" value={choice} style={{ marginRight: '10px' }} onChange={handleInputChange} />
+                        <label htmlFor={`choice-${index}`}>{choice}</label>
+                    </div>
+                ))}
+            </div>
+            
+            {/* Right Side */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {unitSpecificChoices.slice(2,4).map((choice, index) => (
+                    <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                        <input type="radio" id={`choice-${index+2}`} name="choice" value={choice} style={{ marginRight: '10px' }} onChange={handleInputChange} />
+                        <label htmlFor={`choice-${index+2}`}>{choice}</label>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+
+
+
+
           {/* Displaying the label/category for the question */}
           <div style={{ 
             width: '300px', height: '40px', left: '500px', top: '-80px', position: 'absolute',
             textAlign: 'center', color: '#4caf50', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word' 
           }}>
             Category: {questions[currentQuestionIndex]?.label}
-          </div>
-                  <input type="text" style={{ width: '402.53px', height: '66px', left: '141.24px', top: '106px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }} placeholder="Enter amount here" value={answers[currentQuestionIndex] || ''}
- onChange={(e) => {e.target.value = e.target.value.replace(/[^0-9]/g, ''); if (e.target.value.length > 5) {e.target.value = e.target.value.slice(0, 5);} let updatedAnswers = [...answers];
- updatedAnswers[currentQuestionIndex] = e.target.value;
- setAnswers(updatedAnswers);}}/>             
+          </div>            
     </div>
     <div style={{ width: '785px', height: '22px', left: '100px', top: '107px', position: 'absolute', color: '#0b0a0a', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 500, wordWrap: 'break-word' }}>Answering the below questions will help in determining your Carbon Footprint</div>
     <div style={{ width: '237px', height: '23px', left: '148px', top: '512px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>No. of Trees to be planted</div>
     <div style={{ width: '155px', height: '40px', left: '222px', top: '573px', position: 'absolute' }}>
-        <div style={{ left: '10px', top: '-10px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '32px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 700, wordWrap: 'break-word' }}>0</div>
+        <div style={{ left: '10px', top: '-10px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '32px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 700, wordWrap: 'break-word' }}>{numberOfTrees}</div>
         
     </div>
 </div>
@@ -189,3 +391,4 @@ export function DynamicQuestionPage(props) {
 }
 
 export default DynamicQuestionPage;
+

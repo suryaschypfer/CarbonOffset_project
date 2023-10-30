@@ -3,7 +3,6 @@ import React from 'react';
 import Header from './Header';
 import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import Axios library
 import axiosInstance from './axiosconfig';
 
 
@@ -21,33 +20,33 @@ export function Landing_Page(props) {
 // Logic to enter into firstquestion only if valid inputs(zipcode and family members) are given
 const handleFirstQuestion = () => {
   // Check if the zipCode is empty
-  if (!zipCode) {
+  if (!zipCode || !familyMembers) {
       setErrorMessage('Please enter the Zip Code');
-      return; // Don't navigate
-  } else if (!familyMembers) { // Check if familyMembers is empty
       setFamilyErrorMessage('Please enter this mandatory field');
       return; // Don't navigate
-  } else {
-      // Make an Axios call to the utility API endpoint with the entered zipCode
-      axiosInstance.get(`/api/utility/${zipCode}`)
-          .then(response => {
-              // If response contains data, navigate to the first question page
-              navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
-              console.log('Navigating to the next page...');
-          })
-          .catch(error => {
-              // If an error occurs, most likely the zipcode is not found in the utility table
-              if (error.response && error.response.status === 404) {
-                  setErrorMessage('Not a valid Zipcode');
-              } else {
-                  // Handle other errors such as server errors or network issues
-                  console.error("Error fetching the utility table:", error);
-                  setErrorMessage('An error occurred. Please try again.');
-              }
-          });
+  } 
+  else {
+    navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
+    console.log('Navigating to the next page...');
+      // // Make an Axios call to the utility API endpoint with the entered zipCode
+      // axiosInstance.get(`/api/utility/${zipCode}`)
+      //     .then(response => {
+      //         // If response contains data, navigate to the first question page
+      //         navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
+      //         console.log('Navigating to the next page...');
+      //     })
+      //     .catch(error => {
+      //         // If an error occurs, most likely the zipcode is not found in the utility table
+      //         if (error.response && error.response.status === 404) {
+      //             setErrorMessage('Not a valid Zipcode');
+      //         } else {
+      //             // Handle other errors such as server errors or network issues
+      //             console.error("Error fetching the utility table:", error);
+      //             setErrorMessage('An error occurred. Please try again.');
+      //         }
+      //     });
   }
 };
-
 
 
 
@@ -86,7 +85,6 @@ const handleFirstQuestion = () => {
 
 
 
-
       </div>
       <div style={{ width: '398px', height: '100px', left: '169px', top: '650px', position: 'absolute' }}>
       <div style={{width: '1px', height: '12px', left: '261px', top: '74px', position: 'absolute'}}></div>
@@ -109,7 +107,6 @@ const handleFirstQuestion = () => {
 />
 
 <div style={{ color: 'red', position: 'absolute', left: '82.06px', top: '35px' }}>{familyErrorMessage}</div>
-
 
 
       </div>
@@ -153,7 +150,6 @@ const handleFirstQuestion = () => {
       </div>
     </div>
     <div style={{width: '1522px', height: '75px', left: '0px', top: '974px', position: 'absolute', background: '#9FC1A2', border: '1px black solid', backdropFilter: 'blur(4px)'}}></div>
-
 
 </div>
 
