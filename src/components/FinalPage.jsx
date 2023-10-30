@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-
 export function FinalPage (props) {
+  const location = useLocation();
+  const { zip, familySize, answers, carbonFootprint, numberOfTrees } = location.state || {};
+
     const navigate = useNavigate();
 
     const navigateToHome = () => {
@@ -25,6 +28,7 @@ export function FinalPage (props) {
     const handlePlantTrees = () => {
         navigate('/amountpage'); // Navigate to the amount page
     };
+    if (!carbonFootprint || !numberOfTrees) {
 
     return (
         <div style={{ width: '100%', height: '100%', position: 'relative', background: 'white' }}>
@@ -51,7 +55,7 @@ export function FinalPage (props) {
             </div>
             <div style={{ width: '214.05px', height: '56px', left: '504px', top: '450px', position: 'absolute' }}>
               <div style={{ width: '184.66px', height: '56px', left: '0px', top: '0px', position: 'absolute', background: '#A3C7A0', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', borderRadius: '300px', border: '1px black solid' }} />
-              <div style={{ width: '171.05px', left: '43px', top: '15px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600 }}>Plant Trees</div>
+              <div style={{ width: '171.05px', left: '43px', top: '15px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, cursor: 'pointer'}} onClick={handlePlantTrees}>Plant Trees</div>
             </div>
             <div style={{ width: '683px', height: '167px', left: '101px', top: '131px', position: 'absolute' }} />
             <div style={{ left: '324px', top: '43px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 500 }}>Your total carbon footprint </div>
@@ -69,13 +73,14 @@ export function FinalPage (props) {
             <div style={{ width: '231px', height: '331px', left: '417px', top: '241px', position: 'absolute', color: 'white', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400 }}>The transportation sector is a major contributor to carbon footprints, responsible for nearly 30% of total greenhouse gas emissions in the United States.</div>
           </div>
       
-          <div style={{ left: '498px', top: '346px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>13000 </div>
-          <div style={{ left: '544px', top: '546px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>3</div>
+          <div style={{ left: '498px', top: '346px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>{carbonFootprint || "N/A"} </div>
+          <div style={{ left: '544px', top: '546px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>{numberOfTrees || "N/A"}</div>
           <div style={{ width: '71px', height: '30px', left: '657px', top: '376px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>lbs</div>
           <div style={{ left: '1112px', top: '106px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer'}}onClick={handleadmin}>Admin</div>
           
         </div>
       );
+    }
       
 
 }
