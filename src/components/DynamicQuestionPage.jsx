@@ -266,7 +266,7 @@ const fetchCarbonFootprintAndTrees = async () => {
             width: '409.62px', height: '50px', left: '137.69px', top: '30px', position: 'absolute',
             textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' 
           }}>
-            {questions[currentQuestionIndex]?.questions}
+            {questions[currentQuestionIndex]?.questionContent}
           </div>
 
           {questions[currentQuestionIndex]?.questionType === 1 && (!questions[currentQuestionIndex]?.choiceAns || questions[currentQuestionIndex]?.choiceAns === "1" || questions[currentQuestionIndex]?.choiceAns === "null" || questions[currentQuestionIndex]?.choiceAns === "NULL" || questions[currentQuestionIndex]?.choiceAns === "") && (
