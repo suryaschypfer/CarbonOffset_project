@@ -80,9 +80,9 @@ nav {
     color: black;
 }
 
-.enteremail,
+.enteremailid,
 .enterpass {
-    background-color: #84D2F3;
+    background-color: #007ea7;
     padding: 15px;
     border: 1px solid #000;
     margin-bottom: 20px;
@@ -90,6 +90,7 @@ nav {
     border-radius: 20px;
     width: 100%;
 }
+
 
 label {
     display: block;
@@ -115,10 +116,9 @@ input[type="password"] {
     margin-top: 10px;
 }
 
-button[type="submit"],
 button[type="button"] {
-    background-color: #A7C8A3;
-    color: black;
+    background-color: black;
+    color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -127,9 +127,21 @@ button[type="button"] {
     font-weight: bold;
 }
 
-button[type="submit"]:hover,
+.submit_login {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+
+}
+
+button[type="submit_login"]:hover,
 button[type="button"]:hover {
-    background-color: #59a351;
+    background-color: rgb(52, 49, 49);
 }
 
 .bottom_div {

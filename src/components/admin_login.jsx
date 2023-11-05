@@ -66,7 +66,7 @@ function AdminLogin() {
             <div className="adminlogin">
                 <h2>Admin Login</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="enteremail">
+                    <div className="enteremailid">
                         <label htmlFor="email">Email</label>
                         <input
                             type="email"
@@ -89,13 +89,13 @@ function AdminLogin() {
                         />
                     </div>
                     <div className="button-container">
-                        <button type="submit">Login</button>
+                        <button type="submit_login" className='submit_login'>Login</button>
                         <button type="button" onClick={handleForgotPasswordClick}> Forgot Password </button>
                     </div>
                 </form>
                 <p className="error-message">{loginError}</p>
             </div>
-            <footer className="bottom_div"></footer>
+            {/* <footer className="bottom_div"></footer> */}
         </div>
     );
 }
