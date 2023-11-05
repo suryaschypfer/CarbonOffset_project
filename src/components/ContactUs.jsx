@@ -144,14 +144,14 @@ export const ContactUs = () => {
         <div className="contact">
             <nav className="nav-bar">
                 <div className="leftnav">
-                    <span>Carbon Offset</span>
+                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
                 </div>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
                     <a href="#">About Us</a>
-                    <a href="#">Calculator</a>
+                    {/* <a href="#">Calculator</a> */}
                     <a href="#">Admin</a>
-                    <a href="#" className ="ContactUs">Contact Us</a>
+                    <a href="#" className ="selected">Contact Us</a>
                 </div>
 
             </nav>

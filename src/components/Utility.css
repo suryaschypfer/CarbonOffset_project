@@ -88,13 +88,13 @@ body {
    
 }
 
-img {
+/* img {
     cursor: pointer;
     border-radius: 8px;
     background-color: azure;
     height: 25px;
     width: 25px;
-  }
+  } */
   
   img:hover {
     box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
