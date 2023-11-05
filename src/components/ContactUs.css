@@ -1,6 +1,6 @@
 .container{
     padding: 0% !important;
-    margin-top: 6vh;
+    margin-top: 1vh;
     margin-bottom: 0%;
     /* border-bottom: 6.1vh solid #A7C8A3 !important; 
      border-radius: 0vh !important;  */
@@ -11,15 +11,30 @@ body {
     margin-top: 0px !important;
 }
 
+.nav-bar{
+    background-color: white;
+    padding-right: 1vw;
+}
+
 .leftnav{
     margin-left: 5vw;
 }
 
-.rightnav a.ContactUs {
+.rightnav a {
+  color: black;
+}
+
+.mainlogo {
+    width: 20vw !important;
+    height: 8vh !important;;
+    background-color: none;
+  }
+
+.rightnav a.selected {
     background-color: #A7C8A3;
     /* border-radius: 8px; */
     color: black;
-    margin-right: 4vw;
+    margin-right: 0vw;
 }
 
 
@@ -129,7 +144,7 @@ body {
   }
 
   .bottom_div {
-    background-color: #A7C8A3;
+    background-color: #ff9d76;
     height: 30px;
     width: 100%;
     position: fixed;

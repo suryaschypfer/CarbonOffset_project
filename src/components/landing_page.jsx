@@ -20,11 +20,19 @@ export function Landing_Page(props) {
 // Logic to enter into firstquestion only if valid inputs(zipcode and family members) are given
 const handleFirstQuestion = () => {
   // Check if the zipCode is empty
-  if (!zipCode || !familyMembers) {
+  if (!zipCode && !familyMembers) {
       setErrorMessage('Please enter the Zip Code');
       setFamilyErrorMessage('Please enter this mandatory field');
       return; // Don't navigate
   } 
+  if (!zipCode) {
+    setErrorMessage('Please enter the Zip Code');
+    return; // Don't navigate
+} 
+if (!familyMembers) {
+  setFamilyErrorMessage('Please enter this mandatory field');
+  return; // Don't navigate
+} 
   else {
     navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
     console.log('Navigating to the next page...');
@@ -53,7 +61,40 @@ const handleFirstQuestion = () => {
   return (
     <div style={{ background: 'white'}}>
     <Header />
-    <img style={{width: '842px', height: '497px', left: '598px', top: '301px', position: 'absolute', outline: 'none' , border: 'none' , userSelect: 'none' , pointerEvents: 'none'}} src="LandingPageImage.png" alt="Landing Page" />
+    {/* <img style={{width: '842px', height: '497px', left: '598px', top: '301px', position: 'absolute', outline: 'none' , border: 'none' , userSelect: 'none' , pointerEvents: 'none'}} src="LandingPageImage.png" alt="Landing Page" /> */}
+    <div
+  style={{
+    width: '700px',
+    height: '550px',
+    left: '650px',
+    top: '200px',
+    position: 'absolute',
+    overflow: 'hidden',
+  }}
+>
+  <video
+    style={{
+      width: '97%',
+      height: '97%',
+      objectFit: 'cover',
+      transform: 'scale(1.0, 1.5)', // Adjust the scale as needed to maintain the aspect ratio
+      outline: 'none',
+      border: 'none',
+      userSelect: 'none',
+      pointerEvents: 'none',
+    }}
+    autoPlay
+    muted
+    loop
+  >
+    <source
+      src="https://video.wixstatic.com/video/c253c4_51f0cf76ff124d7783cc34c394893ed3/720p/mp4/file.mp4"
+      type="video/mp4"
+    />
+  </video>
+</div>
+
+
     <div style={{width: '500px', height: '552px', left: '128px', top: '219px', position: 'absolute'}}>
         <div style={{width: '500px', height: '88px', left: '0px', top: '-100px', position: 'absolute', color: 'black', fontSize: '32px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 700, wordWrap: 'break-word'}}>Empowering You to Plant a Greener Future</div>
         <div>
@@ -120,7 +161,7 @@ const handleFirstQuestion = () => {
             left: '0px',
             top: '-10px',
             position: 'absolute',
-            background: 'rgba(97.05, 197.20, 240.12, 0.78)',
+            background: 'black',
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             borderRadius: '300px',
             border: '1px black solid',
@@ -137,7 +178,7 @@ const handleFirstQuestion = () => {
               left: '90px',
               top: '0px',
               position: 'absolute',
-              color: 'black',
+              color: 'white',
               fontSize: '20px',
               fontFamily: '"Helvetica Neue", sans-serif',
               fontWeight: 400,
@@ -149,7 +190,7 @@ const handleFirstQuestion = () => {
         </div>
       </div>
     </div>
-    <div style={{width: '1522px', height: '75px', left: '0px', top: '974px', position: 'absolute', background: '#9FC1A2', border: '1px black solid', backdropFilter: 'blur(4px)'}}></div>
+    <div style={{width: '1350px', height: '75px', left: '0px', top: '974px', position: 'absolute', background: '#ff9d76', border: '1px black solid', backdropFilter: 'blur(4px)'}}></div>
 
 </div>
 
