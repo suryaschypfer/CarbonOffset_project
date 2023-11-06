@@ -14,8 +14,8 @@ const port = 3000;
 const dbConfig = {
     HOST: '127.0.0.1',
     USER: 'root',
-    PASSWORD: "Lakshmi@24",
-    DB: "carbon"
+    PASSWORD: "Carbon@123",
+    DB: "CRBN"
 };
 
 // Create a MySQL connection
@@ -78,7 +78,7 @@ app.post('/api/ContactUs', cors(), (req, res) => {
     const { email, query, firstName, lastName } = req.body;
 
     // 1) Adding query to the Enquiry table
-    const insertEnquirySql = 'INSERT INTO carbon.Enquiry (enquiry_question, enquiry_flag) VALUES (?, ?)';
+    const insertEnquirySql = 'INSERT INTO CRBN.Enquiry (enquiry_question, enquiry_flag) VALUES (?, ?)';
     mysqlConnection.query(insertEnquirySql, [query, 1], (err, result) => {
         if (err) {
             console.error('Error inserting into Enquiry table:', err);
@@ -88,8 +88,8 @@ app.post('/api/ContactUs', cors(), (req, res) => {
         const enquiryId = result.insertId;
 
         // 2) Inserting a new entry into the Customer table
-        const insertCustomerSql = `INSERT INTO carbon.Customer (date_answered, session_id, first_name, last_name, email, total_carbon_footprint, answers, number_of_trees, enquiry_id) 
-        VALUES (CURDATE(), "N/A", ?, ?, ?, 0, "N/A", 0, ?)`;
+        const insertCustomerSql = `INSERT INTO CRBN.Customer (date_answered, session_id, first_name, last_name,age, email, total_carbon_footprint, answers, number_of_trees, enquiry_id) 
+        VALUES (CURDATE(), "N/A", ?, ?, ?, ?, 0, "N/A", 0, ?)`;
         mysqlConnection.query(insertCustomerSql, [firstName, lastName, email, enquiryId], (err, insertResult) => {
             if (err) {
                 console.error('Error inserting into Customer table:', err);
