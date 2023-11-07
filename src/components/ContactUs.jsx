@@ -15,7 +15,7 @@ export const ContactUs = () => {
     const [SuccessMessage, setSuccessMessage] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [age, setAge] = useState('');
+    // const [age, setAge] = useState('');
     const [email, setEmail] = useState('');
     const [query, setQuery] = useState('');
 
@@ -67,22 +67,26 @@ export const ContactUs = () => {
         }
     };
 
-    const handleAgeChange = (e) => {
-        const inputAge = e.target.value;
-        if (!/^\d+$/.test(inputAge)) {
-          setAErrorMessage('Age must be a number');
-        } else {
-          setAErrorMessage('');
-        }
-        setAge(inputAge);
-      };
+    // const handleAgeChange = (e) => {
+    //     const inputAge = e.target.value;
+    //     if (!/^\d+$/.test(inputAge)) {
+    //       setAErrorMessage('Age must be a number');
+    //     } else {
+    //       setAErrorMessage('');
+    //     }
+    //     setAge(inputAge);
+    //   };
 
     const handleSend = () => {
-        const firstName = document.querySelector('.FName input').value;
-        const lastName = document.querySelector('.LName input').value;
-        const age = document.querySelector('.Age input').value;
-        const email = document.querySelector('.Email input').value;
-        const query = document.querySelector('.Query input').value;
+        const firstNameInput = document.querySelector('.FName input')
+        const lastNameInput = document.querySelector('.LName input')
+        const emailInput = document.querySelector('.Email input')
+        const queryInput = document.querySelector('.Query input')
+
+        const firstName = firstNameInput.value;
+        const lastName = lastNameInput.value;
+        const email = emailInput.value;
+        const query = queryInput.value;
 
 
         if (!firstName) {
@@ -101,13 +105,13 @@ export const ContactUs = () => {
             return;
         }
 
-        if (!age) {
-            setAErrorMessage('Age is a required');
-            setTimeout(() => {
-                setAErrorMessage('');
-              }, 1000);
-            return;
-        }
+        // if (!age) {
+        //     setAErrorMessage('Age is a required');
+        //     setTimeout(() => {
+        //         setAErrorMessage('');
+        //       }, 1000);
+        //     return;
+        // }
 
         if (!email) {
             setEErrorMessage('Email is required');
@@ -130,44 +134,40 @@ export const ContactUs = () => {
         return;
         }
 
-
-    
-        // Assuming you have an API endpoint for sending the data
         const data = {
             firstName,
             lastName,
-            age,
             email,
             query
         };
     
-        // Use axios or fetch to send the data to the backend
+
         axiosInstance.post("/api/ContactUs", data)
-  .then(response => {
-    if (response.status === 200) {
+        .then(response => {
+        if (response.status === 200) {
+        firstNameInput.value = '';
+        lastNameInput.value = '';
+        emailInput.value = '';
+        queryInput.value = '';
         setSuccessMessage('Enquiry and Customer added successfully');
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setQuery('');
         setTimeout(() => {
-          setSuccessMessage('');
+            setSuccessMessage('');
         }, 1000);
-    } else {
-      setErrorMessage('Error adding the Enquiry and Customer');
-    }
-    setTimeout(() => {
-      setErrorMessage('');
-    }, 2000);
-  })
-  .catch(error => {
-    console.error(error);
-    setErrorMessage('Error adding into the Enquiry and Customer');
-    setTimeout(() => {
-      setErrorMessage('');
-    }, 2000);
-  });
-    };
+            } else {
+            setErrorMessage('Error adding the Enquiry and Customer');
+            }
+            setTimeout(() => {
+            setErrorMessage('');
+            }, 2000);
+        })
+        .catch(error => {
+            console.error(error);
+            setErrorMessage('Error adding into the Enquiry and Customer');
+            setTimeout(() => {
+            setErrorMessage('');
+            }, 2000);
+        });
+     };
 
     return (
         <div className="contact">
@@ -204,12 +204,12 @@ export const ContactUs = () => {
                             <input type="text" placeholder="Enter your last name" onChange={handleLNameChange} />
                             {LErrorMessage && <div className="error-message">{LErrorMessage}</div>}
                         </div>
-                        <div className='Age'>
+                        {/* <div className='Age'>
                             Age*
                              <br />
                              <input type="text" placeholder="Enter your age" onChange={handleAgeChange} />
                              {AErrorMessage && <div className="error-message">{AErrorMessage}</div>}
-                        </div>
+                        </div> */}
                         <div className='Email'>
                             Email*
                             <br />
@@ -228,7 +228,7 @@ export const ContactUs = () => {
 
                 </div>
                 <div className="image-container">
-                    <img src="landingPageImage.png" alt="image" className="image" />
+                    <img src="LandingPageImage.png" alt="image" className="image" />
                 </div>
                 {/* <footer className="bottom_div"></footer> */}
             </div>

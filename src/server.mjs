@@ -14,7 +14,7 @@ const port = 3000;
 const dbConfig = {
     host: "127.0.0.1",
     user: "root",
-    password: "Vamsi@9490437848",
+    password: "Carbon@123",
     database: "CRBN",
     port: 3306,
   };
@@ -30,6 +30,38 @@ mysqlConnection.connect((err) => {
   } else {
     console.error("Connection to MySQL failed:", err);
   }
+});
+
+
+app.post('/api/ContactUs', cors(), (req, res) => {
+  const { email, query, firstName, lastName } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+
+  // 1) Adding query to the Enquiry table
+  const insertEnquirySql = 'INSERT INTO enquiry (firstname, lastname, email, enquiry_question, enquiry_flag) VALUES (?, ?, ?, ?, ?)';
+  mysqlConnection.query(insertEnquirySql, [firstName, lastName, email, query, 1], (err, result) => {
+      if (err) {
+          console.error('Error inserting into Enquiry table:', err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      // const enquiryId = result.insertId;
+
+      // 2) Inserting a new entry into the Customer table
+      const insertCustomerSql = `INSERT INTO Customer (date_answered, session_id, first_name, last_name, email, total_carbon_footprint, answers, number_of_trees, zipcode) 
+      VALUES (CURDATE(), "N/A", ?, ?, ?, 0, "N/A", 0, "N/A")`;
+      mysqlConnection.query(insertCustomerSql, [firstName, lastName, email], (err, insertResult) => {
+          if (err) {
+              console.error('Error inserting into Customer table:', err);
+              return res.status(500).json({ error: 'Internal Server Error' });
+          }
+
+          return res.status(200).json({ message: 'Enquiry and Customer added successfully' });
+      });
+  });
 });
 
 
@@ -122,34 +154,6 @@ app.get("/api/questionsuser", cors(), (req, res) => {
     }
   });
 
-
-
-app.post('/api/ContactUs', cors(), (req, res) => {
-    const { email, query, firstName, lastName } = req.body;
-
-    // 1) Adding query to the Enquiry table
-    const insertEnquirySql = 'INSERT INTO CRBN.Enquiry (enquiry_question, enquiry_flag) VALUES (?, ?)';
-    mysqlConnection.query(insertEnquirySql, [query, 1], (err, result) => {
-        if (err) {
-            console.error('Error inserting into Enquiry table:', err);
-            return res.status(500).json({ error: 'Internal Server Error' });
-        }
-
-        const enquiryId = result.insertId;
-
-        // 2) Inserting a new entry into the Customer table
-        const insertCustomerSql = `INSERT INTO CRBN.Customer (date_answered, session_id, first_name, last_name,age, email, total_carbon_footprint, answers, number_of_trees, enquiry_id) 
-        VALUES (CURDATE(), "N/A", ?, ?, ?, ?, 0, "N/A", 0, ?)`;
-        mysqlConnection.query(insertCustomerSql, [firstName, lastName, email, enquiryId], (err, insertResult) => {
-            if (err) {
-                console.error('Error inserting into Customer table:', err);
-                return res.status(500).json({ error: 'Internal Server Error' });
-            }
-
-            return res.status(200).json({ message: 'Enquiry and Customer added successfully' });
-        });
-    });
-});
 
 // API for random fact fetching
 app.get("/api/randomfact/:index", async (req, res) => {
