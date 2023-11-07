@@ -1,10 +1,10 @@
-//import './style.css'; 
 import React from 'react';
 import Header from './Header';
-import { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
-
+import DynamicQuestionPage from './DynamicQuestionPage';
+import axios from 'axios';
 
 export function Landing_Page(props) {
   const navigate = useNavigate();
@@ -13,48 +13,61 @@ export function Landing_Page(props) {
   const [familyMembers, setFamilyMembers] = useState('');
   const [familyErrorMessage, setFamilyErrorMessage] = useState('');
 
-  // const handleadmin = () => {
-  //   navigate('/admin');
-  // };
+  const handleadmin = () => {
+    navigate('/admin'); 
+};
+
+// Construct the data to send in the request body
+const data = {
+  familyMembers: familyMembers
+};
+
+// Define the server URL
+const serverUrl = "http://localhost:3000/api/setFamilyMembers";
+
+// Send a POST request to the server
+fetch(serverUrl, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+})
+.then(response => {
+    if (response.ok) {
+        console.log('Family members data sent successfully.');
+    } else {
+        console.error('Failed to send family members data to the server.');
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+});
+
 
   // Logic to enter into firstquestion only if valid inputs(zipcode and family members) are given
-  const handleFirstQuestion = () => {
-    // Check if the zipCode is empty
-    if (!zipCode && !familyMembers) {
+const handleFirstQuestion = () => {
+  
+  // Check if the zipCode is empty
+  if (!zipCode && !familyMembers) {
       setErrorMessage('Please enter the Zip Code');
       setFamilyErrorMessage('Please enter this mandatory field');
       return; // Don't navigate
-    }
-    if (!zipCode) {
-      setErrorMessage('Please enter the Zip Code');
-      return; // Don't navigate
-    }
-    if (!familyMembers) {
-      setFamilyErrorMessage('Please enter this mandatory field');
-      return; // Don't navigate
-    }
-    else {
-      navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
-      console.log('Navigating to the next page...');
-      // // Make an Axios call to the utility API endpoint with the entered zipCode
-      // axiosInstance.get(`/api/utility/${zipCode}`)
-      //     .then(response => {
-      //         // If response contains data, navigate to the first question page
-      //         navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
-      //         console.log('Navigating to the next page...');
-      //     })
-      //     .catch(error => {
-      //         // If an error occurs, most likely the zipcode is not found in the utility table
-      //         if (error.response && error.response.status === 404) {
-      //             setErrorMessage('Not a valid Zipcode');
-      //         } else {
-      //             // Handle other errors such as server errors or network issues
-      //             console.error("Error fetching the utility table:", error);
-      //             setErrorMessage('An error occurred. Please try again.');
-      //         }
-      //     });
-    }
-  };
+  } 
+  if (!zipCode) {
+    setErrorMessage('Please enter the Zip Code');
+    return; // Don't navigate
+} 
+if (!familyMembers) {
+  setFamilyErrorMessage('Please enter this mandatory field');
+  return; // Don't navigate
+} 
+  else {
+    navigate('/question', { state: { zip: zipCode, familySize: familyMembers } });
+    console.log('Family Members',familyMembers);
+    console.log('Navigating to the next page...');
+  }
+};
 
 
 
