@@ -89,8 +89,8 @@ export function DynamicQuestionPage(props) {
     const calculateFormula = async (formulaName) => {
         // Make an API call to calculate the formula
         try {
-          const response = await axios.post(
-            "http://localhost:3000/api/calculateFormula",
+          const response = await axiosInstance.post(
+            "/api/calculateFormula",
             {
               formulaName,
             }
@@ -239,8 +239,7 @@ export function DynamicQuestionPage(props) {
         
     };
 
-    const handleUnitSelection =  async (unit) => {
-
+    const handleUnitSelection = async (unit) => {
         // Check if the selected unit is the same as the unit that was clicked
         if (selectedUnit === unit) {
             // Deselect the unit and reset the unit choices
@@ -248,29 +247,20 @@ export function DynamicQuestionPage(props) {
             setUnitChoices([]);
         } else {
             setSelectedUnit(unit);
-            let apiFormula = questions[currentQuestionIndex].selectedFormulas[questions[currentQuestionIndex].selectedUnits.indexOf(unit)];
-            formulaValue = await calculateFormula(apiFormula);
-            
-            console.log("formula value",formulaValue);
-            finalFormulaVal = formulaValue*formulaQuestionInput;
-            console.log("formulaip",formulaQuestionInput);
-            console.log("final Val",finalFormulaVal);
     
-            // If it's not questionType=2 and choiceAns=2, simply set the choices as they are
-            if (questions[currentQuestionIndex]?.questionType !== 2 || questions[currentQuestionIndex]?.choiceAns !== "2") {
-                setUnitChoices(questions[currentQuestionIndex]?.choices || []);
+            // Fetch the choices based on the selected unit
+            const unitsIndex = questions[currentQuestionIndex]?.selectedUnits.indexOf(unit);
+            if (unitsIndex >= 0) {
+                const choices = questions[currentQuestionIndex]?.choices;
+                const parsedChoices = JSON.parse(choices);
+                const unitChoices = parsedChoices[unitsIndex];
+                setUnitChoices(unitChoices || []);
             } else {
-                // For questionType=2 and choiceAns=2, parse choices
-                let parsedChoices = [];
-                try {
-                    parsedChoices = JSON.parse(questions[currentQuestionIndex]?.choices || '{}');
-                    setUnitChoices(parsedChoices[unit] || []);
-                } catch (error) {
-                    console.error("Error parsing choices JSON:", error);
-                }
+                console.error("Unit not found in selectedUnits.");
             }
         }
     }
+    
 
     const navigateToHome = () => {
         navigate('/');
@@ -474,27 +464,33 @@ const fetchCarbonFootprintAndTrees = async () => {
 )}
 
 
-                    {
-                        questions[currentQuestionIndex]?.questionType === 2 && (
-                            <div style={{ width: '400px', marginTop: '60px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-around' }}>
-                                {questions[currentQuestionIndex]?.selectedUnits.map(unit => (
-                                    <div
-                                        key={unit}
-                                        style={{
-                                            padding: '10px',
-                                            border: '1px solid',
-                                            borderRadius: '5px',
-                                            cursor: 'pointer',
-                                            backgroundColor: selectedUnit === unit ? 'lightgreen' : 'white'
-                                        }}
-                                        onClick={() => handleUnitSelection(unit)}
-                                    >
-                                        {unit}
-                                    </div>
-                                ))}
-                            </div>
-                        )
-                    }
+{
+    questions[currentQuestionIndex]?.questionType === 2 && (
+        <div style={{ width: '400px', marginTop: '60px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-around' }}>
+            {questions[currentQuestionIndex]?.selectedUnits.map((units, index) => (
+                <div key={index} style={{ display: 'flex' }}>
+                    {units.map((unit, subIndex) => (
+                        <div
+                            key={subIndex}
+                            style={{
+                                padding: '10px',
+                                border: '1px solid',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                backgroundColor: selectedUnit === unit ? 'lightgreen' : 'white',
+                                margin: '5px' // Add some spacing between units
+                            }}
+                            onClick={() => handleUnitSelection(unit)}
+                        >
+                            {unit}
+                        </div>
+                    ))}
+                </div>
+            ))}
+        </div>
+    )
+}
+
 
                     {
                         questions[currentQuestionIndex]?.questionType === 2 && (questions[currentQuestionIndex]?.choiceAns === "1" || !questions[currentQuestionIndex]?.choiceAns || questions[currentQuestionIndex]?.choiceAns === "null" || questions[currentQuestionIndex]?.choiceAns === "NULL") && (
