@@ -1,35 +1,31 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-
-export function FinalPage() {
+export function FinalPage (props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { zip, familySize, answers, carbonFootprint, numberOfTrees } = location.state || {};
+    const navigateToHome = () => {
+        navigate('/');
+    }
+    const handleadmin = () => {
+        navigate('/admin'); // Use navigate to go to the desired route
+    };
+    const handleContactUs = () => {
+        navigate('/ContactUs'); // Use navigate to go to the desired route
+    };
+    // Handler for the 'Previous Page' button
+    const handlePrevious = () => {
+        navigate('/question'); // Replace with your previous question page route
+    };
 
-  // Use URLSearchParams to get query parameters
-  const queryParams = new URLSearchParams(location.search);
-  const carbonFootprint = queryParams.get('carbonFootprint');
-  const numberOfTrees = queryParams.get('numberOfTrees');
-
-  const navigateToHome = () => {
-    navigate('/');
-  }
-  const handleadmin = () => {
-    navigate('/admin'); // Use navigate to go to the desired route
-  };
-  const handleContactUs = () => {
-    navigate('/ContactUs'); // Use navigate to go to the desired route
-  };
-  // Handler for the 'Previous Page' button
-  const handlePrevious = () => {
-    navigate('/question'); // Replace with your previous question page route
-  };
-
-  // Handler for the 'Plant Trees' button
-  const handlePlantTrees = () => {
-    navigate('/amountpage'); // Navigate to the amount page
-  };
-
+    // Handler for the 'Plant Trees' button
+    const handlePlantTrees = () => {
+        navigate('/amountpage'); // Navigate to the amount page
+    };
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', background: 'white' }}>

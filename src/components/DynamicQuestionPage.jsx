@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
-
+import axios from 'axios';
 
 export function DynamicQuestionPage(props) {
+    const [image, setImage] = useState("");
+    const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
+    const [selectedChoices, setSelectedChoices] = useState([]);
     const navigate = useNavigate();
     const [answers, setAnswers] = useState({});
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [fact, setFact] = useState("");
-    const [image, setImage] = useState("");
     const [totalQuestions, setTotalQuestions] = useState(0);
-
+    const [totalFootprint, setTotalFootprint] = useState(0); // Initialize totalFootprint
+    const [ans,updateAns] = useState(1);
+    let formulaQuestionInput = 0;
     const zip = props.location?.state?.zip || "";
     const familySize = props.location?.state?.familySize || "";
-
+    let finalFootPrint = 0;
+    let finalTrees = 0;
+    let finalFormulaVal = 0;
+    let formulaValue = 0;
+    console.log("familyMembers",familySize);
     const [selectedUnit, setSelectedUnit] = useState('');  // State for selected unit
     const [unitChoices, setUnitChoices] = useState([]);   // Choices specific to the selected unit
-
     const [carbonFootprint, setCarbonFootprint] = useState(0);
     const [numberOfTrees, setNumberOfTrees] = useState(0);
-
     const currentQuestionNumber = currentQuestionIndex + 1;
     const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
     console.log(questions[currentQuestionIndex]);
@@ -34,22 +40,22 @@ export function DynamicQuestionPage(props) {
 
     const fetchActiveQuestions = async () => {
         try {
-            const response = await axiosInstance.get('/api/questionsuser');
-            if (response.data) {
-                console.log("Questions Data:", response.data);
-                setQuestions(response.data);
-            }
+          const response = await axiosInstance.get('/api/questionsuser');
+          if (response.data) {
+            console.log("Questions Data:", response.data);
+            setQuestions(response.data);
+          }
         } catch (error) {
-            console.error('Error fetching active questions:', error);
+          console.error('Error fetching active questions:', error);
         }
-    };
+      };
 
-    const fetchRandomFact = async () => {
+      const fetchRandomFact = async () => {
         try {
-            const randomValue = Math.random();
-            const response = await axiosInstance.get(`/api/randomfact/${currentQuestionIndex}?nocache=${randomValue}`);
-
-
+          const randomValue = Math.random();
+          const response = await axiosInstance.get(`/api/randomfact/${currentQuestionIndex}?nocache=${randomValue}`);
+    
+            
             if (response.data && response.data.fact) {
                 setFact(response.data.fact);
                 //console.log("Full Response:", response);
@@ -79,71 +85,190 @@ export function DynamicQuestionPage(props) {
         setTotalQuestions(response.data);
     };
 
-    const handleSubmitAnswers = async (answers) => {
+
+    const calculateFormula = async (formulaName) => {
+        // Make an API call to calculate the formula
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/api/calculateFormula",
+            {
+              formulaName,
+            }
+          );
+    
+          // Get the result from the response
+          const result = response.data.result;
+    
+          console.log(
+            `Formula "${formulaName}" calculated successfully! Result:`,
+            result
+          );
+    
+          return result;
+    
+          // You can do further processing with the result if needed
+        } catch (error) {
+          console.error(`Error calculating formula "${formulaName}":`, error);
+        }
+      };
+
+      const handleProceed = async () => {
+        if (currentQuestionIndex < questions.length - 1) {
+          // Transform the answers object to the desired format
+          console.log("questions",questions);
+          const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value}));
+      
+          // Fetch and update the carbon footprint here based on the submitted answer
+          await handleSubmitAnswers(formattedAnswers);
+      
+          setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        } else {
+          // Calculate the footprint for the last question
+          const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value}));
+          await handleSubmitAnswers(formattedAnswers); // Calculate for the last question
+      
+          // Now, after calculating the footprint for the last question, assign it to lastQuestionFootprint
+          const lastQuestionFootprint = carbonFootprint;
+      
+          // Log the lastQuestionFootprint
+          console.log('lastQuestionFootprint:', lastQuestionFootprint);
+            
+          // Navigate to the FinalPage with the updated state
+    
+          navigate('/FinalPage', {
+            state: {
+              zip: zip,
+              familySize: familySize,
+              answers: answers,
+              carbonFootprint: finalFootPrint, // Include the last question's footprint
+              numberOfTrees: finalTrees,
+            },
+          });
+          
+        }
+      }
+      const handleSubmitAnswers = async (answers) => {
+        console.log("answers to post",answers);
         try {
             const response = await axiosInstance.post('/api/calculateFootprint', answers);
+            console.log("response",response);
             const data = response.data;
-
+            
             if (data) {
                 // Update the state with the received data
                 setCarbonFootprint(data.carbonFootprint);
                 setNumberOfTrees(data.numberOfTrees);
                 console.log("Updated Footprint:", data.carbonFootprint);
-
+                finalFootPrint = data.carbonFootprint;
+                finalTrees = data.numberOfTrees;
+    
             }
         } catch (error) {
             console.error("Error fetching calculation results:", error);
         }
     }
 
+    useEffect(() => {
+        // When you navigate back to the same question, set the selected choice index based on the answer
+        const currentQuestionId = questions[currentQuestionIndex]?.id;
+        const selectedChoice = answers[currentQuestionId];
+        setSelectedChoiceIndex(selectedChoice);
+      }, [currentQuestionIndex, answers]);
 
-    const handleInputChange = (event) => {
+
+
+      const handleInputChange = (event) => {
+    
         const currentQuestionId = questions[currentQuestionIndex]?.id;
         if (!currentQuestionId) return;
-
+    
         let newAnswerValue = event.target.value;
-
+        formulaQuestionInput = questions[currentQuestionIndex]?.questionType === 2 ? event.target.value : 0 ; 
+    
+    
         // If the event target is a radio input, save its value directly
         if (event.target.type === "radio") {
-            const choiceIndex = event.target.getAttribute("data-index"); // Get the index of the selected choice
-            const refValue = questions[currentQuestionIndex]?.refs[choiceIndex]; // Get the corresponding ref value
+            const choiceIndex = +event.target.getAttribute("id").slice(event.target.getAttribute("id").lastIndexOf("-") + 1); // Get the index of the selected choice
             setAnswers((prevAnswers) => ({
                 ...prevAnswers,
-                [currentQuestionId]: refValue, // Use the ref value instead of the choice
+                [currentQuestionId]: choiceIndex, // Use the ref value instead of the choice
             }));
             return;
         }
-
+    
+        // If the event target is a checkbox input, handle it for choiceAns = 3
+        if (event.target.type === "checkbox") {
+            
+            const innerIndex = +event.target.getAttribute("data-index");
+            const currentSelectedChoices = [...selectedChoices];
+    
+            if (event.target.checked) {
+                // Add innerIndex to selectedChoices if checked
+                currentSelectedChoices.push(innerIndex);
+            } else {
+                // Remove innerIndex from selectedChoices if unchecked
+                const indexToRemove = currentSelectedChoices.indexOf(innerIndex);
+                if (indexToRemove !== -1) {
+                    currentSelectedChoices.splice(indexToRemove, 1);
+                }
+            }
+    
+            console.log("checkbox choices",currentSelectedChoices);
+            setAnswers((prevAnswers) => ({
+                ...prevAnswers,
+                [currentQuestionId]: currentSelectedChoices, // Use the ref value instead of the choice
+            }));
+            
+            setSelectedChoices(currentSelectedChoices);
+    
+            return;
+        }
+    
         // Handle text inputs for questionType 1 or 2
-        if ([1, 2].includes(questions[currentQuestionIndex]?.questionType)) {
+        if ([1,2].includes(questions[currentQuestionIndex]?.questionType)) {
             newAnswerValue = newAnswerValue.replace(/[^0-9.]/g, ''); // Accept only numeric values and dot
             if (newAnswerValue.length > 5) {
                 newAnswerValue = newAnswerValue.slice(0, 5);
             }
         }
-
+    
         setAnswers((prevAnswers) => ({
             ...prevAnswers,
-            [currentQuestionId]: newAnswerValue,
+            [currentQuestionId]: newAnswerValue
         }));
+        
     };
 
-    const handleUnitSelection = (unit) => {
-        setSelectedUnit(unit);
+    const handleUnitSelection =  async (unit) => {
 
-        // If it's not questionType=2 and choiceAns=2, simply set the choices as they are
-        if (questions[currentQuestionIndex]?.questionType !== 2 || questions[currentQuestionIndex]?.choiceAns !== "2") {
-            setUnitChoices(questions[currentQuestionIndex]?.choices || []);
-            return;
-        }
-
-        // For questionType=2 and choiceAns=2, parse choices
-        let parsedChoices = [];
-        try {
-            parsedChoices = JSON.parse(questions[currentQuestionIndex]?.choices || '{}');
-            setUnitChoices(parsedChoices[unit] || []);
-        } catch (error) {
-            console.error("Error parsing choices JSON:", error);
+        // Check if the selected unit is the same as the unit that was clicked
+        if (selectedUnit === unit) {
+            // Deselect the unit and reset the unit choices
+            setSelectedUnit(null);
+            setUnitChoices([]);
+        } else {
+            setSelectedUnit(unit);
+            let apiFormula = questions[currentQuestionIndex].selectedFormulas[questions[currentQuestionIndex].selectedUnits.indexOf(unit)];
+            formulaValue = await calculateFormula(apiFormula);
+            
+            console.log("formula value",formulaValue);
+            finalFormulaVal = formulaValue*formulaQuestionInput;
+            console.log("formulaip",formulaQuestionInput);
+            console.log("final Val",finalFormulaVal);
+    
+            // If it's not questionType=2 and choiceAns=2, simply set the choices as they are
+            if (questions[currentQuestionIndex]?.questionType !== 2 || questions[currentQuestionIndex]?.choiceAns !== "2") {
+                setUnitChoices(questions[currentQuestionIndex]?.choices || []);
+            } else {
+                // For questionType=2 and choiceAns=2, parse choices
+                let parsedChoices = [];
+                try {
+                    parsedChoices = JSON.parse(questions[currentQuestionIndex]?.choices || '{}');
+                    setUnitChoices(parsedChoices[unit] || []);
+                } catch (error) {
+                    console.error("Error parsing choices JSON:", error);
+                }
+            }
         }
     }
 
@@ -151,90 +276,77 @@ export function DynamicQuestionPage(props) {
         navigate('/');
     }
 
-    // Naviagtion if user clicks on previous page
-    const handlelandingpage = () => {
-        if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex(prevIndex => prevIndex - 1);
-        } else {
-            // If it's the first question, go back to landing page or any other desired action
-            navigate('/');
-        }
-    };
+// Naviagtion if user clicks on previous page
+const handlelandingpage = () => { 
+    if (currentQuestionIndex > 0) {
+        setCurrentQuestionIndex(prevIndex => prevIndex - 1);
+    } else {
+        // If it's the first question, go back to landing page or any other desired action
+        navigate('/');
+    }
+};
+
+const handleadmin = () => {
+    navigate('/admin'); // Use navigate to go to the desired route
+};
+
     const handleaboutus = () => {
         navigate('/aboutus'); // Use navigate to go to the desired route
     };
     const handleContactUs = () => {
         navigate('/ContactUs'); // Use navigate to go to the desired route
     };
-    const handleProceed = async () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            // Transform the answers object to the desired format
-            const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
-
-            // Fetch and update the carbon footprint here based on the submitted answer
-            await handleSubmitAnswers(formattedAnswers);
-            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-        } else {
-            // If it's the last question, navigate to the FinalPage
-            setCarbonFootprint(carbonFootprint); // Replace with your actual carbon footprint value
-            setNumberOfTrees(numberOfTrees); // Replace with your actual number of trees value
-
-            // Navigate to the FinalPage with query parameters
-            navigate(`/FinalPage?carbonFootprint=${carbonFootprint}&numberOfTrees=${numberOfTrees}`);
-        }
-    };
-
-
+    
     const handlePrevious = () => {
         if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex(prevIndex => prevIndex - 1);
+          setCurrentQuestionIndex(prevIndex => prevIndex - 1);
         } else {
-            // If it's the first question, go back to landing page or any other desired action
-            navigate('/', { state: { zip: zip, familySize: familySize, answers: answers } });
+          // If it's the first question, go back to landing page or any other desired action
+          navigate('/', { state: { zip: zip, familySize: familySize, answers: answers } });
         }
-    };
+      };
 
     const roundedPercentage = parseFloat(progressPercentage.toFixed(2));
 
     let parsedChoices = {};
+try {
+    parsedChoices = typeof questions[currentQuestionIndex]?.choices === "string" 
+        ? JSON.parse(questions[currentQuestionIndex]?.choices) 
+        : questions[currentQuestionIndex]?.choices;
+} catch (error) {
+    console.error("Failed to parse choices:", error);
+}
+
+const unitSpecificChoices = (selectedUnit && parsedChoices) ? parsedChoices[selectedUnit] || [] : [];
+
+const fetchCarbonFootprintAndTrees = async () => {
     try {
-        parsedChoices = typeof questions[currentQuestionIndex]?.choices === "string"
-            ? JSON.parse(questions[currentQuestionIndex]?.choices)
-            : questions[currentQuestionIndex]?.choices;
-    } catch (error) {
-        console.error("Failed to parse choices:", error);
-    }
-
-    const unitSpecificChoices = (selectedUnit && parsedChoices) ? parsedChoices[selectedUnit] || [] : [];
-
-    const fetchCarbonFootprintAndTrees = async () => {
-        try {
-            // You should adjust the structure of the 'answers' payload according to how you've structured your state and components
-            const answers = [ /* An array or object of the user's answers. E.g., { id: 1, value: 10 }, ... */];
-
-            const response = await axiosInstance.post('/api/calculateFootprint', answers);
-
-            if (response.status === 200) {
-                const { carbonFootprint, numberOfTrees } = response.data;
-                setCarbonFootprint(carbonFootprint);
-                setNumberOfTrees(numberOfTrees);
-
-                // If you have a way to navigate to the FinalPage after this, invoke that logic here.
-                // For instance, if you're using react-router, you'd navigate to the FinalPage route.
-            } else {
-                console.error("Failed to calculate carbon footprint and trees.");
-            }
-        } catch (error) {
-            console.error("Error fetching carbon footprint and trees:", error);
+        // You should adjust the structure of the 'answers' payload according to how you've structured your state and components
+        const answers = [ /* An array or object of the user's answers. E.g., { id: 1, value: 10 }, ... */ ];
+        
+        const response = await axiosInstance.post('/api/calculateFootprint', answers);
+        
+        if (response.status === 200) {
+            const { carbonFootprint, numberOfTrees } = response.data;
+            setCarbonFootprint(carbonFootprint);
+            setNumberOfTrees(numberOfTrees);
+            
+            // If you have a way to navigate to the FinalPage after this, invoke that logic here.
+            // For instance, if you're using react-router, you'd navigate to the FinalPage route.
+        } else {
+            console.error("Failed to calculate carbon footprint and trees.");
         }
-    };
+    } catch (error) {
+        console.error("Error fetching carbon footprint and trees:", error);
+    }
+};
 
 
 
 
     return (
         <div style={{ background: 'white' }}>
-
+            <button onClick={()=>{console.log(calculateFormula("GallonToCforPropane"))}}>Click</button>
             {/* <div style={{ width: '1178px', height: '5px', left: '128px', top: '106px', position: 'absolute' }}>
         <div style={{ left: '614px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={navigateToHome}>Home</div>
         <div style={{ left: '0px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800, wordWrap: 'break-word', cursor: 'pointer' }}>OFFSET CRBN</div>
@@ -320,13 +432,12 @@ export function DynamicQuestionPage(props) {
 
                     {questions[currentQuestionIndex]?.questionType === 1 && questions[currentQuestionIndex]?.choiceAns === "2" && (
                         <div style={{
-                            width: '409.62px', marginTop: '88px', left: '137.69px', position: 'absolute',
-                            textAlign: 'left',
+                            width: '409.62px', marginTop: '88px', left: '137.69px', position: 'absolute',textAlign: 'left',
                         }}>
                             {questions[currentQuestionIndex]?.choices.map((innerChoices, outerIndex) => (
                                 innerChoices.map((choice, innerIndex) => (
                                     <div key={outerIndex + '-' + innerIndex} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                                        <input type="radio" id={`choice-${outerIndex}-${innerIndex}`} name="choice" value={choice} style={{ marginRight: '10px' }} onChange={handleInputChange} />
+                                        <input type="radio" id={`choice-${outerIndex}-${innerIndex}`} name="choice" value={choice} data-index={innerIndex} style={{ marginRight: '10px' }} onChange={handleInputChange} checked={innerIndex === selectedChoiceIndex ? true : false} />
                                         <label htmlFor={`choice-${outerIndex}-${innerIndex}`}>{choice}</label>
                                     </div>
                                 ))
@@ -334,10 +445,39 @@ export function DynamicQuestionPage(props) {
                         </div>
                     )}
 
+{questions[currentQuestionIndex]?.questionType === 1 && questions[currentQuestionIndex]?.choiceAns === "3" && (
+  <div style={{ 
+    width: '409.62px',
+    marginTop: '88px',
+    left: '137.69px',
+    position: 'absolute',
+    textAlign: 'left',
+  }}>
+    {questions[currentQuestionIndex]?.choices.map((innerChoices, outerIndex) => (
+      innerChoices.map((choice, innerIndex) => (
+        <div key={outerIndex + '-' + innerIndex} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+          <input
+            type="checkbox"
+            id={`choice-${outerIndex}-${innerIndex}`}
+            name="choice"
+            value={choice}
+            data-index={innerIndex}
+            style={{ marginRight: '10px' }}
+            onChange={handleInputChange}
+            checked={selectedChoices.includes(innerIndex)}
+          />
+          <label htmlFor={`choice-${outerIndex}-${innerIndex}`}>{choice}</label>
+        </div>
+      ))
+    ))}
+  </div>
+)}
+
+
                     {
                         questions[currentQuestionIndex]?.questionType === 2 && (
                             <div style={{ width: '400px', marginTop: '60px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-around' }}>
-                                {['Miles/Week', 'Miles/Year', 'Gallon', '1000 cubic feet', 'KWH', 'Therms', 'Dollars'].map(unit => (
+                                {questions[currentQuestionIndex]?.selectedUnits.map(unit => (
                                     <div
                                         key={unit}
                                         style={{
@@ -369,9 +509,6 @@ export function DynamicQuestionPage(props) {
                         )
                     }
 
-
-
-
                     {
                         questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "2" && (
                             <div style={{ width: '400px', marginTop: '165px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
@@ -398,10 +535,6 @@ export function DynamicQuestionPage(props) {
                             </div>
                         )
                     }
-
-
-
-
 
                     {/* Displaying the label/category for the question */}
                     <div style={{
