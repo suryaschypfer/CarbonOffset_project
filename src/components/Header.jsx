@@ -9,7 +9,11 @@ function Header(props) {
     };
 
     const handleContactUsNavigation = () => {
-        navigate('/ContactUs');
+        navigate('/contactus');
+    };
+
+    const handleAboutUsNavigation = () => {
+        navigate('/aboutus');
     };
 
     return (
@@ -30,9 +34,9 @@ function Header(props) {
                 </div>
                 <div className="rightnav">
                     <a href="#" className="selected">Home</a>
-                    <a href="#">About Us</a>
+                    <a href="#" onClick={handleAboutUsNavigation}>About Us</a>
                     <a href="#">Calculator</a>
-                    <a href="#" onClick={handleAdminNavigation}>Admin</a>
+                    {/* <a href="#" onClick={handleAdminNavigation}>Admin</a> */}
                     <a href="#" onClick={handleContactUsNavigation}>Contact Us</a>
                 </div>
 

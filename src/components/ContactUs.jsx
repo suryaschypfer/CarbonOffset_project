@@ -2,7 +2,8 @@ import React from 'react';
 import './ContactUs.css';
 import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from './axiosconfig';
+
 
 export const ContactUs = () => {
     const navigate = useNavigate();
@@ -20,6 +21,10 @@ export const ContactUs = () => {
 
     const handlelandingpage = () => {
         navigate('/');
+    };
+
+    const handleaboutus = () => {
+        navigate('/aboutus');
     };
 
     const handleFNameChange = (e) => {
@@ -137,7 +142,7 @@ export const ContactUs = () => {
         };
     
         // Use axios or fetch to send the data to the backend
-  axios.post("http://localhost:3000/api/ContactUs", data)
+        axiosInstance.post("/api/ContactUs", data)
   .then(response => {
     if (response.status === 200) {
         setSuccessMessage('Enquiry and Customer added successfully');
@@ -172,9 +177,9 @@ export const ContactUs = () => {
                 </div>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
-                    <a href="#">About Us</a>
-                    {/* <a href="#">Calculator</a> */}
-                    <a href="#">Admin</a>
+                    <a href="#" onClick={handleaboutus}>About Us</a>
+                    <a href="#">Calculator</a>
+                    {/* <a href="#">Admin</a> */}
                     <a href="#" className ="selected">Contact Us</a>
                 </div>
 

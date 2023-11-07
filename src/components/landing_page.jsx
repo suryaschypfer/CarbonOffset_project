@@ -13,9 +13,9 @@ export function Landing_Page(props) {
   const [familyMembers, setFamilyMembers] = useState('');
   const [familyErrorMessage, setFamilyErrorMessage] = useState('');
 
-  const handleadmin = () => {
-    navigate('/admin');
-  };
+  // const handleadmin = () => {
+  //   navigate('/admin');
+  // };
 
   // Logic to enter into firstquestion only if valid inputs(zipcode and family members) are given
   const handleFirstQuestion = () => {

@@ -25,6 +25,8 @@ import Third_Question from './components/thirdquestion';
 import ForgotPassword from './components/ForgotPassword';
 import ValuesLandingPage from './components/valuesLandingpage.tsx';
 import ContactUs from "./components/ContactUs";
+import AboutUs from "./components/aboutUs";
+
 import { ValuesPage, Values } from "./components/valuespage";
 import Utility from './components/Utility';
 
@@ -48,6 +50,7 @@ root.render(
             <Route path="/questions" element={<Questions />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/contactus" element={<ContactUs />} />
+            <Route path="/aboutus" element={<AboutUs />} />
           </Route>
         </Routes>
       </Router>

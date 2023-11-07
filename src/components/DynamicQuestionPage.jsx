@@ -128,14 +128,6 @@ export function DynamicQuestionPage(props) {
         }));
     };
 
-
-
-
-
-
-
-
-
     const handleUnitSelection = (unit) => {
         setSelectedUnit(unit);
 
@@ -155,14 +147,9 @@ export function DynamicQuestionPage(props) {
         }
     }
 
-
-
-
-
     const navigateToHome = () => {
         navigate('/');
     }
-
 
     // Naviagtion if user clicks on previous page
     const handlelandingpage = () => {
@@ -173,8 +160,8 @@ export function DynamicQuestionPage(props) {
             navigate('/');
         }
     };
-    const handleadmin = () => {
-        navigate('/admin'); // Use navigate to go to the desired route
+    const handleaboutus = () => {
+        navigate('/aboutus'); // Use navigate to go to the desired route
     };
     const handleContactUs = () => {
         navigate('/ContactUs'); // Use navigate to go to the desired route
@@ -262,9 +249,9 @@ export function DynamicQuestionPage(props) {
                 </div>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
-                    <a href="#">About Us</a>
+                    <a href="#" onClick={handleaboutus} >About Us</a> 
                     <a href="#" className="selected">Calculator</a>
-                    <a href="#">Admin</a>
+                    {/* <a href="#">Admin</a> */}
                     <a href="#" onClick={handleContactUs}>Contact Us</a>
                 </div>
 
