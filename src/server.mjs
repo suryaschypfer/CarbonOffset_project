@@ -11,13 +11,15 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const port = 3000;
+
 const dbConfig = {
-    host: "127.0.0.1",
-    user: "root",
-    password: "Carbon@123",
-    database: "CRBN",
-    port: 3306,
-  };
+  host: "18.222.228.43",
+  user: "carbonuser",
+  password: "Carbon@123",
+  database: "CRBN",
+  port: 3306,
+};
+
 
 // Create a MySQL connection
 const mysqlConnection = mysql.createConnection(dbConfig);
@@ -303,13 +305,12 @@ const getVariableValue = async (variableName) => {
 
             // Calculate carbon footprint based on questionType and choiceAns using the dynamically set familyMembers
             let carbonValue = 0;
-
             if (questionType === 1) {
                 if (choiceAns === "1") {
-                    carbonValue = household ? (refs * userValue)/familyMembers : (refs * userValue); // Use the user-selected choice's refValue
+                    carbonValue = household ? (refs * userValue)/1 : (refs * userValue); // Use the user-selected choice's refValue
                 } else if (choiceAns === "2") {
                     if (userValue >= 0 && userValue < refs[0].length) {
-                        carbonValue = household ? (refs[0][userValue])/familyMembers : refs[0][userValue] ; 
+                        carbonValue = household ? (refs[0][userValue])/1 : refs[0][userValue] ; 
                     } else {
                         console.error("Invalid user-selected choice index:", userValue);
                     }
@@ -320,7 +321,7 @@ const getVariableValue = async (variableName) => {
                         // Calculate footprint based on selected choices
                         for (const choiceIndex of selectedChoices) {
                             if (choiceIndex >= 0 && choiceIndex < refs[0].length) {
-                                carbonValue += household ? (refs[0][choiceIndex])/familyMembers : (refs[0][choiceIndex]);
+                                carbonValue += household ? (refs[0][choiceIndex])/1 : (refs[0][choiceIndex]);
                             } else {
                                 console.error("Invalid user-selected choice index:", choiceIndex);
                             }
