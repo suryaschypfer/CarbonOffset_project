@@ -85,7 +85,6 @@ export function DynamicQuestionPage(props) {
         setTotalQuestions(response.data);
     };
 
-
     const calculateFormula = async (formulaName) => {
         // Make an API call to calculate the formula
         try {
@@ -176,7 +175,6 @@ export function DynamicQuestionPage(props) {
       }, [currentQuestionIndex, answers]);
 
 
-
       const handleInputChange = (event) => {
     
         const currentQuestionId = questions[currentQuestionIndex]?.id;
@@ -239,27 +237,48 @@ export function DynamicQuestionPage(props) {
         
     };
 
-    const handleUnitSelection = async (unit) => {
-        // Check if the selected unit is the same as the unit that was clicked
-        if (selectedUnit === unit) {
-            // Deselect the unit and reset the unit choices
-            setSelectedUnit(null);
-            setUnitChoices([]);
+    const handleUnitSelection = async (unit, choiceIndex) => {
+        if (selectedUnit === unit && selectedChoiceIndex === choiceIndex) {
+          // Deselect the unit and choice
+          setSelectedUnit(null);
+          setSelectedChoiceIndex(null);
+          setUnitChoices([]);
         } else {
-            setSelectedUnit(unit);
-    
-            // Fetch the choices based on the selected unit
-            const unitsIndex = questions[currentQuestionIndex]?.selectedUnits.indexOf(unit);
-            if (unitsIndex >= 0) {
-                const choices = questions[currentQuestionIndex]?.choices;
-                const parsedChoices = JSON.parse(choices);
+          setSelectedUnit(unit);
+          setSelectedChoiceIndex(choiceIndex);
+      
+          // Fetch the choices based on the selected unit
+          const unitsIndex = questions[currentQuestionIndex]?.selectedUnits.indexOf(unit);
+          if (unitsIndex >= 0) {
+            const choices = questions[currentQuestionIndex]?.choices;
+            if (choices !== null) {
+              try {
+                const choicesString = JSON.stringify(choices);
+                const parsedChoices = JSON.parse(choicesString);
                 const unitChoices = parsedChoices[unitsIndex];
                 setUnitChoices(unitChoices || []);
+              } catch (error) {
+                console.error("Error parsing JSON:", error);
+                setUnitChoices([]); // Set an empty array or handle the error as needed
+              }
             } else {
-                console.error("Unit not found in selectedUnits.");
+              // Handle the case where choices are null
+              console.error("Choices are null.");
+              setUnitChoices([]); // Set an empty array
             }
+          } else {
+            console.error("Unit not found in selectedUnits.");
+            setUnitChoices([]); // Set an empty array if the unit is not found
+          }
         }
-    }
+      };
+      
+      
+    
+    
+    
+     
+    
     
 
     const navigateToHome = () => {
@@ -333,7 +352,6 @@ const fetchCarbonFootprintAndTrees = async () => {
 
 
 
-
     return (
         <div style={{ background: 'white' }}>
             <button onClick={()=>{console.log(calculateFormula("GallonToCforPropane"))}}>Click</button>
@@ -368,7 +386,6 @@ const fetchCarbonFootprintAndTrees = async () => {
                         <source src="https://video.wixstatic.com/video/11062b_a05955ed1c70427da0c0da8b85a42836/1080p/mp4/file.mp4" type="video/mp4" />
                     </video>
                 </div>
-
 
                 <div style={{ width: '885px', height: '17px', left: '0px', top: '30px', position: 'absolute' }}>
                     <div style={{ width: '885px', height: '17px', left: '0px', top: '0px', position: 'absolute', background: '#EAE4E3', borderRadius: '10px' }}></div>
@@ -463,74 +480,93 @@ const fetchCarbonFootprintAndTrees = async () => {
   </div>
 )}
 
-
 {
     questions[currentQuestionIndex]?.questionType === 2 && (
         <div style={{ width: '400px', marginTop: '60px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-around' }}>
-            {questions[currentQuestionIndex]?.selectedUnits.map((units, index) => (
-                <div key={index} style={{ display: 'flex' }}>
-                    {units.map((unit, subIndex) => (
-                        <div
-                            key={subIndex}
-                            style={{
-                                padding: '10px',
-                                border: '1px solid',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                backgroundColor: selectedUnit === unit ? 'lightgreen' : 'white',
-                                margin: '5px' // Add some spacing between units
-                            }}
-                            onClick={() => handleUnitSelection(unit)}
-                        >
-                            {unit}
-                        </div>
-                    ))}
+            {questions[currentQuestionIndex]?.selectedUnits.map((unit, index) => (
+                <div
+                    key={index}
+                    style={{
+                        padding: '10px',
+                        border: '1px solid',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        backgroundColor: selectedUnit === unit ? 'lightgreen' : 'white',
+                        margin: '5px' // Add some spacing between units
+                    }}
+                    onClick={() => handleUnitSelection(unit)}
+                >
+                    {unit}
                 </div>
             ))}
         </div>
     )
 }
 
+{
+    questions[currentQuestionIndex]?.questionType === 2 && (questions[currentQuestionIndex]?.choiceAns === "1" || !questions[currentQuestionIndex]?.choiceAns || questions[currentQuestionIndex]?.choiceAns === "null" || questions[currentQuestionIndex]?.choiceAns === "NULL") && (
+        <input
+            type="text"
+            style={{ width: '402.53px', height: '66px', left: '141.24px', top: '160px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }}
+            placeholder="Enter value here for selected units"
+            value={answers[questions[currentQuestionIndex]?.id] || ''}
+            onChange={handleInputChange}
+        />
+    )
+}
 
-                    {
-                        questions[currentQuestionIndex]?.questionType === 2 && (questions[currentQuestionIndex]?.choiceAns === "1" || !questions[currentQuestionIndex]?.choiceAns || questions[currentQuestionIndex]?.choiceAns === "null" || questions[currentQuestionIndex]?.choiceAns === "NULL") && (
-                            <input
-                                type="text"
-                                style={{ width: '402.53px', height: '66px', left: '141.24px', top: '160px', position: 'absolute', background: 'white', borderRadius: '300px', border: 'none', paddingLeft: '15px', fontSize: '20px' }}
-                                placeholder="Enter value here for selected units"
-                                value={answers[questions[currentQuestionIndex]?.id] || ''}
-                                onChange={handleInputChange}
+{
+  questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "2" && (
+    <div style={{ width: '400px', marginTop: '165px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {Array.isArray(unitChoices) && unitChoices.length > 0 && unitChoices.map((choice, index) => (
+          <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+            <input type="radio" id={`choice-${index}`} name="choice" value={choice} style={{ marginRight: '10px' }} onChange={handleInputChange} />
+            <label htmlFor={`choice-${index}`}>{choice}</label>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
-                            />
-                        )
-                    }
+{
+  questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "3" && (
+    <div style={{ width: '400px', marginTop: '165px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {Array.isArray(unitChoices) && unitChoices.length > 0 ? (
+          unitChoices.map((choice, index) => (
+            <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+              <input
+                type="checkbox"
+                id={`choice-${index}`}
+                name="choice"
+                value={choice}
+                style={{ marginRight: '10px' }}
+                onChange={() => handleUnitSelection(choice)} // Pass the choice to the handler
+              />
+              <label htmlFor={`choice-${index}`}>{choice}</label>
+            </div>
+          ))
+        ) : null}
+      </div>
+    </div>
+  )
+}
 
-                    {
-                        questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "2" && (
-                            <div style={{ width: '400px', marginTop: '165px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
 
-                                {/* Left Side */}
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    {unitSpecificChoices.slice(0, 2).map((choice, index) => (
-                                        <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                                            <input type="radio" id={`choice-${index}`} name="choice" value={choice} style={{ marginRight: '10px' }} onChange={handleInputChange} />
-                                            <label htmlFor={`choice-${index}`}>{choice}</label>
-                                        </div>
-                                    ))}
-                                </div>
 
-                                {/* Right Side */}
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    {unitSpecificChoices.slice(2, 4).map((choice, index) => (
-                                        <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                                            <input type="radio" id={`choice-${index + 2}`} name="choice" value={choice} style={{ marginRight: '10px' }} onChange={handleInputChange} />
-                                            <label htmlFor={`choice-${index + 2}`}>{choice}</label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )
-                    }
+
+
+
+
+
+
+
+
+
+
+
 
                     {/* Displaying the label/category for the question */}
                     <div style={{
@@ -566,3 +602,4 @@ const fetchCarbonFootprintAndTrees = async () => {
 }
 
 export default DynamicQuestionPage;
+
