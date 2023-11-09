@@ -204,7 +204,7 @@ if (!familyMembers) {
           </div>
         </div>
       </div>
-      <div style={{ width: '100%', height: '30px', left: '0px', top: '974px', position: 'absolute', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div>
+      {/* <div style={{ width: '100%', height: '30px', left: '0px', top: '974px', position: 'absolute', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div> */}
 
     </div>
 
