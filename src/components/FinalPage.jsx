@@ -7,6 +7,7 @@ import axios from 'axios';
 export function FinalPage (props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const lastAnsweredQuestionIndex = location.state?.lastAnsweredQuestionIndex || 0;
   const { zip, familySize, answers, carbonFootprint, numberOfTrees } = location.state || {};
     const navigateToHome = () => {
         navigate('/');
@@ -18,9 +19,18 @@ export function FinalPage (props) {
         navigate('/ContactUs'); // Use navigate to go to the desired route
     };
     // Handler for the 'Previous Page' button
+    // const handlePrevious = () => {
+    //     navigate('/question'); // Replace with your previous question page route
+    // };
     const handlePrevious = () => {
-        navigate('/question'); // Replace with your previous question page route
+      if (lastAnsweredQuestionIndex > 0) {
+        const previousQuestionIndex = lastAnsweredQuestionIndex + 1;
+        navigate(`/question/${previousQuestionIndex}`);
+      } else {
+        navigate('/');
+      }
     };
+    
 
     // Handler for the 'Plant Trees' button
     const handlePlantTrees = () => {

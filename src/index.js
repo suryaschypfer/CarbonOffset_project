@@ -41,7 +41,7 @@ root.render(
         <Routes> {/* Use Routes to define your routes */}
           <Route path="/" element={<App />}>
             <Route index={true} path="/" element={<Landing_Page />} />
-            <Route path="/question" element={<DynamicQuestionPage />} />
+            <Route path="/question/:questionIndex" element={<DynamicQuestionPage />} />
             <Route path="/finalpage" element={<FinalPage />} />
             <Route path="/secondquestion" element={<SecondQuestion />} />
             <Route path="/thirdquestion" element={<Third_Question />} />

@@ -1,43 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 export function DynamicQuestionPage(props) {
-    const [image, setImage] = useState("");
-    const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
-    const [selectedChoices, setSelectedChoices] = useState([]);
-    const navigate = useNavigate();
-    const [answers, setAnswers] = useState({});
-    const [questions, setQuestions] = useState([]);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [fact, setFact] = useState("");
-    const [totalQuestions, setTotalQuestions] = useState(0);
-    const [totalFootprint, setTotalFootprint] = useState(0); // Initialize totalFootprint
-    const [ans,updateAns] = useState(1);
-    let formulaQuestionInput = 0;
-    const zip = props.location?.state?.zip || "";
-    const familySize = props.location?.state?.familySize || "";
-    let finalFootPrint = 0;
-    let finalTrees = 0;
-    let finalFormulaVal = 0;
-    let formulaValue = 0;
-    console.log("familyMembers",familySize);
-    const [selectedUnit, setSelectedUnit] = useState('');  // State for selected unit
-    const [unitChoices, setUnitChoices] = useState([]);   // Choices specific to the selected unit
-    const [carbonFootprint, setCarbonFootprint] = useState(0);
-    const [numberOfTrees, setNumberOfTrees] = useState(0);
-    const currentQuestionNumber = currentQuestionIndex + 1;
-    const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
-    console.log(questions[currentQuestionIndex]);
+  const [image, setImage] = useState("");
+  const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
+  const [selectedChoices, setSelectedChoices] = useState([]);
+  const [lastAnsweredQuestionIndex, setLastAnsweredQuestionIndex] = useState(0);
+  const navigate = useNavigate();
+  const [answers, setAnswers] = useState({});
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const { questionIndex } = useParams();
+  useEffect(() => {
+    setCurrentQuestionIndex(questionIndex ? parseInt(questionIndex, 10) : 0);
+  }, [questionIndex]);
+  const [fact, setFact] = useState("");
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [totalFootprint, setTotalFootprint] = useState(0);
+  const [ans, updateAns] = useState(1);
+  let formulaQuestionInput = 0;
+  const zip = props.location?.state?.zip || "";
+  const familySize = props.location?.state?.familySize || "";
+  let finalFootPrint = 0;
+  let finalTrees = 0;
+  let finalFormulaVal = 0;
+  let formulaValue = 0;
+  console.log("familyMembers", familySize);
+  const [selectedUnit, setSelectedUnit] = useState('');
+  const [unitChoices, setUnitChoices] = useState([]);
+  const [carbonFootprint, setCarbonFootprint] = useState(0);
+  const [numberOfTrees, setNumberOfTrees] = useState(0);
+  const currentQuestionNumber = currentQuestionIndex + 1;
+  const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
+  console.log(questions[currentQuestionIndex]);
 
-    useEffect(() => {
-        fetchActiveQuestions();
-        fetchRandomFact();
-        fetchRandomImage();
-        fetchTotalQuestions();
-    }, [currentQuestionIndex]);
+  useEffect(() => {
+    fetchActiveQuestions();
+    fetchRandomFact();
+    fetchRandomImage();
+    fetchTotalQuestions();
+  }, [currentQuestionIndex]);
 
+  useEffect(() => {
+    // Load answers, carbon footprint, and number of trees from cookies on component mount
+    const storedAnswers = getCookie('answers') || '{}';
+    const storedCarbonFootprint = parseFloat(getCookie('carbonFootprint')) || 0;
+    const storedNumberOfTrees = parseInt(getCookie('numberOfTrees')) || 0;
+
+    setAnswers(JSON.parse(storedAnswers));
+    setCarbonFootprint(storedCarbonFootprint);
+    setNumberOfTrees(storedNumberOfTrees);
+
+    // ... existing code ...
+  }, []);
+
+
+  
     const fetchActiveQuestions = async () => {
         try {
           const response = await axiosInstance.get('/api/questionsuser');
@@ -113,14 +133,30 @@ export function DynamicQuestionPage(props) {
 
       const handleProceed = async () => {
         if (currentQuestionIndex < questions.length - 1) {
+          const currentQuestionId = questions[currentQuestionIndex]?.id; // Add this line
+
           // Transform the answers object to the desired format
           console.log("questions",questions);
-          const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value}));
+          const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
       
           // Fetch and update the carbon footprint here based on the submitted answer
           await handleSubmitAnswers(formattedAnswers);
-      
+
+          setLastAnsweredQuestionIndex(currentQuestionIndex);
           setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+
+           // Create a new variable to store the updated answers
+        const updatedAnswers = { ...answers };
+        updatedAnswers[currentQuestionId] = formattedAnswers;
+
+       // Set the cookies with a one-minute expiration
+  const oneMinuteFromNow = new Date(Date.now() + 1 * 60 * 1000).toUTCString();
+  document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+  document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
+  document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
+
+
+          navigate(`/question/${currentQuestionIndex + 1}`);
         } else {
           // Calculate the footprint for the last question
           const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value}));
@@ -128,7 +164,24 @@ export function DynamicQuestionPage(props) {
       
           // Now, after calculating the footprint for the last question, assign it to lastQuestionFootprint
           const lastQuestionFootprint = carbonFootprint;
-      
+
+          setLastAnsweredQuestionIndex(currentQuestionIndex);
+
+          // Set the cookies for the last question
+          const oneMinuteFromNow = new Date(Date.now() + 1 * 60 * 1000).toUTCString();
+          document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+  document.cookie = `carbonFootprint=${finalFootPrint}; expires=${oneMinuteFromNow}; path=/`;
+  document.cookie = `numberOfTrees=${finalTrees}; expires=${oneMinuteFromNow}; path=/`;
+
+
+          console.log('After navigate to FinalPage:', {
+            lastAnsweredQuestionIndex,
+            currentQuestionIndex,
+            answers,
+            carbonFootprint,
+            numberOfTrees,
+          });
+
           // Log the lastQuestionFootprint
           console.log('lastQuestionFootprint:', lastQuestionFootprint);
             
@@ -141,11 +194,31 @@ export function DynamicQuestionPage(props) {
               answers: answers,
               carbonFootprint: finalFootPrint, // Include the last question's footprint
               numberOfTrees: finalTrees,
+              lastAnsweredQuestionIndex: lastAnsweredQuestionIndex, // Include lastAnsweredQuestionIndex
             },
           });
           
         }
       }
+
+      // Helper functions for handling cookies
+function setCookie(name, value, days) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+}
+
+function getCookie(name) {
+  const cookieName = `${name}=`;
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    let cookie = cookies[i].trim();
+    if (cookie.startsWith(cookieName)) {
+      return cookie.substring(cookieName.length, cookie.length);
+    }
+  }
+  return null;
+}
       const handleSubmitAnswers = async (answers) => {
         console.log("answers to post",answers);
         try {
@@ -272,14 +345,6 @@ export function DynamicQuestionPage(props) {
           }
         }
       };
-      
-      
-    
-    
-    
-     
-    
-    
 
     const navigateToHome = () => {
         navigate('/');
