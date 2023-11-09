@@ -15,7 +15,7 @@ const port = 3000;
 const dbConfig = {
   host: "127.0.0.1",
   user: "root",
-  password: "Vamsi@9490437848",
+  password: "",
   database: "CRBN",
   port: 3306,
 };
