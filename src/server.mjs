@@ -13,9 +13,9 @@ app.use(bodyParser.json());
 const port = 3000;
 
 const dbConfig = {
-  host: "18.222.228.43",
-  user: "carbonuser",
-  password: "Carbon@123",
+  host: "127.0.0.1",
+  user: "root",
+  password: "Vamsi@9490437848",
   database: "CRBN",
   port: 3306,
 };
@@ -25,6 +25,7 @@ const dbConfig = {
 const mysqlConnection = mysql.createConnection(dbConfig);
 
 const pool = mysql1.createPool(dbConfig);
+let multiplyingFactor = 0;
 
 mysqlConnection.connect((err) => {
   if (!err) {
@@ -102,6 +103,8 @@ app.post("/api/calculateFormula", async (req, res) => {
       const result = (parsedVar1 * parsedVar2) / (parsedVar3 * parsedVar4);
   
       res.json({ result });
+      multiplyingFactor = result;
+      console.log("multiplying Factor",result);
     } catch (error) {
       console.error("Error calculating formula:", error);
       res.status(500).json({ error: "Internal Server Error" });
@@ -194,6 +197,7 @@ app.get("/api/randomimage/:index", async (req, res) => {
 });
 
 
+
 // Route to calculate total number of qustions to display progress bar percentage in each question page
 app.get("/api/totalquestions", cors(), async (req, res) => {
     try {
@@ -273,33 +277,48 @@ const getVariableValue = async (variableName) => {
     // If the variable is present in the conversion_table, return its value, otherwise parse as float
     return rows.length > 0 ? rows[0].value : parseFloat(variableName);
   };
-
+  
+  console.log("Hello");
   app.post('/api/calculateFootprint', cors(), async (req, res) => {
-    const answers = req.body; // Array containing question IDs, user answers, and household values
+    console.log("Answers Array",req.body.answersArr);
+    console.log("Indexes Array",req.body.unitIndexArr);
+    console.log("Formula Values Array",req.body.formulaValArr);
+
+    const answers = req.body.answersArr; // Array containing question IDs, user answers, and household values
+    const unitIndexes = req.body.unitIndexArr;
+    const formulaVals = req.body.formulaValArr;
 
     let totalCarbonFootprint = 0;
-
+    console.log("Answers ---->",answers);
     try {
         for (let answer of answers) {
-            console.log("answer is",answer);
-            //console.log("answers is :",answers);
+            console.log("answer",answer);
             const id = answer.id;
-            console.log("question id",id);
             const userValue = answer.value;
-            //console.log("user value",userValue);
+            let unitIndex;
+            let formulaValue;
+
+            for(let arr of unitIndexes){
+              if(arr.id == id){
+                unitIndex=arr.unitIndex;
+              }
+            }
+
+            for(let arr of formulaVals){
+              if(arr.id == id){
+                formulaValue = arr.formulaVal
+              }
+            }
             // Fetch refs (constants or formulas) for the question based on questionType and choiceAns
             const [results] = await mysqlConnection.promise().query("SELECT refs, questionType, household, choiceAns FROM CRBN.questionsTable WHERE id = ?", [id]);
             
             
             
             if (results.length === 0) {
-                console.error(`No data found for id: ${id}`);
                 continue; // Skip the rest of this iteration and proceed to the next id in the loop
             }
-            console.log("array :",results);
             const refs = results[0].refs;
             let household= results[0].household;
-            console.log("Househole value",household);
             const questionType = results[0].questionType;
             const choiceAns = results[0].choiceAns;
 
@@ -331,7 +350,32 @@ const getVariableValue = async (variableName) => {
                     }
                 }
             }
-
+            else{
+              if(choiceAns === "1"){
+                carbonValue = userValue * formulaValue;
+              }
+              else if(choiceAns === "2"){
+                carbonValue = refs[unitIndex][userValue] * formulaValue;
+                
+              }
+              else if (choiceAns === "3") {
+                // User can select multiple choices
+                if (Array.isArray(userValue)) {
+                    const selectedChoices = userValue;
+                    // Calculate footprint based on selected choices
+                    for (const choiceIndex of selectedChoices) {
+                        if (choiceIndex >= 0 && choiceIndex < refs[unitIndex].length) {
+                            carbonValue += household ? ((refs[unitIndex][choiceIndex]) * formulaValue)/1 : ((refs[unitIndex][choiceIndex]) * formulaValue);
+                        } else {
+                            console.error("Invalid user-selected choice index:", choiceIndex);
+                        }
+                    }
+                } else {
+                    console.error("Invalid user-selected choices:", userValue);
+                }
+            }
+            }
+            
             totalCarbonFootprint += Math.ceil(carbonValue);
         }
 

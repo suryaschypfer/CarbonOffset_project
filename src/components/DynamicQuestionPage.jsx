@@ -10,7 +10,9 @@ export function DynamicQuestionPage(props) {
   const [lastAnsweredQuestionIndex, setLastAnsweredQuestionIndex] = useState(0);
   const navigate = useNavigate();
   const [answers, setAnswers] = useState({});
-  const [questions, setQuestions] = useState([]);
+    const [unitIndexes,setUnitIndex]=useState({});
+    const [formulaValues,setFormulaValue]=useState({});
+    const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { questionIndex } = useParams();
   useEffect(() => {
@@ -28,8 +30,10 @@ export function DynamicQuestionPage(props) {
   let finalFormulaVal = 0;
   let formulaValue = 0;
   console.log("familyMembers", familySize);
-  const [selectedUnit, setSelectedUnit] = useState('');
-  const [unitChoices, setUnitChoices] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState('');  // State for selected unit
+    const [selectedFormula,setSelectedFormula] = useState(''); // State for selected formula
+    const [unitChoices, setUnitChoices] = useState([]);   // Choices specific to the selected unit
+
   const [carbonFootprint, setCarbonFootprint] = useState(0);
   const [numberOfTrees, setNumberOfTrees] = useState(0);
   const currentQuestionNumber = currentQuestionIndex + 1;
@@ -138,9 +142,10 @@ export function DynamicQuestionPage(props) {
           // Transform the answers object to the desired format
           console.log("questions",questions);
           const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
-      
+          const formattedUnitIndex = Object.entries(unitIndexes).map(([id,unitIndex]) => ({ id: Number(id), unitIndex}));
+          const formattedFormulaValues = Object.entries(formulaValues).map(([id,formulaVal]) => ({ id: Number(id),formulaVal}));
           // Fetch and update the carbon footprint here based on the submitted answer
-          await handleSubmitAnswers(formattedAnswers);
+          handleSubmitAnswers(formattedAnswers,formattedUnitIndex,formattedFormulaValues);
 
           setLastAnsweredQuestionIndex(currentQuestionIndex);
           setCurrentQuestionIndex(prevIndex => prevIndex + 1);
@@ -160,8 +165,9 @@ export function DynamicQuestionPage(props) {
         } else {
           // Calculate the footprint for the last question
           const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value}));
-          await handleSubmitAnswers(formattedAnswers); // Calculate for the last question
-      
+          const formattedUnitIndex = Object.entries(unitIndexes).map(([id,index]) => ({ id: Number(id), index}));
+          const formattedFormulaValues = Object.entries(formulaValues).map(([id,formulaVal]) => ({ id: Number(id),formulaVal}));
+          await handleSubmitAnswers(formattedAnswers,formattedUnitIndex,formattedFormulaValues);       
           // Now, after calculating the footprint for the last question, assign it to lastQuestionFootprint
           const lastQuestionFootprint = carbonFootprint;
 
@@ -219,11 +225,12 @@ function getCookie(name) {
   }
   return null;
 }
-      const handleSubmitAnswers = async (answers) => {
-        console.log("answers to post",answers);
-        try {
-            const response = await axiosInstance.post('/api/calculateFootprint', answers);
-            console.log("response",response);
+const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
+  console.log("answers to post",answers);
+  try {
+      const response = await axiosInstance.post('/api/calculateFootprint', {answersArr:answers,unitIndexArr:unitIndexes,formulaValArr:formulaValues});
+      console.log("response",response);
+
             const data = response.data;
             
             if (data) {
@@ -269,9 +276,12 @@ function getCookie(name) {
     
         // If the event target is a checkbox input, handle it for choiceAns = 3
         if (event.target.type === "checkbox") {
-            
-            const innerIndex = +event.target.getAttribute("data-index");
-            const currentSelectedChoices = [...selectedChoices];
+          console.log("attribute id ----->",event.target.getAttribute("id"));
+          console.log("attribute inner index --->",event.target.getAttribute("data-index"));
+
+          const innerIndex = event.target.getAttribute("data-index") ? +event.target.getAttribute("data-index") : +event.target.getAttribute("id").slice(event.target.getAttribute("id").lastIndexOf("-") + 1);
+          const currentSelectedChoices = [...selectedChoices];
+
     
             if (event.target.checked) {
                 // Add innerIndex to selectedChoices if checked
@@ -323,7 +333,19 @@ function getCookie(name) {
           // Fetch the choices based on the selected unit
           const unitsIndex = questions[currentQuestionIndex]?.selectedUnits.indexOf(unit);
           if (unitsIndex >= 0) {
+            formulaValue = await calculateFormula((questions[currentQuestionIndex]?.selectedFormulas[unitsIndex]));
+            setUnitIndex((prevUnitIndexes) => ({
+              ...prevUnitIndexes,
+              [questions[currentQuestionIndex]?.id]: unitsIndex, // Use the ref value instead of the choice
+          }));
+          setFormulaValue((prevFormulaValues) => ({
+            ...prevFormulaValues,
+            [questions[currentQuestionIndex]?.id]: formulaValue, // Use the ref value instead of the choice
+        }));
+            console.log("formula value",formulaValue);
+            
             const choices = questions[currentQuestionIndex]?.choices;
+
             if (choices !== null) {
               try {
                 const choicesString = JSON.stringify(choices);
@@ -608,7 +630,7 @@ const fetchCarbonFootprintAndTrees = async () => {
                 name="choice"
                 value={choice}
                 style={{ marginRight: '10px' }}
-                onChange={() => handleUnitSelection(choice)} // Pass the choice to the handler
+                onChange={handleInputChange} // Pass the choice to the handler
               />
               <label htmlFor={`choice-${index}`}>{choice}</label>
             </div>
@@ -618,20 +640,6 @@ const fetchCarbonFootprintAndTrees = async () => {
     </div>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     {/* Displaying the label/category for the question */}
                     <div style={{
