@@ -659,7 +659,7 @@ const fetchCarbonFootprintAndTrees = async () => {
                     </div>
                 </div>
             </div>
-            <div style={{ width: '100%', height: '30px', left: '0px', position: 'absolute', top: '900px', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div>
+            {/* <div style={{ width: '100%', height: '30px', left: '0px', position: 'absolute', top: '900px', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div> */}
             {/* <div style={{ left: '1110px', top: '106px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={handleadmin}>Admin</div> */}
         </div>
 

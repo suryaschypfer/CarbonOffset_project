@@ -1,8 +1,46 @@
 import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axiosInstance from "./axiosconfig";
+
+
 
 
 export default function AboutUs() {
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+    const [updateError, setUpdateError] = useState('');
+
+     // useEffect to fetch data from the database and set the initial values
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/api/contact'); // Assuming this is your endpoint to fetch contact details
+
+        if (response.status === 200) {
+          const { email, phone, address } = response.data[0];
+
+          console.log('Fetched data:', response.data); // Check the structure of the response
+        console.log('Email:', email);
+        console.log('Phone:', phone);
+        console.log('Address:', address);
+
+          // Set initial values from the database
+          setEmail(email || ''); // Using an empty string as fallback if email is null
+          setPhone(phone || '');
+          setAddress(address || '');
+        } else {
+          setUpdateError('Failed to fetch contact details');
+        }
+      } catch (error) {
+        console.error('Error fetching contact details:', error);
+        setUpdateError('Failed to fetch contact details');
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array ensures this effect runs once on mount
 
     const handlelandingpage = () => {
         navigate('/');
@@ -11,6 +49,7 @@ export default function AboutUs() {
         navigate('/ContactUs'); // Use navigate to go to the desired route
     };
 
+ 
     //   const handle = () => {
     //     navigate('/admin');
     //   };
@@ -30,7 +69,6 @@ export default function AboutUs() {
 
             </nav>
   <img style={{ width: 842, height: 497, left: 598, top: 241, position: "absolute" }} src="LandingPageImage.png" />
-  <div style={{ width: 1522, height: 50, left: 0, top: 974, position: "absolute", background: "#9FC1A2", border: "1px black solid", backdropFilter: "blur(4px)" }} />
   <div style={{ width: 1163, height: 10, left: 130, top: 166, position: "absolute" }}>
     <div style={{ width: 1135, height: 0, left: 2, top: 0, position: "absolute" }}>
       <div style={{ width: 1135, height: 88, left: 0, top: -50, position: "absolute", color: "black", fontSize: 32, fontFamily: "Outfit", fontWeight: "700", wordWrap: "break-word" }}>About Us</div>
@@ -60,6 +98,26 @@ export default function AboutUs() {
         Our mission is clear: to combat climate change, one tree at a time. We believe that every person has the power to make a positive environmental impact. By providing tools, resources, and a supportive community, we aim to make sustainable living accessible and rewarding for everyone.
       </div>
     </div>
+
+      {/* Display contact information */}
+      <img style={{ width: 40, height: 40, left: 77, top: 700, position: "absolute" }} src="email.png" />
+      <img style={{ width: 50, height: 50, left: 277, top: 695, position: "absolute" }} src="phone.jpeg" />
+      <img style={{ width: 50, height: 50, left: 477, top: 695, position: "absolute" }} src="pin.png" />
+
+      <div style={{ width: 500, height: 150, left: 2, top: 700, position: "absolute" }}>
+                    {/* <div style={{ width: 500, height: 25, left: 1, top: 0, position: "absolute", color: "black", fontSize: 32, fontFamily: "Outfit", fontWeight: "700", wordWrap: "break-word" }}>Contact Information</div> */}
+                    <div style={{ width: 500, height: 25, left: 1, top: 50, position: "absolute", color: "black", fontSize: 20, fontFamily: "Outfit", wordWrap: "break-word" }}>
+                        <p>{email}</p>
+                    </div>
+                    <div style={{ width: 500, height: 25, left: 251, top: 50, position: "absolute", color: "black", fontSize: 20, fontFamily: "Outfit", wordWrap: "break-word" }}>
+                    <p>{phone}</p>
+                    </div>
+                    <div style={{ width: 500, height: 25, left: 401, top: 50, position: "absolute", color: "black", fontSize: 20, fontFamily: "Outfit", wordWrap: "break-word" }}>
+                    <p>{address}</p>
+                    </div>
+                   
+                        
+                </div>
   </div>
 </div>
 
