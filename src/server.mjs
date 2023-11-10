@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const port = 3000;
 
 const dbConfig = {
-  host: "52.14.4.189",
+  host: "3.136.83.126",
   user: "carbonuser",
   password: "Carbon@123",
   database: "CRBN",
