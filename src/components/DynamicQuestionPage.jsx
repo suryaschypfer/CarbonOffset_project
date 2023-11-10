@@ -1,67 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
+import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 export function DynamicQuestionPage(props) {
-  const [image, setImage] = useState("");
-  const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
-  const [selectedChoices, setSelectedChoices] = useState([]);
-  const [lastAnsweredQuestionIndex, setLastAnsweredQuestionIndex] = useState(0);
-  const navigate = useNavigate();
-  const [answers, setAnswers] = useState({});
+    const [image, setImage] = useState("");
+    const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
+    const [selectedChoices, setSelectedChoices] = useState([]);
+    const [selectedChoices_Q1, setSelectedChoicesQ1]=useState([]);
+    const navigate = useNavigate();
+    const [lastAnsweredQuestionIndex, setLastAnsweredQuestionIndex] = useState(0);
+    const [answers, setAnswers] = useState({});
     const [unitIndexes,setUnitIndex]=useState({});
     const [formulaValues,setFormulaValue]=useState({});
     const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const { questionIndex } = useParams();
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const { questionIndex } = useParams();
   useEffect(() => {
     setCurrentQuestionIndex(questionIndex ? parseInt(questionIndex, 10) : 0);
   }, [questionIndex]);
-  const [fact, setFact] = useState("");
-  const [totalQuestions, setTotalQuestions] = useState(0);
-  const [totalFootprint, setTotalFootprint] = useState(0);
-  const [ans, updateAns] = useState(1);
-  let formulaQuestionInput = 0;
-  const zip = props.location?.state?.zip || "";
-  const familySize = props.location?.state?.familySize || "";
-  let finalFootPrint = 0;
-  let finalTrees = 0;
-  let finalFormulaVal = 0;
-  let formulaValue = 0;
-  console.log("familyMembers", familySize);
-  const [selectedUnit, setSelectedUnit] = useState('');  // State for selected unit
+    const [fact, setFact] = useState("");
+    const [totalQuestions, setTotalQuestions] = useState(0);
+    const [totalFootprint, setTotalFootprint] = useState(0); // Initialize totalFootprint
+    const [ans,updateAns] = useState(1);
+    let formulaQuestionInput = 0;
+    const zip = props.location?.state?.zip || "";
+    const familySize = props.location?.state?.familySize || "";
+    let finalFootPrint = 0;
+    let finalTrees = 0;
+    let finalFormulaVal = 0;
+    let formulaValue = 0;
+    console.log("familyMembers",familySize);
+    const [selectedUnit, setSelectedUnit] = useState('');  // State for selected unit
     const [selectedFormula,setSelectedFormula] = useState(''); // State for selected formula
     const [unitChoices, setUnitChoices] = useState([]);   // Choices specific to the selected unit
+    const [carbonFootprint, setCarbonFootprint] = useState(0);
+    const [numberOfTrees, setNumberOfTrees] = useState(0);
+    const currentQuestionNumber = currentQuestionIndex + 1;
+    const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
+    console.log(questions[currentQuestionIndex]);
 
-  const [carbonFootprint, setCarbonFootprint] = useState(0);
-  const [numberOfTrees, setNumberOfTrees] = useState(0);
-  const currentQuestionNumber = currentQuestionIndex + 1;
-  const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
-  console.log(questions[currentQuestionIndex]);
+    useEffect(() => {
+        fetchActiveQuestions();
+        fetchRandomFact();
+        fetchRandomImage();
+        fetchTotalQuestions();
+    }, [currentQuestionIndex]);
 
-  useEffect(() => {
-    fetchActiveQuestions();
-    fetchRandomFact();
-    fetchRandomImage();
-    fetchTotalQuestions();
-  }, [currentQuestionIndex]);
-
-  useEffect(() => {
-    // Load answers, carbon footprint, and number of trees from cookies on component mount
-    const storedAnswers = getCookie('answers') || '{}';
-    const storedCarbonFootprint = parseFloat(getCookie('carbonFootprint')) || 0;
-    const storedNumberOfTrees = parseInt(getCookie('numberOfTrees')) || 0;
-
-    setAnswers(JSON.parse(storedAnswers));
-    setCarbonFootprint(storedCarbonFootprint);
-    setNumberOfTrees(storedNumberOfTrees);
-
-    // ... existing code ...
-  }, []);
-
-
-  
     const fetchActiveQuestions = async () => {
         try {
           const response = await axiosInstance.get('/api/questionsuser');
@@ -110,84 +96,57 @@ export function DynamicQuestionPage(props) {
     };
 
     const calculateFormula = async (formulaName) => {
-        // Make an API call to calculate the formula
-        try {
-          const response = await axiosInstance.post(
-            "/api/calculateFormula",
-            {
-              formulaName,
-            }
-          );
-    
-          // Get the result from the response
-          const result = response.data.result;
-    
-          console.log(
-            `Formula "${formulaName}" calculated successfully! Result:`,
-            result
-          );
-    
-          return result;
-    
-          // You can do further processing with the result if needed
-        } catch (error) {
-          console.error(`Error calculating formula "${formulaName}":`, error);
-        }
-      };
+      // Make an API call to calculate the formula
+      try {
+        const response = await axiosInstance.post(
+          "/api/calculateFormula",
+          {
+            formulaName,
+          }
+        );
+  
+        // Get the result from the response
+        const result = response.data.result;
+  
+        console.log(
+          `Formula "${formulaName}" calculated successfully! Result:`,
+          result
+        );
+  
+        return result;
+  
+        // You can do further processing with the result if needed
+      } catch (error) {
+        console.error(`Error calculating formula "${formulaName}":`, error);
+      }
+    };
 
       const handleProceed = async () => {
         if (currentQuestionIndex < questions.length - 1) {
           const currentQuestionId = questions[currentQuestionIndex]?.id; // Add this line
-
           // Transform the answers object to the desired format
           console.log("questions",questions);
-          const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
+          console.log("answers",answers);
+          const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value}));
           const formattedUnitIndex = Object.entries(unitIndexes).map(([id,unitIndex]) => ({ id: Number(id), unitIndex}));
           const formattedFormulaValues = Object.entries(formulaValues).map(([id,formulaVal]) => ({ id: Number(id),formulaVal}));
           // Fetch and update the carbon footprint here based on the submitted answer
-          handleSubmitAnswers(formattedAnswers,formattedUnitIndex,formattedFormulaValues);
-
+          await handleSubmitAnswers(formattedAnswers,formattedUnitIndex,formattedFormulaValues);
           setLastAnsweredQuestionIndex(currentQuestionIndex);
           setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-
-           // Create a new variable to store the updated answers
-        const updatedAnswers = { ...answers };
-        updatedAnswers[currentQuestionId] = formattedAnswers;
-
-       // Set the cookies with a one-minute expiration
-  const oneMinuteFromNow = new Date(Date.now() + 1 * 60 * 1000).toUTCString();
-  document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
-  document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
-  document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
-
-
           navigate(`/question/${currentQuestionIndex + 1}`);
         } else {
           // Calculate the footprint for the last question
           const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value}));
           const formattedUnitIndex = Object.entries(unitIndexes).map(([id,index]) => ({ id: Number(id), index}));
           const formattedFormulaValues = Object.entries(formulaValues).map(([id,formulaVal]) => ({ id: Number(id),formulaVal}));
-          await handleSubmitAnswers(formattedAnswers,formattedUnitIndex,formattedFormulaValues);       
+
+          await handleSubmitAnswers(formattedAnswers,formattedUnitIndex,formattedFormulaValues); // Calculate for the last question
+      
           // Now, after calculating the footprint for the last question, assign it to lastQuestionFootprint
           const lastQuestionFootprint = carbonFootprint;
-
           setLastAnsweredQuestionIndex(currentQuestionIndex);
-
-          // Set the cookies for the last question
-          const oneMinuteFromNow = new Date(Date.now() + 1 * 60 * 1000).toUTCString();
-          document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
-  document.cookie = `carbonFootprint=${finalFootPrint}; expires=${oneMinuteFromNow}; path=/`;
-  document.cookie = `numberOfTrees=${finalTrees}; expires=${oneMinuteFromNow}; path=/`;
-
-
-          console.log('After navigate to FinalPage:', {
-            lastAnsweredQuestionIndex,
-            currentQuestionIndex,
-            answers,
-            carbonFootprint,
-            numberOfTrees,
-          });
-
+      
           // Log the lastQuestionFootprint
           console.log('lastQuestionFootprint:', lastQuestionFootprint);
             
@@ -207,30 +166,28 @@ export function DynamicQuestionPage(props) {
         }
       }
 
-      // Helper functions for handling cookies
-function setCookie(name, value, days) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-}
-
-function getCookie(name) {
-  const cookieName = `${name}=`;
-  const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-    let cookie = cookies[i].trim();
-    if (cookie.startsWith(cookieName)) {
-      return cookie.substring(cookieName.length, cookie.length);
-    }
-  }
-  return null;
-}
-const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
-  console.log("answers to post",answers);
-  try {
-      const response = await axiosInstance.post('/api/calculateFootprint', {answersArr:answers,unitIndexArr:unitIndexes,formulaValArr:formulaValues});
-      console.log("response",response);
-
+      function setCookie(name, value, days) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+      }
+      
+      function getCookie(name) {
+        const cookieName = `${name}=`;
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          if (cookie.startsWith(cookieName)) {
+            return cookie.substring(cookieName.length, cookie.length);
+          }
+        }
+        return null;
+      }
+      const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
+        console.log("answers to post",answers);
+        try {
+            const response = await axiosInstance.post('/api/calculateFootprint', {answersArr:answers,unitIndexArr:unitIndexes,formulaValArr:formulaValues});
+            console.log("response",response);
             const data = response.data;
             
             if (data) {
@@ -239,6 +196,7 @@ const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
                 setNumberOfTrees(data.numberOfTrees);
                 console.log("Updated Footprint:", data.carbonFootprint);
                 finalFootPrint = data.carbonFootprint;
+                console.log("Final footprint",finalFootPrint);
                 finalTrees = data.numberOfTrees;
     
             }
@@ -256,7 +214,10 @@ const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
 
 
       const handleInputChange = (event) => {
-    
+        
+        console.log("event in inputchnage",event);
+        console.log("event type",event.target.type);
+
         const currentQuestionId = questions[currentQuestionIndex]?.id;
         if (!currentQuestionId) return;
     
@@ -276,12 +237,14 @@ const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
     
         // If the event target is a checkbox input, handle it for choiceAns = 3
         if (event.target.type === "checkbox") {
-          console.log("attribute id ----->",event.target.getAttribute("id"));
-          console.log("attribute inner index --->",event.target.getAttribute("data-index"));
 
-          const innerIndex = event.target.getAttribute("data-index") ? +event.target.getAttribute("data-index") : +event.target.getAttribute("id").slice(event.target.getAttribute("id").lastIndexOf("-") + 1);
-          const currentSelectedChoices = [...selectedChoices];
+            console.log("attribute id ----->",event.target.getAttribute("id"));
+            console.log("attribute inner index --->",event.target.getAttribute("data-index"));
 
+            const innerIndex = event.target.getAttribute("data-index") ? +event.target.getAttribute("data-index") : +event.target.getAttribute("id").slice(event.target.getAttribute("id").lastIndexOf("-") + 1);
+            
+            
+            const currentSelectedChoices = event.target.getAttribute("data-index") ? [...selectedChoices_Q1] : [...selectedChoices];
     
             if (event.target.checked) {
                 // Add innerIndex to selectedChoices if checked
@@ -300,7 +263,13 @@ const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
                 [currentQuestionId]: currentSelectedChoices, // Use the ref value instead of the choice
             }));
             
-            setSelectedChoices(currentSelectedChoices);
+            if(event.target.getAttribute("data-index")){
+              setSelectedChoicesQ1(currentSelectedChoices);
+            }
+            else{
+              setSelectedChoices(currentSelectedChoices);
+            }
+            
     
             return;
         }
@@ -328,10 +297,14 @@ const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
           setUnitChoices([]);
         } else {
           setSelectedUnit(unit);
+          console.log("selected unit",unit);
           setSelectedChoiceIndex(choiceIndex);
+          
+
       
           // Fetch the choices based on the selected unit
           const unitsIndex = questions[currentQuestionIndex]?.selectedUnits.indexOf(unit);
+          console.log("unitsIndex",unitsIndex);
           if (unitsIndex >= 0) {
             formulaValue = await calculateFormula((questions[currentQuestionIndex]?.selectedFormulas[unitsIndex]));
             setUnitIndex((prevUnitIndexes) => ({
@@ -345,7 +318,6 @@ const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
             console.log("formula value",formulaValue);
             
             const choices = questions[currentQuestionIndex]?.choices;
-
             if (choices !== null) {
               try {
                 const choicesString = JSON.stringify(choices);
@@ -358,7 +330,6 @@ const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
               }
             } else {
               // Handle the case where choices are null
-              console.error("Choices are null.");
               setUnitChoices([]); // Set an empty array
             }
           } else {
@@ -367,6 +338,14 @@ const handleSubmitAnswers = async (answers,unitIndexes,formulaValues) => {
           }
         }
       };
+      
+      
+    
+    
+    
+     
+    
+    
 
     const navigateToHome = () => {
         navigate('/');
@@ -558,7 +537,7 @@ const fetchCarbonFootprintAndTrees = async () => {
             data-index={innerIndex}
             style={{ marginRight: '10px' }}
             onChange={handleInputChange}
-            checked={selectedChoices.includes(innerIndex)}
+            
           />
           <label htmlFor={`choice-${outerIndex}-${innerIndex}`}>{choice}</label>
         </div>
@@ -604,7 +583,7 @@ const fetchCarbonFootprintAndTrees = async () => {
 
 {
   questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "2" && (
-    <div style={{ width: '400px', marginTop: '165px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
+    <div style={{ width: '400px', marginTop: '125px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {Array.isArray(unitChoices) && unitChoices.length > 0 && unitChoices.map((choice, index) => (
           <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
@@ -619,7 +598,7 @@ const fetchCarbonFootprintAndTrees = async () => {
 
 {
   questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "3" && (
-    <div style={{ width: '400px', marginTop: '165px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
+    <div style={{ width: '400px', marginTop: '125px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {Array.isArray(unitChoices) && unitChoices.length > 0 ? (
           unitChoices.map((choice, index) => (
@@ -640,6 +619,20 @@ const fetchCarbonFootprintAndTrees = async () => {
     </div>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     {/* Displaying the label/category for the question */}
                     <div style={{
@@ -667,7 +660,7 @@ const fetchCarbonFootprintAndTrees = async () => {
                     </div>
                 </div>
             </div>
-            {/* <div style={{ width: '100%', height: '30px', left: '0px', position: 'absolute', top: '900px', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div> */}
+            <div style={{ width: '100%', height: '30px', left: '0px', position: 'absolute', top: '900px', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div>
             {/* <div style={{ left: '1110px', top: '106px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={handleadmin}>Admin</div> */}
         </div>
 
@@ -675,4 +668,3 @@ const fetchCarbonFootprintAndTrees = async () => {
 }
 
 export default DynamicQuestionPage;
-
