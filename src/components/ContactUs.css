@@ -25,7 +25,7 @@ body {
 }
 
 .mainlogo {
-    width: 20vw !important;
+    width: 12vw !important;
     height: 8vh !important;
     ;
     background-color: none;
@@ -33,9 +33,13 @@ body {
 
 .rightnav a.selected {
     background-color: rgb(255, 87, 1);
-    /* border-radius: 8px; */
+    border-radius: 30px;
     color: black;
     margin-right: 0vw;
+    width: 130px;
+    height: 30px;
+    text-align: center; 
+    padding: 3px;
 }
 
 

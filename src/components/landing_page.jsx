@@ -50,21 +50,21 @@ axiosInstance.post("/api/setFamilyMembers", data)
   
     // Check if the zipCode is empty
     if (!zipCode && !familyMembers) {
-        setErrorMessage('Please enter the Zip Code');
-        setFamilyErrorMessage('Please enter this mandatory field');
+        setErrorMessage('Please enter this field to continue');
+        setFamilyErrorMessage('Please enter this field to continue');
         return; // Don't navigate
     } 
   
     if (!zipCode) {
-      setErrorMessage('Please enter the Zip Code');
+      setErrorMessage('Please enter this field to continue');
       return; // Don't navigate
     }
   
-    // Check if familyMembers is a single digit
-    if (!familyMembers || !/^\d$/.test(familyMembers)) {
-      setFamilyErrorMessage('Please enter a valid number');
+     // Check if familyMembers is one or two digits
+     if (!familyMembers || !/^\d{1,2}$/.test(familyMembers)) {
+      setFamilyErrorMessage('Please enter this field to continue');
       return; // Don't navigate
-    }
+  }
     
     // If all validations pass, navigate to the next page
     navigate('/question/0', { state: { zip: zipCode, familySize: familyMembers } });
@@ -85,17 +85,17 @@ axiosInstance.post("/api/setFamilyMembers", data)
           height: '550px',
           left: '700px',
           top: '200px',
-          borderRadius: '20px 20px',
+          borderRadius: '20px',
           position: 'absolute',
           overflow: 'hidden',
         }}
       >
         <video
           style={{
-            width: '97%',
-            height: '97%',
+            width: '100%',
+            height: '100%',
             objectFit: 'cover',
-            transform: 'scale(1.0, 1.5)', // Adjust the scale as needed to maintain the aspect ratio
+            borderRadius: '20px', // Adjust the scale as needed to maintain the aspect ratio
             outline: 'none',
             border: 'none',
             userSelect: 'none',
@@ -125,7 +125,7 @@ axiosInstance.post("/api/setFamilyMembers", data)
         <div style={{ width: '398px', height: '100px', left: '169px', top: '520px', position: 'absolute' }}>
           <div style={{ width: '0.82px', height: '12px', left: '257.67px', top: '74px', position: 'absolute' }}></div>
           <div style={{ width: '398px', height: '100px', left: '0px', top: '0px', position: 'absolute', background: '#007ea7', borderRadius: '15px' }}></div>
-          <div style={{ left: '80px', top: '15px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>Please enter your Zip Code</div>
+          <div style={{ left: '110px', top: '15px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>Enter your Zipcode</div>
           <input
             type="text"
             name="zipcode"
@@ -140,7 +140,7 @@ axiosInstance.post("/api/setFamilyMembers", data)
             }}
           />
           {/* Conditionally render the error message */}
-          <div style={{ color: 'red', position: 'absolute', left: '82.06px', top: '35px' }}>{errorMessage}</div>
+          <div style={{ color: '#ff8c00', position: 'absolute', left: '92.06px', top: '35px' }}>{errorMessage}</div>
 
 
 
@@ -153,19 +153,22 @@ axiosInstance.post("/api/setFamilyMembers", data)
             type="text"
             name="numericValue"
             placeholder="Enter Number"
-            maxLength="1"
+            maxLength="2"
             required
             value={familyMembers}
             onChange={(e) => {
-              setFamilyMembers(e.target.value);
-              if (e.target.value.trim() !== '') {
+              const input = e.target.value;
+              if (/^\d*$/.test(input)) {
+                setFamilyMembers(input);
                 setFamilyErrorMessage('');  // clear the error message
+              } else {
+                setFamilyErrorMessage('Please enter a valid number');
               }
             }}
             style={{ width: '234px', height: '33px', position: 'absolute', left: '80px', top: '53px', background: 'white', borderRadius: '300px', border: 'none', padding: '0px 10px', outline: 'none' }}
           />
 
-          <div style={{ color: 'red', position: 'absolute', left: '82.06px', top: '35px' }}>{familyErrorMessage}</div>
+          <div style={{ color: '#ff8c00', position: 'absolute', left: '82.06px', top: '35px' }}>{familyErrorMessage}</div>
 
 
         </div>

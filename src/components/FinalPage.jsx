@@ -12,9 +12,9 @@ export function FinalPage (props) {
     const navigateToHome = () => {
         navigate('/');
     }
-    const handleadmin = () => {
-        navigate('/admin'); // Use navigate to go to the desired route
-    };
+    // const handleadmin = () => {
+    //     navigate('/admin'); // Use navigate to go to the desired route
+    // };
     const handleContactUs = () => {
         navigate('/ContactUs'); // Use navigate to go to the desired route
     };
@@ -30,6 +30,9 @@ export function FinalPage (props) {
         navigate('/');
       }
     };
+    const handleaboutus = () => {
+      navigate('/aboutus'); // Use navigate to go to the desired route
+  };
     // Handler for the 'Plant Trees' button
     const handlePlantTrees = () => {
         navigate('/amountpage'); // Navigate to the amount page
@@ -54,9 +57,9 @@ export function FinalPage (props) {
         </div>
         <div className="rightnav">
           <a href="#" onClick={navigateToHome}>Home</a>
-          <a href="#">About Us</a>
-          <a href="#" className="selected">Calculator</a>
-          <a href="#" onClick={handleadmin}>Admin</a>
+          <a href="#" onClick={handleaboutus}>About Us</a>
+          <a href="#" className="selected" onClick={(e) => e.preventDefault()}>Calculator</a>
+          {/* <a href="#" onClick={handleadmin}>Admin</a> */}
           <a href="#" onClick={handleContactUs}>Contact Us</a>
         </div>
 
@@ -81,7 +84,6 @@ export function FinalPage (props) {
         <div style={{ left: '210px', top: '246px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 500 }}>No. of Trees to be planted to offset carbon footprints</div>
       </div>
 
-      <div style={{ width: '322px', height: '108px', left: '350px', top: '300px', position: 'absolute', background: '#D9D9D9', borderRadius: '15px' }} />
       <div style={{ width: '322px', height: '109px', left: '350px', top: '500px', position: 'absolute', background: '#D9D9D9', borderRadius: '15px' }} />
 
       <div style={{ width: '671px', height: '655px', left: '600px', top: '200px', position: 'absolute' }}>
@@ -98,10 +100,20 @@ export function FinalPage (props) {
 
       </div>
 
-      <div style={{ left: '460px', top: '330px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>{carbonFootprint || "N/A"} </div>
+      {/* <div style={{ left: '460px', top: '330px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>{carbonFootprint || "N/A"} </div>
       <div style={{ left: '460px', top: '530px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>{numberOfTrees || "N/A"}</div>
-      <div style={{ width: '71px', height: '30px', left: '600px', top: '350px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>lbs</div>
+      <div style={{ width: '71px', height: '30px', left: '600px', top: '350px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>lbs</div> */}
       {/* <div style={{ left: '1112px', top: '106px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer'}}onClick={handleadmin}>Admin</div> */}
+      <div style={{ position: 'absolute', width: '322px', height: '108px', left: '350px', top: '300px', background: '#D9D9D9', borderRadius: '15px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+  <div style={{ color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>
+    {carbonFootprint || "N/A"}
+  </div>
+  <div style={{ color: 'black', fontSize: '20px', fontWeight: 400 }}>lbs</div>
+</div>
+
+<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', left: '350px', top: '530px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800, width: '200px' }}>
+  <div>{numberOfTrees || "N/A"}</div>
+</div>
 
     </div>
   );

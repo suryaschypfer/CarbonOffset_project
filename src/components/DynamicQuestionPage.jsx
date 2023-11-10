@@ -38,7 +38,7 @@ export function DynamicQuestionPage(props) {
     const [carbonFootprint, setCarbonFootprint] = useState(0);
     const [numberOfTrees, setNumberOfTrees] = useState(0);
     const currentQuestionNumber = currentQuestionIndex + 1;
-    const progressPercentage = (currentQuestionNumber / totalQuestions) * 100;
+    const progressPercentage = currentQuestionNumber === totalQuestions ? 100 : ((currentQuestionNumber - 1) / totalQuestions) * 100;
     console.log(questions[currentQuestionIndex]);
 
     useEffect(() => {
@@ -420,7 +420,7 @@ const fetchCarbonFootprintAndTrees = async () => {
 
     return (
         <div style={{ background: 'white' }}>
-            <button onClick={()=>{console.log(calculateFormula("GallonToCforPropane"))}}>Click</button>
+            {/* <button onClick={()=>{console.log(calculateFormula("GallonToCforPropane"))}}>Click</button> */}
             {/* <div style={{ width: '1178px', height: '5px', left: '128px', top: '106px', position: 'absolute' }}>
         <div style={{ left: '614px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={navigateToHome}>Home</div>
         <div style={{ left: '0px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800, wordWrap: 'break-word', cursor: 'pointer' }}>OFFSET CRBN</div>
