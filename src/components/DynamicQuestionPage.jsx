@@ -82,7 +82,7 @@ export function DynamicQuestionPage(props) {
             const randomValue = Math.random();
             const imgResponse = await axiosInstance.get(`/api/randomimage/${currentQuestionIndex}?nocache=${randomValue}`);
             if (imgResponse.data && imgResponse.data.img_name) {
-                setImage(imgResponse.data.img_name);
+              setImage(`/${imgResponse.data.img_name}`);
             }
         } catch (error) {
             console.error('Error fetching random image:', error);
@@ -478,7 +478,7 @@ const fetchCarbonFootprintAndTrees = async () => {
                         </div>
                     </div>
                     <div style={{ width: '327px', height: '136px', left: '100px', top: '499px', position: 'absolute', background: '#D9D9D9', borderRadius: '15px' }}>
-                        <img style={{ width: '75px', height: '86px', left: '239px', top: '31px', position: 'absolute', mixBlendMode: 'color-burn' }} src="Tree.png" alt="Tree" />
+                        <img style={{ width: '75px', height: '86px', left: '239px', top: '31px', position: 'absolute', mixBlendMode: 'color-burn' }} src="/Tree.png" alt="Tree" />
                     </div>
                 </div>
                 <div style={{ width: '683px', height: '167px', left: '102px', top: '120px', position: 'absolute' }}></div>
@@ -620,20 +620,6 @@ const fetchCarbonFootprintAndTrees = async () => {
   )
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     {/* Displaying the label/category for the question */}
                     <div style={{
                         width: '300px', height: '40px', left: '500px', top: '-60px', position: 'absolute',
@@ -650,7 +636,7 @@ const fetchCarbonFootprintAndTrees = async () => {
             </div>
             <div style={{ width: '260px', height: '655px', left: '1028px', top: '225px', position: 'absolute' }}>
                 {/* <div style={{ width: '285px', height: '655px', left: '0px', top: '0px', position: 'absolute', background: 'rgba(217, 217, 217, 0.12)', borderRadius: '30px' }}></div> */}
-                <img style={{ width: '265px', height: '154px', left: '0px', top: '-140px', position: 'absolute' }} src="First_Question.png" alt="First Question" />
+                <img style={{ width: '265px', height: '154px', left: '0px', top: '-110px', position: 'absolute' }} src="/First_Question.png" alt="First Question" />
                 {/* <div style={{ width: '265px', height: '403px', left: '12px', top: '197px', position: 'absolute', background: '#A3C7A0', borderRadius: '30px' }}></div>
     <div style={{ width: '231px', height: '331px', left: '31px', top: '241px', position: 'absolute', color: 'white', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>{fact}</div> */}
                 <div style={{ width: '265px', height: '500px', left: '0px', top: '65px', position: 'absolute', overflow: 'hidden' }}>
