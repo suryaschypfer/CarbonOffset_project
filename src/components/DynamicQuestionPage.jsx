@@ -434,7 +434,7 @@ const fetchCarbonFootprintAndTrees = async () => {
                     <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
                 </div>
                 <div className="rightnav">
-                    <a href="#" onClick={handlelandingpage}>Home</a>
+                    <a href="#" onClick={navigateToHome}>Home</a>
                     <a href="#" onClick={handleaboutus} >About Us</a> 
                     <a href="#" className="selected">Calculator</a>
                     {/* <a href="#">Admin</a> */}
