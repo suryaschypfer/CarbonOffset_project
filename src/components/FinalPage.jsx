@@ -30,8 +30,6 @@ export function FinalPage (props) {
         navigate('/');
       }
     };
-    
-
     // Handler for the 'Plant Trees' button
     const handlePlantTrees = () => {
         navigate('/amountpage'); // Navigate to the amount page

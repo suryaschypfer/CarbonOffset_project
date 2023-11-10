@@ -17,57 +17,61 @@ export function Landing_Page(props) {
     navigate('/admin'); 
 };
 
+
 // Construct the data to send in the request body
 const data = {
   familyMembers: familyMembers
 };
 
-// Define the server URL
-const serverUrl = "http://localhost:3000/api/setFamilyMembers";
-
-// Send a POST request to the server
-fetch(serverUrl, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-})
-.then(response => {
-    if (response.ok) {
-        console.log('Family members data sent successfully.');
+// Use axiosInstance to send a POST request
+axiosInstance.post("/api/setFamilyMembers", data)
+  .then(response => {
+    console.log('Family members data sent successfully.');
+  })
+  .catch(error => {
+    // Error handling here
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error('Failed to send family members data to the server.', error.response.status);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received when attempting to send family members data to the server.');
     } else {
-        console.error('Failed to send family members data to the server.');
+      // Something happened in setting up the request that triggered an Error
+      console.error('Error:', error.message);
     }
-})
-.catch(error => {
-    console.error('Error:', error);
-});
+  });
+
 
 
   // Logic to enter into firstquestion only if valid inputs(zipcode and family members) are given
-const handleFirstQuestion = () => {
+  const handleFirstQuestion = () => {
   
-  // Check if the zipCode is empty
-  if (!zipCode && !familyMembers) {
+    // Check if the zipCode is empty
+    if (!zipCode && !familyMembers) {
+        setErrorMessage('Please enter the Zip Code');
+        setFamilyErrorMessage('Please enter this mandatory field');
+        return; // Don't navigate
+    } 
+  
+    if (!zipCode) {
       setErrorMessage('Please enter the Zip Code');
-      setFamilyErrorMessage('Please enter this mandatory field');
       return; // Don't navigate
-  } 
-  if (!zipCode) {
-    setErrorMessage('Please enter the Zip Code');
-    return; // Don't navigate
-} 
-if (!familyMembers) {
-  setFamilyErrorMessage('Please enter this mandatory field');
-  return; // Don't navigate
-} 
-  else {
+    }
+  
+    // Check if familyMembers is a single digit
+    if (!familyMembers || !/^\d$/.test(familyMembers)) {
+      setFamilyErrorMessage('Please enter a valid number');
+      return; // Don't navigate
+    }
+    
+    // If all validations pass, navigate to the next page
     navigate('/question/0', { state: { zip: zipCode, familySize: familyMembers } });
-    console.log('Family Members',familyMembers);
+    console.log('Family Members', familyMembers);
     console.log('Navigating to the next page...');
-  }
-};
+  };
+  
 
 
 
@@ -204,7 +208,7 @@ if (!familyMembers) {
           </div>
         </div>
       </div>
-      {/* <div style={{ width: '100%', height: '30px', left: '0px', top: '974px', position: 'absolute', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div> */}
+      <div style={{ width: '100%', height: '30px', left: '0px', top: '974px', position: 'absolute', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div>
 
     </div>
 
