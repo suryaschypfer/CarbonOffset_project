@@ -38,7 +38,7 @@ body {
     margin-right: 0vw;
     width: 130px;
     height: 30px;
-    text-align: center; 
+    text-align: center;
     padding: 3px;
 }
 
@@ -114,7 +114,7 @@ body {
     padding: 1.5vh;
     margin-left: 2vh;
     margin-top: 1vh;
-    background-color: #007ea7;
+    background-color: rgb(255, 87, 1);
     border-radius: 10px;
     font-size: medium;
     font-weight: 500;

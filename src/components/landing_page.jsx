@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './Header';
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 import DynamicQuestionPage from './DynamicQuestionPage';
@@ -14,64 +14,64 @@ export function Landing_Page(props) {
   const [familyErrorMessage, setFamilyErrorMessage] = useState('');
 
   const handleadmin = () => {
-    navigate('/admin'); 
-};
+    navigate('/admin');
+  };
 
 
-// Construct the data to send in the request body
-const data = {
-  familyMembers: familyMembers
-};
+  // Construct the data to send in the request body
+  const data = {
+    familyMembers: familyMembers
+  };
 
-// Use axiosInstance to send a POST request
-axiosInstance.post("/api/setFamilyMembers", data)
-  .then(response => {
-    console.log('Family members data sent successfully.');
-  })
-  .catch(error => {
-    // Error handling here
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.error('Failed to send family members data to the server.', error.response.status);
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error('No response received when attempting to send family members data to the server.');
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error('Error:', error.message);
-    }
-  });
+  // Use axiosInstance to send a POST request
+  axiosInstance.post("/api/setFamilyMembers", data)
+    .then(response => {
+      console.log('Family members data sent successfully.');
+    })
+    .catch(error => {
+      // Error handling here
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Failed to send family members data to the server.', error.response.status);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received when attempting to send family members data to the server.');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error:', error.message);
+      }
+    });
 
 
 
   // Logic to enter into firstquestion only if valid inputs(zipcode and family members) are given
   const handleFirstQuestion = () => {
-  
+
     // Check if the zipCode is empty
     if (!zipCode && !familyMembers) {
-        setErrorMessage('Please enter this field to continue');
-        setFamilyErrorMessage('Please enter this field to continue');
-        return; // Don't navigate
-    } 
-  
+      setErrorMessage('Please enter this field to continue');
+      setFamilyErrorMessage('Please enter this field to continue');
+      return; // Don't navigate
+    }
+
     if (!zipCode) {
       setErrorMessage('Please enter this field to continue');
       return; // Don't navigate
     }
-  
-     // Check if familyMembers is one or two digits
-     if (!familyMembers || !/^\d{1,2}$/.test(familyMembers)) {
+
+    // Check if familyMembers is one or two digits
+    if (!familyMembers || !/^\d{1,2}$/.test(familyMembers)) {
       setFamilyErrorMessage('Please enter this field to continue');
       return; // Don't navigate
-  }
-    
+    }
+
     // If all validations pass, navigate to the next page
     navigate('/question/0', { state: { zip: zipCode, familySize: familyMembers } });
     console.log('Family Members', familyMembers);
     console.log('Navigating to the next page...');
   };
-  
+
 
 
 
@@ -124,7 +124,7 @@ axiosInstance.post("/api/setFamilyMembers", data)
       <div>
         <div style={{ width: '398px', height: '100px', left: '169px', top: '520px', position: 'absolute' }}>
           <div style={{ width: '0.82px', height: '12px', left: '257.67px', top: '74px', position: 'absolute' }}></div>
-          <div style={{ width: '398px', height: '100px', left: '0px', top: '0px', position: 'absolute', background: '#007ea7', borderRadius: '15px' }}></div>
+          <div style={{ width: '398px', height: '100px', left: '0px', top: '0px', position: 'absolute', background: 'rgb(255, 87, 1)', borderRadius: '15px' }}></div>
           <div style={{ left: '110px', top: '15px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>Enter your Zipcode</div>
           <input
             type="text"
@@ -147,7 +147,7 @@ axiosInstance.post("/api/setFamilyMembers", data)
         </div>
         <div style={{ width: '398px', height: '100px', left: '169px', top: '650px', position: 'absolute' }}>
           <div style={{ width: '1px', height: '12px', left: '261px', top: '74px', position: 'absolute' }}></div>
-          <div style={{ width: '398px', height: '100px', left: '0px', top: '0px', position: 'absolute', background: '#007ea7', borderRadius: '15px' }}></div>
+          <div style={{ width: '398px', height: '100px', left: '0px', top: '0px', position: 'absolute', background: 'rgb(255, 87, 1)', borderRadius: '15px' }}></div>
           <div style={{ left: '35px', top: '12px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>How many members in your family?</div>
           <input
             type="text"
@@ -211,7 +211,7 @@ axiosInstance.post("/api/setFamilyMembers", data)
           </div>
         </div>
       </div>
-      <div style={{ width: '100%', height: '30px', left: '0px', top: '974px', position: 'absolute', background: '#ff9d76', backdropFilter: 'blur(4px)' }}></div>
+      <div style={{ width: '100%', height: '30px', left: '0px', top: '974px', position: 'absolute', background: 'rgb(255, 87, 1)', backdropFilter: 'blur(4px)' }}></div>
 
     </div>
 

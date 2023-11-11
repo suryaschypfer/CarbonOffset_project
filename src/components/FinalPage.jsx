@@ -4,39 +4,39 @@ import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-export function FinalPage (props) {
+export function FinalPage(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const lastAnsweredQuestionIndex = location.state?.lastAnsweredQuestionIndex || 0;
   const { zip, familySize, answers, carbonFootprint, numberOfTrees } = location.state || {};
-    const navigateToHome = () => {
-        navigate('/');
-    }
-    // const handleadmin = () => {
-    //     navigate('/admin'); // Use navigate to go to the desired route
-    // };
-    const handleContactUs = () => {
-        navigate('/ContactUs'); // Use navigate to go to the desired route
-    };
-    // Handler for the 'Previous Page' button
-    // const handlePrevious = () => {
-    //     navigate('/question'); // Replace with your previous question page route
-    // };
-    const handlePrevious = () => {
-      if (lastAnsweredQuestionIndex > 0) {
-        const previousQuestionIndex = lastAnsweredQuestionIndex + 1;
-        navigate(`/question/${previousQuestionIndex}`);
-      } else {
-        navigate('/');
-      }
-    };
-    const handleaboutus = () => {
-      navigate('/aboutus'); // Use navigate to go to the desired route
+  const navigateToHome = () => {
+    navigate('/');
+  }
+  // const handleadmin = () => {
+  //     navigate('/admin'); // Use navigate to go to the desired route
+  // };
+  const handleContactUs = () => {
+    navigate('/ContactUs'); // Use navigate to go to the desired route
   };
-    // Handler for the 'Plant Trees' button
-    const handlePlantTrees = () => {
-        navigate('/amountpage'); // Navigate to the amount page
-    };
+  // Handler for the 'Previous Page' button
+  // const handlePrevious = () => {
+  //     navigate('/question'); // Replace with your previous question page route
+  // };
+  const handlePrevious = () => {
+    if (lastAnsweredQuestionIndex > 0) {
+      const previousQuestionIndex = lastAnsweredQuestionIndex + 1;
+      navigate(`/question/${previousQuestionIndex}`);
+    } else {
+      navigate('/');
+    }
+  };
+  const handleaboutus = () => {
+    navigate('/aboutus'); // Use navigate to go to the desired route
+  };
+  // Handler for the 'Plant Trees' button
+  const handlePlantTrees = () => {
+    navigate('/amountpage'); // Navigate to the amount page
+  };
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', background: 'white' }}>
@@ -65,7 +65,7 @@ export function FinalPage (props) {
 
       </nav>
 
-      <div style={{ width: '100%', height: '30px', left: '0px', top: '850px', position: 'absolute', background: '#ff9d76', backdropFilter: 'blur(4px)' }} />
+      <div style={{ width: '100%', height: '30px', left: '0px', top: '850px', position: 'absolute', background: 'rgb(255, 87, 1)', backdropFilter: 'blur(4px)' }} />
 
       {/* <div style={{ width: '1451px', height: '0px', left: '-5px', top: '134px', position: 'absolute', border: '1px black solid' }} /> */}
 
@@ -105,15 +105,15 @@ export function FinalPage (props) {
       <div style={{ width: '71px', height: '30px', left: '600px', top: '350px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>lbs</div> */}
       {/* <div style={{ left: '1112px', top: '106px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer'}}onClick={handleadmin}>Admin</div> */}
       <div style={{ position: 'absolute', width: '322px', height: '108px', left: '350px', top: '300px', background: '#D9D9D9', borderRadius: '15px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-  <div style={{ color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>
-    {carbonFootprint || "N/A"}
-  </div>
-  <div style={{ color: 'black', fontSize: '20px', fontWeight: 400 }}>lbs</div>
-</div>
+        <div style={{ color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800 }}>
+          {carbonFootprint || "N/A"}
+        </div>
+        <div style={{ color: 'black', fontSize: '20px', fontWeight: 400 }}>lbs</div>
+      </div>
 
-<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', left: '350px', top: '530px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800, width: '200px' }}>
-  <div>{numberOfTrees || "N/A"}</div>
-</div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', left: '350px', top: '530px', position: 'absolute', color: 'black', fontSize: '50px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 800, width: '200px' }}>
+        <div>{numberOfTrees || "N/A"}</div>
+      </div>
 
     </div>
   );
