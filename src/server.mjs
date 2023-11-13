@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const port = 3000;
 
 const dbConfig = {
-  host: "3.136.83.126",
+  host: "3.139.84.108",
   user: "carbonuser",
   password: "Carbon@123", // Fix the case of 'PASSWORD' to 'password'
   database: "CRBN", // Fix the case of 'DB' to 'database'
@@ -1172,7 +1172,9 @@ app.post("/api/sendCustomerEnquiryEmail", (req, res) => {
 // Define a route to retrieve questions with a specific flag from the database
 app.get("/api/questionsuser", cors(), (req, res) => {
   const sql =
-    "SELECT * FROM CRBN.questionsTable WHERE enabled = 1 ORDER BY label, id";
+  "SELECT * FROM CRBN.questionsTable WHERE enabled = 1 ORDER BY CASE WHEN label = 'Personal' THEN 1 ELSE 2 END, label, id";
+
+
 
   // Execute the SQL query using the MySQL connection
   mysqlConnection.query(sql, (error, results) => {
