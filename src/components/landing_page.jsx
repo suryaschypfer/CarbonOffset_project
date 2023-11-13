@@ -140,7 +140,7 @@ export function Landing_Page(props) {
             }}
           />
           {/* Conditionally render the error message */}
-          <div style={{ color: '#ff8c00', position: 'absolute', left: '92.06px', top: '35px' }}>{errorMessage}</div>
+          <div style={{ color: '#FFD699', position: 'absolute', left: '92.06px', top: '35px' }}>{errorMessage}</div>
 
 
 
@@ -168,7 +168,7 @@ export function Landing_Page(props) {
             style={{ width: '234px', height: '33px', position: 'absolute', left: '80px', top: '53px', background: 'white', borderRadius: '300px', border: 'none', padding: '0px 10px', outline: 'none' }}
           />
 
-          <div style={{ color: '#ff8c00', position: 'absolute', left: '82.06px', top: '35px' }}>{familyErrorMessage}</div>
+          <div style={{ color: '#FFD699', position: 'absolute', left: '82.06px', top: '35px' }}>{familyErrorMessage}</div>
 
 
         </div>
