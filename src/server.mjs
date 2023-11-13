@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const port = 3000;
 
 const dbConfig = {
-  host: "3.139.84.108",
+  host: "3.19.65.137",
   user: "carbonuser",
   password: "Carbon@123", // Fix the case of 'PASSWORD' to 'password'
   database: "CRBN", // Fix the case of 'DB' to 'database'
@@ -22,7 +22,7 @@ const dbConfig = {
 // const dbConfig = {
 //   host: "127.0.0.1",
 //   user: "root",
-//   password: "", // Fix the case of 'PASSWORD' to 'password'
+//   password: "Carbon@123", // Fix the case of 'PASSWORD' to 'password'
 //   database: "CRBN", // Fix the case of 'DB' to 'database'
 // };
 

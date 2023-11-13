@@ -81,7 +81,7 @@ export const ContactUs = () => {
         const firstNameInput = document.querySelector('.FName input')
         const lastNameInput = document.querySelector('.LName input')
         const emailInput = document.querySelector('.Email input')
-        const queryInput = document.querySelector('.Query input')
+        const queryInput = document.querySelector('.Query textarea')
 
         const firstName = firstNameInput.value;
         const lastName = lastNameInput.value;
@@ -222,18 +222,16 @@ export const ContactUs = () => {
                             <input type="text" placeholder="What is your query" />
                         </div> */}
                         <div className='Query'>
-    Query
-    <br />
-    <textarea
-         type="text"
-        placeholder="What is your query"
-        style={{ width: '95%', height: '75', borderRadius:'20px', padding:'10px', paddingRight:'10px',fontStyle:'helvetica' }}
-        rows={5} // Adjust the number of rows based on your preference
-        required
-    />
-</div>
-
-                    
+                            Query
+                            <br />
+                            <textarea
+                                type="text"
+                                placeholder="What is your query"
+                                style={{ width: '95%', height: '75', borderRadius:'20px', padding:'10px', paddingRight:'10px',fontStyle:'helvetica' }}
+                                rows={5} // Adjust the number of rows based on your preference
+                                required
+                            />
+                        </div>
                         <div className="send">
                             <button onClick={handleSend} className="send-button">Send</button>
                         </div>
