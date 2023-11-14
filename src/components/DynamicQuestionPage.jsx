@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 export function DynamicQuestionPage(props) {
+  const [errorMessage, setErrorMessage] = useState('');
   const [image, setImage] = useState("");
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
   const [selectedChoices, setSelectedChoices] = useState([]);
@@ -184,6 +185,7 @@ export function DynamicQuestionPage(props) {
     return null;
   }
   const handleSubmitAnswers = async (answers, unitIndexes, formulaValues) => {
+    setSelectedUnit(null);
     console.log("answers to post", answers);
     try {
       const response = await axiosInstance.post('/api/calculateFootprint', { answersArr: answers, unitIndexArr: unitIndexes, formulaValArr: formulaValues });
@@ -353,6 +355,7 @@ export function DynamicQuestionPage(props) {
 
   // Naviagtion if user clicks on previous page
   const handlelandingpage = () => {
+    setSelectedUnit(null);      // to set the choices null 
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prevIndex => prevIndex - 1);
     } else {
@@ -546,7 +549,7 @@ export function DynamicQuestionPage(props) {
             </div>
           )}
 
-          {
+{
             questions[currentQuestionIndex]?.questionType === 2 && (
               <div style={{ width: '400px', marginTop: '60px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-around' }}>
                 {questions[currentQuestionIndex]?.selectedUnits.map((unit, index) => (
