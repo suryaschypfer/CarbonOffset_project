@@ -67,7 +67,7 @@ export function Landing_Page(props) {
     }
 
     // If all validations pass, navigate to the next page
-    navigate('/question/0', { state: { zip: zipCode, familySize: familyMembers } });
+    navigate(`/question/0?zip=${zipCode}`, { state: { zip: zipCode, familySize: familyMembers } });
     console.log('Family Members', familyMembers);
     console.log('Navigating to the next page...');
   };

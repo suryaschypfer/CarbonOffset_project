@@ -22,14 +22,27 @@ export function FinalPage(props) {
   // const handlePrevious = () => {
   //     navigate('/question'); // Replace with your previous question page route
   // };
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    var results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+  const zipcodeurl = getParameterByName('zip');
+
   const handlePrevious = () => {
     if (lastAnsweredQuestionIndex > 0) {
       const previousQuestionIndex = lastAnsweredQuestionIndex + 1;
-      navigate(`/question/${previousQuestionIndex}`);
+      navigate(`/question/${previousQuestionIndex}?zip=${zipcodeurl}`);
     } else {
       navigate('/');
     }
   };
+  
   const handleaboutus = () => {
     navigate('/aboutus'); // Use navigate to go to the desired route
   };

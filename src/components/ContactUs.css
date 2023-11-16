@@ -169,6 +169,39 @@ body {
     border-radius: 5px;
 }
 
+.info-button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: 'inline-block';
+  }
+
+  /* padding: '10px 20px',
+      backgroundColor: '#3498db',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '5px',
+      textDecoration: 'none',
+      display: 'inline-block',
+      textAlign: 'center',
+      lineHeight: 'initial', */
+  
+  .tooltip {
+    position: absolute;
+    bottom: -40px; /* Adjust the position as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px;
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+  
+
 /* .bottom_div {
     background-color: #ff9d76;
     height: 30px;

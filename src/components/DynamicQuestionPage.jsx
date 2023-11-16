@@ -6,6 +6,8 @@ import { useParams } from 'react-router-dom';
 
 export function DynamicQuestionPage(props) {
   const [errorMessage, setErrorMessage] = useState('');
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [dataSourceLink, setDataSourceLink] = useState({ text: '', link: '' });
   const [image, setImage] = useState("");
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
   const [selectedChoices, setSelectedChoices] = useState([]);
@@ -40,14 +42,33 @@ export function DynamicQuestionPage(props) {
   const [numberOfTrees, setNumberOfTrees] = useState(0);
   const currentQuestionNumber = currentQuestionIndex + 1;
   const progressPercentage = currentQuestionNumber === totalQuestions ? 100 : ((currentQuestionNumber - 1) / totalQuestions) * 100;
-  console.log(questions[currentQuestionIndex]);
+  // console.log(questions[currentQuestionIndex]);
 
   useEffect(() => {
     fetchActiveQuestions();
     fetchRandomFact();
     fetchRandomImage();
     fetchTotalQuestions();
+    // renderDataSourceLink();
   }, [currentQuestionIndex]);
+
+  // useEffect(() => {
+  //   renderDataSourceLink();
+  // }, [currentQuestionIndex]); // Trigger the function when currentQuestionIndex changes
+
+
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    var results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+  const zipcodeurl = getParameterByName('zip');
+  console.log(zipcodeurl);
 
   const fetchActiveQuestions = async () => {
     try {
@@ -135,7 +156,7 @@ export function DynamicQuestionPage(props) {
       await handleSubmitAnswers(formattedAnswers, formattedUnitIndex, formattedFormulaValues);
       setLastAnsweredQuestionIndex(currentQuestionIndex);
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-      navigate(`/question/${currentQuestionIndex + 1}`);
+      navigate(`/question/${currentQuestionIndex + 1}?zip=${zipcodeurl}`);
     } else {
       // Calculate the footprint for the last question
       const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
@@ -153,7 +174,7 @@ export function DynamicQuestionPage(props) {
 
       // Navigate to the FinalPage with the updated state
 
-      navigate('/FinalPage', {
+      navigate(`/FinalPage?zip=${zipcodeurl}`, {
         state: {
           zip: zip,
           familySize: familySize,
@@ -163,7 +184,6 @@ export function DynamicQuestionPage(props) {
           lastAnsweredQuestionIndex: lastAnsweredQuestionIndex, // Include lastAnsweredQuestionIndex
         },
       });
-
     }
   }
   
@@ -342,14 +362,6 @@ export function DynamicQuestionPage(props) {
     }
   };
 
-
-
-
-
-
-
-
-
   const navigateToHome = () => {
     navigate('/');
   }
@@ -375,7 +387,136 @@ export function DynamicQuestionPage(props) {
   const handleContactUs = () => {
     navigate('/ContactUs'); // Use navigate to go to the desired route
   };
+  
 
+  const fetchDataForZipcode = async () => {
+    try {
+      const response = await axiosInstance.post('/api/utilityzipcode', { zipcode: zipcodeurl });
+      if (response.status === 200) {
+        console.log("Successfully fetched zipcode details. Status:", response.status);
+        return response.data;
+      } else {
+        console.error("Failed to fetch zipcode details. Status:", response.status);
+        throw new Error(`Failed to fetch zipcode details. Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error fetching zipcode details:", error);
+      throw error;
+    }
+  };
+  
+  const renderDataSourceLink = async () => {
+    let questionLabel = "";
+    let questiontext = "";
+    let questionUtility = "";
+  
+    try {
+      let isZipcodeZero = questions[currentQuestionIndex].zipcode;
+      questionLabel = questions[currentQuestionIndex].label;
+      questiontext = questions[currentQuestionIndex].questionContent;
+  
+      // Determine question utility based on question text
+      if (questiontext.toLowerCase().includes("elec")) {
+        questionUtility = "Electricity";
+      } else if (questiontext.toLowerCase().includes("gas") || questiontext.toLowerCase().includes("hydrogen") || questiontext.toLowerCase().includes("pallets") || questiontext.toLowerCase().includes("coal")) {
+        questionUtility = "Gas";
+      } else if (questiontext.toLowerCase().includes("bike") || questiontext.toLowerCase().includes("car") || questiontext.toLowerCase().includes("commute") || questiontext.includes("mileage") || questiontext.includes("transport") || questiontext.includes("vehicle")) {
+        questionUtility = "Gas";
+      } else if (questiontext.includes("Water") || questiontext.includes("Diet") || questiontext.includes("eat")) {
+        questionUtility = "Food";
+      } else if (questiontext.toLowerCase().includes("shop")) {
+        questionUtility = "Shopping";
+      } else if (questiontext.toLowerCase().includes("waste") || questiontext.toLowerCase().includes("recycle")) {
+        questionUtility = "Waste";
+      } else {
+        questionUtility = "";
+      }
+  
+      const data = await fetchDataForZipcode();
+  
+      if (!data || Object.keys(data).length === 0 || data === null) {
+        return {
+          text: "Our calculations are based on countrywide average data.",
+          link: 'https://www.epa.gov/egrid',
+        };
+      } else if (isZipcodeZero === 0) {
+        if (questionUtility === "Shopping" || questionUtility === "Food") {
+          return {
+            text: `Our calculations are based on the countrywide average data related to ${questionUtility} habits.`,
+            link: 'https://www.epa.gov/egrid',
+          };
+        } else if (questionUtility === "Waste") {
+          return {
+            text: `Our calculations are based on countrywide average ${questionUtility} management practices.`,
+            link: 'https://www.epa.gov/egrid',
+          };
+        } else if (questionUtility === "") {
+          return {
+            text: ``,
+            link: 'https://www.epa.gov/egrid',
+          };
+        } else {
+          return {
+            text: `Our calculations are based on the countrywide average rates for ${questionUtility} consumption.`,
+            link: 'https://www.epa.gov/egrid',
+          };
+        }
+      } else {
+        return {
+          text: `Our calculations are sourced from ${data.Sources} for your zipcode ${zipcodeurl}.`,
+          link: 'https://www.epa.gov/egrid',
+        };
+      }
+    } catch (error) {
+      console.error("Error rendering data source link:", error);
+      if (questionUtility === "Shopping" || questionUtility === "Food") {
+        return {
+          text: `Our calculations are based on the countrywide average data related to ${questionUtility} habits.`,
+          link: 'https://www.epa.gov/egrid',
+        };
+      } else if (questionUtility === "Waste") {
+        return {
+          text: `Our calculations are based on countrywide average ${questionUtility} management practices.`,
+          link: 'https://www.epa.gov/egrid',
+        };
+      } else if (questionUtility === "") {
+        return {
+          text: ``,
+          link: 'https://www.epa.gov/egrid',
+        };
+      } else {
+        return {
+          text: `Our calculations are based on the countrywide average rates for ${questionUtility} consumption.`,
+          link: 'https://www.epa.gov/egrid',
+        };
+      }
+    }
+  };
+  
+  
+  const handleMouseEnter = async () => {
+    try {
+      const { link, text } = await renderDataSourceLink();
+      setDataSourceLink({ link, text });
+      setShowTooltip(true);
+    } catch (error) {
+      console.error("Error on mouse enter:", error);
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+  
+  const handleClick = async () => {
+    try {
+      const { link } = await renderDataSourceLink();
+      window.location.href = link;
+    } catch (error) {
+      console.error("Error on button click:", error);
+    }
+  };
+  
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prevIndex => prevIndex - 1);
@@ -477,12 +618,12 @@ export function DynamicQuestionPage(props) {
           <div style={{ width: '322px', height: '136px', left: '480px', top: '499px', position: 'absolute', background: '#D9D9D9', borderRadius: '15px' }}>
             <div style={{ width: '237px', height: '23px', left: '50px', top: '15px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>Your carbon footprint</div>
             <div style={{ width: '119px', height: '40px', left: '181px', top: '220px', position: 'absolute' }}>
-              <div style={{ left: '-80px', top: '-140px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '32px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 700, wordWrap: 'break-word' }}>{carbonFootprint}</div>
-              <div style={{ width: '60px', height: '26px', left: '25px', top: '-129px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>lbs</div>
+              <div style={{ left: '-80px', top: '-156px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '32px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 700, wordWrap: 'break-word' }}>{carbonFootprint}</div>
+              <div style={{ width: '60px', height: '26px', left: '25px', top: '-146px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word' }}>lbs</div>
             </div>
           </div>
           <div style={{ width: '327px', height: '136px', left: '100px', top: '499px', position: 'absolute', background: '#D9D9D9', borderRadius: '15px' }}>
-            <img style={{ width: '75px', height: '86px', left: '239px', top: '31px', position: 'absolute', mixBlendMode: 'color-burn' }} src="/Tree.png" alt="Tree" />
+            <img style={{ width: '75px', height: '75px', left: '239px', top: '45px', position: 'absolute', mixBlendMode: 'color-burn' }} src="/Tree.png" alt="Tree" />
           </div>
         </div>
         <div style={{ width: '683px', height: '167px', left: '102px', top: '120px', position: 'absolute' }}></div>
@@ -650,24 +791,45 @@ export function DynamicQuestionPage(props) {
           </div>
         </div>
       </div>
-      <div style={{ position: 'absolute', bottom: '-150px', left: '1025px' }}>
-  <a
-    href="https://www.epa.gov/egrid"
-    style={{
-      padding: '10px 20px',
-      backgroundColor: '#3498db',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '5px',
-      textDecoration: 'none',
-      display: 'inline-block',
-      textAlign: 'center',
-      lineHeight: 'initial',
+
+      {/* <div style={{ position: 'absolute', bottom: '-150px', left: '1025px' }}>
+  <button
+    className="info-button"
+    onMouseEnter={() => {
+      const { link, text } = renderDataSourceLink();
+      console.log(`Calling renderDataSourceLink. Link: ${link}, Text: ${text}`);
+      setShowTooltip(true);
+    }}
+    onMouseLeave={() => setShowTooltip(false)}
+    onClick={() => {
+      const { link } = renderDataSourceLink();
+      window.location.href = link;
     }}
   >
     Data Sources
-  </a>
-</div>
+  </button>
+  {showTooltip && (
+    <div className="tooltip">
+      {renderDataSourceLink().text}
+    </div>
+  )}
+</div> */}
+
+<div style={{ position: 'absolute', bottom: '-150px', left: '1025px' }}>
+      <button
+        className="info-button"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+      >
+        Data Sources
+      </button>
+      {showTooltip && (
+        <div className="tooltip">
+          {dataSourceLink.text}
+        </div>
+      )}
+    </div>
 
 
       <div style={{ width: '100%', height: '30px', left: '0px', position: 'absolute', top: '900px', background: 'rgb(255, 87, 1)', backdropFilter: 'blur(4px)' }}></div>
