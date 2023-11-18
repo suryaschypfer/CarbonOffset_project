@@ -96,7 +96,7 @@ export default function AboutUs() {
           loop
         >
           <source
-            src="https://video.wixstatic.com/video/11062b_d578b9d4ffba48c68d086ec29fe9e6f0/720p/mp4/file.mp4"
+            src="https://video.wixstatic.com/video/11062b_5ae1557b0cb244ab80dabfa817f48caa/480p/mp4/file.mp4"
             type="video/mp4"
           />
         </video>
@@ -163,7 +163,7 @@ export default function AboutUs() {
           loop
         >
           <source
-      src="https://video.wixstatic.com/video/11062b_5ae1557b0cb244ab80dabfa817f48caa/480p/mp4/file.mp4"
+      src="https://video.wixstatic.com/video/11062b_77378fc0da68439ebd8fd24a2f51e50c/1080p/mp4/file.mp4"
       type="video/mp4"
           />
         </video>

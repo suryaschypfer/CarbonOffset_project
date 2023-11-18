@@ -239,7 +239,27 @@ export const ContactUs = () => {
 
                 </div>
                 <div className="image-container">
-                    <img src="LandingPageImage.png" alt="image" className="image" />
+                <video
+                    style={{
+                        width: '90%',
+                        height: '80%',
+                        objectFit: 'cover',
+                        borderRadius: '20px', // Adjust the scale as needed to maintain the aspect ratio
+                        outline: 'none',
+                        border: 'none',
+                        userSelect: 'none',
+                        pointerEvents: 'none',
+                        marginRight:'2.5vw'
+                    }}
+                    autoPlay
+                    muted
+                    loop
+                    >
+                    <source
+                        src="https://video.wixstatic.com/video/11062b_d578b9d4ffba48c68d086ec29fe9e6f0/1080p/mp4/file.mp4"
+                        type="video/mp4"
+                    />
+                    </video>
                 </div>
                 {/* <footer className="bottom_div"></footer> */}
             </div>
