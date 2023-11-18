@@ -3,14 +3,15 @@ import Header from './Header';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
+import Cookies from 'js-cookie';
 import DynamicQuestionPage from './DynamicQuestionPage';
 import axios from 'axios';
 
 export function Landing_Page(props) {
   const navigate = useNavigate();
-  const [zipCode, setZipCode] = useState('');
+  const [zipCode, setZipCode] = useState(Cookies.get('zipCode') || '');
   const [errorMessage, setErrorMessage] = useState('');
-  const [familyMembers, setFamilyMembers] = useState('');
+  const [familyMembers, setFamilyMembers] = useState(Cookies.get('familyMembers') || '');
   const [familyErrorMessage, setFamilyErrorMessage] = useState('');
 
   const handleadmin = () => {
@@ -65,6 +66,9 @@ export function Landing_Page(props) {
       setFamilyErrorMessage('Please enter this field to continue');
       return; // Don't navigate
     }
+
+    Cookies.set('zipCode', zipCode, { expires: 5 / (24 * 60) }); // 5 minutes expiry
+    Cookies.set('familyMembers', familyMembers, { expires: 5 / (24 * 60) }); // 5 minutes expiry
 
     // If all validations pass, navigate to the next page
     navigate(`/question/0?zip=${zipCode}`, { state: { zip: zipCode, familySize: familyMembers } });
