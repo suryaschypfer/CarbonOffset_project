@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
-import axios from 'axios';
+// import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 export function DynamicQuestionPage(props) {
-  const [errorMessage, setErrorMessage] = useState('');
+  // const [errorMessage, setErrorMessage] = useState('');
   const [showTooltip, setShowTooltip] = useState(false);
   const [dataSourceLink, setDataSourceLink] = useState({ text: '', link: '' });
   const [image, setImage] = useState("");
@@ -25,18 +25,18 @@ export function DynamicQuestionPage(props) {
   }, [questionIndex]);
   const [fact, setFact] = useState("");
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [totalFootprint, setTotalFootprint] = useState(0); // Initialize totalFootprint
-  const [ans, updateAns] = useState(1);
+  // const [totalFootprint, setTotalFootprint] = useState(0); // Initialize totalFootprint
+  // const [ans, updateAns] = useState(1);
   let formulaQuestionInput = 0;
   const zip = props.location?.state?.zip || "";
   const familySize = props.location?.state?.familySize || "";
   let finalFootPrint = 0;
   let finalTrees = 0;
-  let finalFormulaVal = 0;
+  // let finalFormulaVal = 0;
   let formulaValue = 0;
   console.log("familyMembers", familySize);
   const [selectedUnit, setSelectedUnit] = useState('');  // State for selected unit
-  const [selectedFormula, setSelectedFormula] = useState(''); // State for selected formula
+  // const [selectedFormula, setSelectedFormula] = useState(''); // State for selected formula
   const [unitChoices, setUnitChoices] = useState([]);   // Choices specific to the selected unit
   const [carbonFootprint, setCarbonFootprint] = useState(0);
   const [numberOfTrees, setNumberOfTrees] = useState(0);
@@ -56,7 +56,21 @@ export function DynamicQuestionPage(props) {
   //   renderDataSourceLink();
   // }, [currentQuestionIndex]); // Trigger the function when currentQuestionIndex changes
 
+  useEffect(() => {
+    // Load answers, carbon footprint, and number of trees from cookies on component mount
+    const storedAnswers = getCookie('answers') || '{}';
+    const storedCarbonFootprint = parseFloat(getCookie('carbonFootprint')) || 0;
+    const storedNumberOfTrees = parseInt(getCookie('numberOfTrees')) || 0;
+    const storedSelectedChoices = JSON.parse(getCookie('selectedChoices')) || [];
 
+
+    setAnswers(JSON.parse(storedAnswers));
+    setCarbonFootprint(storedCarbonFootprint);
+    setNumberOfTrees(storedNumberOfTrees);
+
+    // ... existing code ...
+  }, []);
+  
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
@@ -156,6 +170,12 @@ export function DynamicQuestionPage(props) {
       await handleSubmitAnswers(formattedAnswers, formattedUnitIndex, formattedFormulaValues);
       setLastAnsweredQuestionIndex(currentQuestionIndex);
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+
+       // Set the cookies with a one-minute expiration
+  const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
+  document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+  document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
+  document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
       navigate(`/question/${currentQuestionIndex + 1}?zip=${zipcodeurl}`);
     } else {
       // Calculate the footprint for the last question
@@ -171,6 +191,12 @@ export function DynamicQuestionPage(props) {
 
       // Log the lastQuestionFootprint
       console.log('lastQuestionFootprint:', lastQuestionFootprint);
+
+       // Set the cookies for the last question
+       const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
+       document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+       document.cookie = `carbonFootprint=${finalFootPrint}; expires=${oneMinuteFromNow}; path=/`;
+       document.cookie = `numberOfTrees=${finalTrees}; expires=${oneMinuteFromNow}; path=/`;
 
       // Navigate to the FinalPage with the updated state
 
