@@ -3,15 +3,20 @@ import Header from './Header';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
-import Cookies from 'js-cookie';
+import { useLocation } from 'react-router-dom';
+// import Cookies from 'js-cookie';
 import DynamicQuestionPage from './DynamicQuestionPage';
 import axios from 'axios';
 
 export function Landing_Page(props) {
   const navigate = useNavigate();
-  const [zipCode, setZipCode] = useState(Cookies.get('zipCode') || '');
+  const location = useLocation();
+  const codeForZip = new URLSearchParams(location.search).get('zip');
+  // const [zipCode, setZipCode] = useState(Cookies.get('zipCode') || '');
+  const [zipCode, setZipCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [familyMembers, setFamilyMembers] = useState(Cookies.get('familyMembers') || '');
+  // const [familyMembers, setFamilyMembers] = useState(Cookies.get('familyMembers') || '');
+  const [familyMembers, setFamilyMembers] = useState('');
   const [familyErrorMessage, setFamilyErrorMessage] = useState('');
 
   const handleadmin = () => {
@@ -67,8 +72,8 @@ export function Landing_Page(props) {
       return; // Don't navigate
     }
 
-    Cookies.set('zipCode', zipCode, { expires: 5 / (24 * 60) }); // 5 minutes expiry
-    Cookies.set('familyMembers', familyMembers, { expires: 5 / (24 * 60) }); // 5 minutes expiry
+    // Cookies.set('zipCode', zipCode, { expires: 5 / (24 * 60) }); // 5 minutes expiry
+    // Cookies.set('familyMembers', familyMembers, { expires: 5 / (24 * 60) }); // 5 minutes expiry
 
     // If all validations pass, navigate to the next page
     navigate(`/question/0?zip=${zipCode}`, { state: { zip: zipCode, familySize: familyMembers } });
@@ -221,6 +226,8 @@ export function Landing_Page(props) {
 
   );
 }
+
+export const exportedZipCode = Landing_Page.zipCode;
 
 export default Landing_Page;
 

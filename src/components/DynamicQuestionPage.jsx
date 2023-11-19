@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate,Link ,useLocation} from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 // import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { exportedZipCode } from './landing_page'; 
 
 export function DynamicQuestionPage(props) {
   // const [errorMessage, setErrorMessage] = useState('');
@@ -13,6 +14,9 @@ export function DynamicQuestionPage(props) {
   const [selectedChoices, setSelectedChoices] = useState([]);
   const [selectedChoices_Q1, setSelectedChoicesQ1] = useState([]);
   const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const location = useLocation();
+  const codeForZip = new URLSearchParams(location.search).get('zip');
   const [lastAnsweredQuestionIndex, setLastAnsweredQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [unitIndexes, setUnitIndex] = useState({});
@@ -131,13 +135,14 @@ export function DynamicQuestionPage(props) {
     setTotalQuestions(response.data);
   };
 
-  const calculateFormula = async (formulaName) => {
+  const calculateFormula = async (formulaName,zipcode="") => {
     // Make an API call to calculate the formula
     try {
       const response = await axiosInstance.post(
-        "/api/calculateFormula",
+        "http://localhost:3000/api/calculateFormula",
         {
           formulaName,
+          zipcode,
         }
       );
 
@@ -355,7 +360,7 @@ export function DynamicQuestionPage(props) {
       const unitsIndex = questions[currentQuestionIndex]?.selectedUnits.indexOf(unit);
       console.log("unitsIndex", unitsIndex);
       if (unitsIndex >= 0) {
-        formulaValue = await calculateFormula((questions[currentQuestionIndex]?.selectedFormulas[unitsIndex]));
+        formulaValue = await calculateFormula((questions[currentQuestionIndex]?.selectedFormulas[unitsIndex]),codeForZip);
         setUnitIndex((prevUnitIndexes) => ({
           ...prevUnitIndexes,
           [questions[currentQuestionIndex]?.id]: unitsIndex, // Use the ref value instead of the choice
@@ -365,7 +370,7 @@ export function DynamicQuestionPage(props) {
           [questions[currentQuestionIndex]?.id]: formulaValue, // Use the ref value instead of the choice
         }));
         console.log("formula value", formulaValue);
-
+        console.log("zip value", zip);
         const choices = questions[currentQuestionIndex]?.choices;
         if (choices !== null) {
           try {
