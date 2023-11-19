@@ -139,7 +139,7 @@ export function DynamicQuestionPage(props) {
     // Make an API call to calculate the formula
     try {
       const response = await axiosInstance.post(
-        "http://localhost:3000/api/calculateFormula",
+        "/api/calculateFormula",
         {
           formulaName,
           zipcode,
