@@ -157,6 +157,48 @@ export function DynamicQuestionPage(props) {
     }
   };
 
+  const insertDataIntoCustomerTable = async (zipcode, finalFootprint, finalTrees, ageAnswer) => {
+    try {
+      // Make an API call to insert data into the Customer table
+      const response = await axiosInstance.post('/api/insertCustomerData', {
+        zipcode,
+        finalFootprint,
+        finalTrees,
+        age: ageAnswer,
+      });
+  
+      if (response.status === 200) {
+        console.log('Data inserted into Customer table successfully.');
+      } else {
+        console.error('Failed to insert data into Customer table.');
+      }
+    } catch (error) {
+      console.error('Error inserting data into Customer table:', error);
+    }
+  };
+
+  const getChoicesByAgeAnswer = (ageAnswer, questionsTable) => {
+    const ageQuestionId = 104;
+    const ageQuestion = questionsTable.find(question => question.id === ageQuestionId);
+  
+    if (!ageQuestion || !Array.isArray(ageQuestion.choices)) {
+      console.error('Error: Age question or its choices not found or not an array.');
+      return [];
+    }
+  
+    const choicesByAge = ageQuestion.choices.map(choicesArray => choicesArray[ageAnswer]);
+  
+    if (!Array.isArray(choicesByAge) || choicesByAge.length === 0) {
+      console.error('Error: Choices for the given ageAnswer not found or not an array.');
+      return [];
+    }
+  
+    const finalChoice = choicesByAge[0]; // Extract the first (and only) element
+    console.log('Choices based on age:', finalChoice);
+    return finalChoice;
+  };
+  
+
   const handleProceed = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       const currentQuestionId = questions[currentQuestionIndex]?.id; // Add this line
@@ -197,6 +239,15 @@ export function DynamicQuestionPage(props) {
        document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
        document.cookie = `carbonFootprint=${finalFootPrint}; expires=${oneMinuteFromNow}; path=/`;
        document.cookie = `numberOfTrees=${finalTrees}; expires=${oneMinuteFromNow}; path=/`;
+
+      // Insert data into the Customer table
+      const ageQuestionId = 104;
+      const ageAnswer = answers[ageQuestionId]; 
+      // const numericZipcode = parseInt(zipcodeurl, 10);
+      const choicesByAge = getChoicesByAgeAnswer(ageAnswer, questions);
+      console.log('Choices based on age:', choicesByAge);
+      await insertDataIntoCustomerTable(zipcodeurl, finalFootPrint, finalTrees, choicesByAge);
+      
 
       // Navigate to the FinalPage with the updated state
 

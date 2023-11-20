@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const port = 3000;
 
 const dbConfig = {
-  host: "3.133.102.189",
+  host: "18.118.218.56",
   user: "carbonuser",
   password: "Carbon@123", // Fix the case of 'PASSWORD' to 'password'
   database: "CRBN", // Fix the case of 'DB' to 'database'
@@ -41,6 +41,25 @@ mysqlConnection.connect((err) => {
     console.error("Connection to MySQL failed:", err);
   }
 });
+
+app.post('/api/insertCustomerData', cors(), (req, res) => {
+  const { zipcode, finalFootprint, finalTrees, age } = req.body;
+
+  const insertQuery =
+    'INSERT INTO CRBN.Customer (total_carbon_footprint, number_of_trees, zipcode, age, date_answered) VALUES (?, ?, ?, ?, CURDATE())';
+
+  mysqlConnection.query(insertQuery, [finalFootprint, finalTrees, zipcode, age], (error, results) => {
+    if (error) {
+      console.error('Error inserting data into customer table:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      console.log('Data inserted into customer table successfully:', results);
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+});
+
+
 
 app.get("/api/Customer", cors(), (req, res) => {
   const query =
