@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate,Link ,useLocation} from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 // import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { exportedZipCode } from './landing_page'; 
+
 
 export function DynamicQuestionPage(props) {
   // const [errorMessage, setErrorMessage] = useState('');
@@ -20,6 +22,8 @@ export function DynamicQuestionPage(props) {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { questionIndex } = useParams();
+  const location = useLocation();
+  const codeForZip = new URLSearchParams(location.search).get('zip');
   useEffect(() => {
     setCurrentQuestionIndex(questionIndex ? parseInt(questionIndex, 10) : 0);
   }, [questionIndex]);
@@ -43,6 +47,7 @@ export function DynamicQuestionPage(props) {
   const currentQuestionNumber = currentQuestionIndex + 1;
   const progressPercentage = currentQuestionNumber === totalQuestions ? 100 : ((currentQuestionNumber - 1) / totalQuestions) * 100;
   // console.log(questions[currentQuestionIndex]);
+  
 
   useEffect(() => {
     fetchActiveQuestions();
@@ -56,20 +61,20 @@ export function DynamicQuestionPage(props) {
   //   renderDataSourceLink();
   // }, [currentQuestionIndex]); // Trigger the function when currentQuestionIndex changes
 
-  useEffect(() => {
-    // Load answers, carbon footprint, and number of trees from cookies on component mount
-    const storedAnswers = getCookie('answers') || '{}';
-    const storedCarbonFootprint = parseFloat(getCookie('carbonFootprint')) || 0;
-    const storedNumberOfTrees = parseInt(getCookie('numberOfTrees')) || 0;
-    const storedSelectedChoices = JSON.parse(getCookie('selectedChoices')) || [];
+  // useEffect(() => {
+  //   // Load answers, carbon footprint, and number of trees from cookies on component mount
+  //   const storedAnswers = getCookie('answers') || '{}';
+  //   const storedCarbonFootprint = parseFloat(getCookie('carbonFootprint')) || 0;
+  //   const storedNumberOfTrees = parseInt(getCookie('numberOfTrees')) || 0;
+  //   const storedSelectedChoices = JSON.parse(getCookie('selectedChoices')) || [];
 
 
-    setAnswers(JSON.parse(storedAnswers));
-    setCarbonFootprint(storedCarbonFootprint);
-    setNumberOfTrees(storedNumberOfTrees);
+  //   setAnswers(JSON.parse(storedAnswers));
+  //   setCarbonFootprint(storedCarbonFootprint);
+  //   setNumberOfTrees(storedNumberOfTrees);
 
-    // ... existing code ...
-  }, []);
+  //   // ... existing code ...
+  // }, []);
   
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -131,13 +136,14 @@ export function DynamicQuestionPage(props) {
     setTotalQuestions(response.data);
   };
 
-  const calculateFormula = async (formulaName) => {
+  const calculateFormula = async (formulaName,zipcode="") => {
     // Make an API call to calculate the formula
     try {
       const response = await axiosInstance.post(
         "/api/calculateFormula",
         {
           formulaName,
+          zipcode,
         }
       );
 
@@ -214,10 +220,10 @@ export function DynamicQuestionPage(props) {
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
 
        // Set the cookies with a one-minute expiration
-  const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
-  document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
-  document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
-  document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
+  // const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
+  // document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+  // document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
+  // document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
       navigate(`/question/${currentQuestionIndex + 1}?zip=${zipcodeurl}`);
     } else {
       // Calculate the footprint for the last question
@@ -235,10 +241,10 @@ export function DynamicQuestionPage(props) {
       console.log('lastQuestionFootprint:', lastQuestionFootprint);
 
        // Set the cookies for the last question
-       const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
-       document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
-       document.cookie = `carbonFootprint=${finalFootPrint}; expires=${oneMinuteFromNow}; path=/`;
-       document.cookie = `numberOfTrees=${finalTrees}; expires=${oneMinuteFromNow}; path=/`;
+      //  const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
+      //  document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+      //  document.cookie = `carbonFootprint=${finalFootPrint}; expires=${oneMinuteFromNow}; path=/`;
+      //  document.cookie = `numberOfTrees=${finalTrees}; expires=${oneMinuteFromNow}; path=/`;
 
       // Insert data into the Customer table
       const ageQuestionId = 104;
@@ -406,7 +412,7 @@ export function DynamicQuestionPage(props) {
       const unitsIndex = questions[currentQuestionIndex]?.selectedUnits.indexOf(unit);
       console.log("unitsIndex", unitsIndex);
       if (unitsIndex >= 0) {
-        formulaValue = await calculateFormula((questions[currentQuestionIndex]?.selectedFormulas[unitsIndex]));
+        formulaValue = await calculateFormula((questions[currentQuestionIndex]?.selectedFormulas[unitsIndex]),codeForZip);
         setUnitIndex((prevUnitIndexes) => ({
           ...prevUnitIndexes,
           [questions[currentQuestionIndex]?.id]: unitsIndex, // Use the ref value instead of the choice
@@ -416,6 +422,7 @@ export function DynamicQuestionPage(props) {
           [questions[currentQuestionIndex]?.id]: formulaValue, // Use the ref value instead of the choice
         }));
         console.log("formula value", formulaValue);
+        console.log("zip value", zip);
 
         const choices = questions[currentQuestionIndex]?.choices;
         if (choices !== null) {
