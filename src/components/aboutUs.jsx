@@ -56,9 +56,11 @@ export default function AboutUs() {
   return (
     <div style={{ background: "white" }}>
          <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
-                <div className="leftnav">
+         <div className="leftnav">
+                <a href="#" onClick={handlelandingpage}>
                     <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
-                </div>
+                </a>
+            </div>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
                     <a href="#"className="selected">About Us</a>

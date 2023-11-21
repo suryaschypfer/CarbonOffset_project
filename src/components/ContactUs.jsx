@@ -172,9 +172,11 @@ export const ContactUs = () => {
     return (
         <div className="contact">
             <nav className="nav-bar">
-                <div className="leftnav">
+            <div className="leftnav">
+                <a href="#" onClick={handlelandingpage}>
                     <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
-                </div>
+                </a>
+            </div>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
                     <a href="#" onClick={handleaboutus}>About Us</a>

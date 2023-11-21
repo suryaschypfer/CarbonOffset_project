@@ -500,15 +500,15 @@ export function DynamicQuestionPage(props) {
       questiontext = questions[currentQuestionIndex].questionContent;
   
       // Determine question utility based on question text
-      if (questiontext.toLowerCase().includes("elec")) {
+      if (questiontext.toLowerCase().includes("electricity")) {
         questionUtility = "Electricity";
       } else if (questiontext.toLowerCase().includes("gas") || questiontext.toLowerCase().includes("hydrogen") || questiontext.toLowerCase().includes("pallets") || questiontext.toLowerCase().includes("coal")) {
         questionUtility = "Gas";
-      } else if (questiontext.toLowerCase().includes("bike") || questiontext.toLowerCase().includes("car") || questiontext.toLowerCase().includes("commute") || questiontext.includes("mileage") || questiontext.includes("transport") || questiontext.includes("vehicle")) {
-        questionUtility = "Gas";
+      } else if (questiontext.toLowerCase().includes("bike") || questiontext.toLowerCase().includes("car") || questiontext.toLowerCase().includes("flight") || questiontext.toLowerCase().includes("commute") || questiontext.includes("mileage") || questiontext.includes("transport") || questiontext.includes("transit") || questiontext.includes("vehicle")) {
+        questionUtility = "Fuel";
       } else if (questiontext.includes("Water") || questiontext.includes("Diet") || questiontext.includes("eat")) {
         questionUtility = "Food";
-      } else if (questiontext.toLowerCase().includes("shop")) {
+      } else if (questiontext.toLowerCase().includes("shop") || questiontext.toLowerCase().includes("groceries") || questiontext.toLowerCase().includes("clothing")) {
         questionUtility = "Shopping";
       } else if (questiontext.toLowerCase().includes("waste") || questiontext.toLowerCase().includes("recycle")) {
         questionUtility = "Waste";
