@@ -7,7 +7,8 @@ import { exportedZipCode } from './landing_page';
 
 
 export function DynamicQuestionPage(props) {
-  // const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessageUnit, setUnitErrorMessage] = useState('');
   const [showTooltip, setShowTooltip] = useState(false);
   const [dataSourceLink, setDataSourceLink] = useState({ text: '', link: '' });
   const [image, setImage] = useState("");
@@ -211,7 +212,16 @@ export function DynamicQuestionPage(props) {
       // Transform the answers object to the desired format
       console.log("questions", questions);
       console.log("answers", answers);
-      const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
+      if(questions[currentQuestionIndex]?.questionType == 1)
+      {
+        if((answers[currentQuestionId]) === undefined || (answers[currentQuestionId]) === '' || (answers[questions[currentQuestionIndex]?.id])?.length === 0)
+        {
+          setErrorMessage('Please answer above field to continue');
+          return;
+        }
+        else{
+          setErrorMessage('');
+          const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
       const formattedUnitIndex = Object.entries(unitIndexes).map(([id, unitIndex]) => ({ id: Number(id), unitIndex }));
       const formattedFormulaValues = Object.entries(formulaValues).map(([id, formulaVal]) => ({ id: Number(id), formulaVal }));
       // Fetch and update the carbon footprint here based on the submitted answer
@@ -225,8 +235,44 @@ export function DynamicQuestionPage(props) {
   // document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
   // document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
       navigate(`/question/${currentQuestionIndex + 1}?zip=${zipcodeurl}`);
+        }
+      }
+      else{
+        if((formulaValues[currentQuestionId]) === undefined || (formulaValues[currentQuestionId]) === null ){
+          setUnitErrorMessage("Please select unit");
+        return;
+        }
+        if((answers[currentQuestionId])===undefined || (answers[currentQuestionId]) === '' || (answers[questions[currentQuestionIndex]?.id])?.length === 0){
+          setErrorMessage('Please answer above field to continue');
+          return;
+        }
+        setErrorMessage('');
+      const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
+      const formattedUnitIndex = Object.entries(unitIndexes).map(([id, unitIndex]) => ({ id: Number(id), unitIndex }));
+      const formattedFormulaValues = Object.entries(formulaValues).map(([id, formulaVal]) => ({ id: Number(id), formulaVal }));
+      // Fetch and update the carbon footprint here based on the submitted answer
+      await handleSubmitAnswers(formattedAnswers, formattedUnitIndex, formattedFormulaValues);
+      setLastAnsweredQuestionIndex(currentQuestionIndex);
+      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+
+       // Set the cookies with a one-minute expiration
+  // const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
+  // document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+  // document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
+  // document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
+      navigate(`/question/${currentQuestionIndex + 1}?zip=${zipcodeurl}`); 
+
+      }
+      
     } else {
-      // Calculate the footprint for the last question
+      if((answers[questions[currentQuestionIndex]?.id]) === undefined || (answers[questions[currentQuestionIndex]?.id]) === '' || (answers[questions[currentQuestionIndex]?.id])?.length === 0)
+        {
+          setErrorMessage('Please enter this field to continue');
+          return;
+        } 
+        else
+        {
+          // Calculate the footprint for the last question
       const formattedAnswers = Object.entries(answers).map(([id, value]) => ({ id: Number(id), value }));
       const formattedUnitIndex = Object.entries(unitIndexes).map(([id, index]) => ({ id: Number(id), index }));
       const formattedFormulaValues = Object.entries(formulaValues).map(([id, formulaVal]) => ({ id: Number(id), formulaVal }));
@@ -267,6 +313,9 @@ export function DynamicQuestionPage(props) {
           lastAnsweredQuestionIndex: lastAnsweredQuestionIndex, // Include lastAnsweredQuestionIndex
         },
       });
+        }
+
+      
     }
   }
   
@@ -320,6 +369,7 @@ export function DynamicQuestionPage(props) {
 
 
   const handleInputChange = (event) => {
+    setErrorMessage('');
 
     console.log("event in inputchnage", event);
     console.log("event type", event.target.type);
@@ -343,14 +393,12 @@ export function DynamicQuestionPage(props) {
 
     // If the event target is a checkbox input, handle it for choiceAns = 3
     if (event.target.type === "checkbox") {
+      let currentSelectedChoices = Array.isArray(selectedChoices) ? [...selectedChoices] : [];
 
       console.log("attribute id ----->", event.target.getAttribute("id"));
       console.log("attribute inner index --->", event.target.getAttribute("data-index"));
 
       const innerIndex = event.target.getAttribute("data-index") ? +event.target.getAttribute("data-index") : +event.target.getAttribute("id").slice(event.target.getAttribute("id").lastIndexOf("-") + 1);
-
-
-      const currentSelectedChoices = event.target.getAttribute("data-index") ? [...selectedChoices_Q1] : [...selectedChoices];
 
       if (event.target.checked) {
         // Add innerIndex to selectedChoices if checked
@@ -395,16 +443,31 @@ export function DynamicQuestionPage(props) {
 
   };
 
-  const handleUnitSelection = async (unit, choiceIndex) => {
-    if (selectedUnit === unit && selectedChoiceIndex === choiceIndex) {
+  const handleUnitSelection = async (unit, choiceIndex) => 
+  {
+    console.log("choice index",choiceIndex);
+    const currentQuestionId = questions[currentQuestionIndex]?.id;
+    if (selectedUnit === unit) {
       // Deselect the unit and choice
-      setSelectedUnit(null);
-      setSelectedChoiceIndex(null);
+       setSelectedUnit(null);
+       // setSelectedChoiceIndex(null);
+      answers[questions[currentQuestionIndex]?.id] = undefined
+      setUnitIndex((prevUnitIndexes) => ({
+        ...prevUnitIndexes,
+        [questions[currentQuestionIndex]?.id]: null,
+      }));
+      setFormulaValue((prevFormulaValues) => ({
+          ...prevFormulaValues,
+          [questions[currentQuestionIndex]?.id]: null,
+      }));
       setUnitChoices([]);
-    } else {
+      //setUnitIndex(prevUnitIndexes => ({ ...prevUnitIndexes, [currentQuestionId]: -1 }));
+      console.log("selected unit in if", unit);
+  }
+    else {
       setSelectedUnit(unit);
       console.log("selected unit", unit);
-      setSelectedChoiceIndex(choiceIndex);
+     // setSelectedChoiceIndex(choiceIndex);
 
 
 
@@ -412,39 +475,57 @@ export function DynamicQuestionPage(props) {
       const unitsIndex = questions[currentQuestionIndex]?.selectedUnits.indexOf(unit);
       console.log("unitsIndex", unitsIndex);
       if (unitsIndex >= 0) {
-        formulaValue = await calculateFormula((questions[currentQuestionIndex]?.selectedFormulas[unitsIndex]),codeForZip);
+        formulaValue = await calculateFormula((questions[currentQuestionIndex]?.selectedFormulas[unitsIndex]));
+        setUnitErrorMessage('');
         setUnitIndex((prevUnitIndexes) => ({
-          ...prevUnitIndexes,
-          [questions[currentQuestionIndex]?.id]: unitsIndex, // Use the ref value instead of the choice
+            ...prevUnitIndexes,
+            [questions[currentQuestionIndex]?.id]: unitsIndex,
         }));
         setFormulaValue((prevFormulaValues) => ({
-          ...prevFormulaValues,
-          [questions[currentQuestionIndex]?.id]: formulaValue, // Use the ref value instead of the choice
+            ...prevFormulaValues,
+            [questions[currentQuestionIndex]?.id]: formulaValue,
         }));
         console.log("formula value", formulaValue);
-        console.log("zip value", zip);
 
         const choices = questions[currentQuestionIndex]?.choices;
         if (choices !== null) {
-          try {
-            const choicesString = JSON.stringify(choices);
-            const parsedChoices = JSON.parse(choicesString);
-            const unitChoices = parsedChoices[unitsIndex];
-            setUnitChoices(unitChoices || []);
-          } catch (error) {
-            console.error("Error parsing JSON:", error);
-            setUnitChoices([]); // Set an empty array or handle the error as needed
-          }
+            try {
+                const choicesString = JSON.stringify(choices);
+                const parsedChoices = JSON.parse(choicesString);
+                const unitChoices = parsedChoices[unitsIndex];
+                setUnitChoices(unitChoices || []);
+
+                // Store the selected choice and its corresponding choices
+                setSelectedChoices(prev => ({
+                    ...prev,
+                    [currentQuestionId]: {
+                        unitIndex: unitsIndex,
+                        choices: unitChoices || [],
+                        selectedChoice: choiceIndex
+                    }
+                }));
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                setUnitChoices([]); // Set an empty array or handle the error as needed
+            }
         } else {
-          // Handle the case where choices are null
-          setUnitChoices([]); // Set an empty array
+            // Handle the case where choices are null
+            setUnitChoices([]); // Set an empty array
         }
-      } else {
-        console.error("Unit not found in selectedUnits.");
-        setUnitChoices([]); // Set an empty array if the unit is not found
-      }
     }
+    else {
+      console.error("Unit not found in selectedUnits.");
+      setUnitChoices([]); // Set an empty array if the unit is not found
+  }
+}
   };
+        
+        
+        
+        
+        
+            
+
 
   const navigateToHome = () => {
     navigate('/');
@@ -452,6 +533,8 @@ export function DynamicQuestionPage(props) {
 
   // Naviagtion if user clicks on previous page
   const handlelandingpage = () => {
+    setErrorMessage('');
+    setUnitErrorMessage('');
     setSelectedUnit(null);      // to set the choices null 
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prevIndex => prevIndex - 1);
@@ -733,6 +816,8 @@ export function DynamicQuestionPage(props) {
 
             />
           )}
+          {/* Display the error message if it exists */}
+    {errorMessage && <div style={{ color: 'red', position: 'absolute', top: '71px', left: '151.24px' }}>{errorMessage}</div>}
 
           {questions[currentQuestionIndex]?.questionType === 1 && questions[currentQuestionIndex]?.choiceAns === "2" && (
             <div style={{
@@ -788,10 +873,10 @@ export function DynamicQuestionPage(props) {
                       border: '1px solid',
                       borderRadius: '5px',
                       cursor: 'pointer',
-                      backgroundColor: selectedUnit === unit ? 'lightgreen' : 'white',
+                      backgroundColor: unitIndexes[questions[currentQuestionIndex]?.id] === index ? 'lightgreen' : 'white',
                       margin: '5px' // Add some spacing between units
                     }}
-                    onClick={() => handleUnitSelection(unit)}
+                    onClick={() => handleUnitSelection(unit, index)}
                   >
                     {unit}
                   </div>
@@ -799,6 +884,8 @@ export function DynamicQuestionPage(props) {
               </div>
             )
           }
+          {/* Display the error message if it exists */}
+    {errorMessageUnit && <div style={{ color: 'red', position: 'absolute', top: '40px', left: '281.24px' }}>{errorMessageUnit}</div>}
 
           {
             questions[currentQuestionIndex]?.questionType === 2 && (questions[currentQuestionIndex]?.choiceAns === "1" || !questions[currentQuestionIndex]?.choiceAns || questions[currentQuestionIndex]?.choiceAns === "null" || questions[currentQuestionIndex]?.choiceAns === "NULL") && (
@@ -812,44 +899,60 @@ export function DynamicQuestionPage(props) {
             )
           }
 
-          {
-            questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "2" && (
-              <div style={{ width: '400px', marginTop: '125px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {Array.isArray(unitChoices) && unitChoices.length > 0 && unitChoices.map((choice, index) => (
-                    <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                      <input type="radio" id={`choice-${index}`} name="choice" value={choice} style={{ marginRight: '10px' }} onChange={handleInputChange} />
-                      <label htmlFor={`choice-${index}`}>{choice}</label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )
-          }
-
-          {
-            questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "3" && (
-              <div style={{ width: '400px', marginTop: '125px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {Array.isArray(unitChoices) && unitChoices.length > 0 ? (
-                    unitChoices.map((choice, index) => (
-                      <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                        <input
-                          type="checkbox"
-                          id={`choice-${index}`}
-                          name="choice"
-                          value={choice}
-                          style={{ marginRight: '10px' }}
-                          onChange={handleInputChange} // Pass the choice to the handler
-                        />
-                        <label htmlFor={`choice-${index}`}>{choice}</label>
-                      </div>
+{
+    questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "2" && (
+        <div style={{ width: '400px', marginTop: '125px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {
+                    // Check if unitChoices is an array and has elements
+                    Array.isArray(unitChoices) && unitChoices.length > 0 && unitChoices.map((choice, index) => (
+                        <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                            <input 
+                                type="radio" 
+                                id={`choice-${index}`} 
+                                name="choice" 
+                                value={choice} 
+                                style={{ marginRight: '10px' }} 
+                                onChange={handleInputChange}
+                                // Check this input if it matches the selected choice index
+                                checked={selectedChoiceIndex === index} 
+                            />
+                            <label htmlFor={`choice-${index}`}>{choice}</label>
+                        </div>
                     ))
-                  ) : null}
-                </div>
-              </div>
-            )
-          }
+                }
+            </div>
+        </div>
+    )
+}
+
+{
+    questions[currentQuestionIndex]?.questionType === 2 && selectedUnit && questions[currentQuestionIndex]?.choiceAns === "3" && (
+        <div style={{ width: '400px', marginTop: '125px', left: '137.69px', position: 'absolute', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {Array.isArray(unitChoices) && unitChoices.length > 0 ? (
+                    unitChoices.map((choice, index) => {
+                        const isSelected = Array.isArray(selectedChoices) && selectedChoices.includes(index);
+                        return (
+                            <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                                <input
+                                    type="checkbox"
+                                    id={`choice-${index}`}
+                                    name="choice"
+                                    value={choice}
+                                    style={{ marginRight: '10px' }}
+                                    onChange={handleInputChange}
+                                    checked={isSelected} 
+                                />
+                                <label htmlFor={`choice-${index}`}>{choice}</label>
+                            </div>
+                        );
+                    })
+                ) : null}
+            </div>
+        </div>
+    )
+}
 
           {/* Displaying the label/category for the question */}
           <div style={{
