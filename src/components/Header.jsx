@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import logoImg from "../logo2.png";
+
 
 
 function Header(props) {
@@ -22,11 +24,23 @@ function Header(props) {
     return (
        
         <nav className="nav-bar" style={{ display: 'flex', width: '100%' }}>
-            <div className="leftnav">
+            {/* <div className="leftnav">
                 <a href="#" onClick={handlehome} >
-                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
+                <span>
+                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" ></img>
+                    </span> 
                 </a>
-            </div>
+            </div> */}
+            {/* <div className="leftnav"></div> */}
+            <span>
+            <a href="#" onClick={handlehome} >
+              <img
+                src={logoImg}
+                style={{ width: "300px", height: "90px", marginLeft: "10px" }}
+              ></img>
+              </a>
+            </span>
+            
             <div className="rightnav">
                 <a href="#" className="selected">
                     Home
