@@ -3,6 +3,7 @@ import { useNavigate,Link ,useLocation} from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 // import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import logoImg from "../logo2.png";
 import { exportedZipCode } from './landing_page'; 
 
 
@@ -659,11 +660,14 @@ export function DynamicQuestionPage(props) {
         <div style={{ left: '1070px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={handleContactUs}>Contact Us</div>
     </div> */}
       <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
-      <div className="leftnav">
-                <a href="#" onClick={handlelandingpage}>
-                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
-                </a>
-            </div>
+      <span>
+            <a href="#" onClick={navigateToHome} >
+              <img
+                src={logoImg}
+                style={{ width: "300px", height: "90px", marginLeft: "10px" }}
+              ></img>
+              </a>
+            </span>
         <div className="rightnav">
           <a href="#" onClick={navigateToHome}>Home</a>
           <a href="#" onClick={handleaboutus} >About Us</a>

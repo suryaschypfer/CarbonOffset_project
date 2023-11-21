@@ -1,9 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import axiosInstance from "./axiosconfig";
-
-
-
+import logoImg from "../logo2.png";
 
 export default function AboutUs() {
     const navigate = useNavigate();
@@ -56,11 +54,14 @@ export default function AboutUs() {
   return (
     <div style={{ background: "white" }}>
          <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
-         <div className="leftnav">
-                <a href="#" onClick={handlelandingpage}>
-                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
-                </a>
-            </div>
+         <span>
+            <a href="#" onClick={handlelandingpage} >
+              <img
+                src={logoImg}
+                style={{ width: "300px", height: "90px", marginLeft: "10px" }}
+              ></img>
+              </a>
+            </span>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
                     <a href="#"className="selected">About Us</a>
@@ -76,7 +77,7 @@ export default function AboutUs() {
           width: '600px',
           height: '230px',
           left: '800px',
-          top: '100px',
+          top: '120px',
           borderRadius: '20px',
           position: 'absolute',
           overflow: 'hidden',
