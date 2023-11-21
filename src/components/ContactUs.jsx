@@ -177,7 +177,7 @@ export const ContactUs = () => {
             <a href="#" onClick={handlelandingpage} >
               <img
                 src={logoImg}
-                style={{ width: "300px", height: "90px", marginLeft: "10px" }}
+                style={{ width: "300px", height: "90px", marginLeft: "50px" }}
               ></img>
               </a>
             </span>
