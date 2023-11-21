@@ -659,9 +659,11 @@ export function DynamicQuestionPage(props) {
         <div style={{ left: '1070px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={handleContactUs}>Contact Us</div>
     </div> */}
       <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
-        <div className="leftnav">
-          <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
-        </div>
+      <div className="leftnav">
+                <a href="#" onClick={handlelandingpage}>
+                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
+                </a>
+            </div>
         <div className="rightnav">
           <a href="#" onClick={navigateToHome}>Home</a>
           <a href="#" onClick={handleaboutus} >About Us</a>
