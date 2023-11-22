@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 import { useLocation } from 'react-router-dom';
 // import Cookies from 'js-cookie';
-import DynamicQuestionPage from './DynamicQuestionPage';
+import DynamicQuestionPage2 from './DynamicQuestionPage2';
 import axios from 'axios';
 
 export function Landing_Page(props) {

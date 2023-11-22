@@ -20,7 +20,7 @@ import reportWebVitals from "./reportWebVitals";
 import AdminLogin from "./components/admin_login";
 import Questions from "./components/questions";
 import Landing_Page from "./components/landing_page";
-import DynamicQuestionPage from "./components/DynamicQuestionPage";
+import DynamicQuestionPage2 from "./components/DynamicQuestionPage2.jsx";
 import FinalPage from "./components/FinalPage.jsx";
 import SecondQuestion from "./components/secondquestion";
 import Third_Question from "./components/thirdquestion";
@@ -47,7 +47,7 @@ root.render(
             <Route index={true} path="/" element={<Landing_Page />} />
             <Route
               path="/question/:questionIndex"
-              element={<DynamicQuestionPage />}
+              element={<DynamicQuestionPage2 />}
             />
             <Route path="/finalpage" element={<FinalPage />} />
             <Route path="/secondquestion" element={<SecondQuestion />} />
