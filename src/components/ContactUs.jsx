@@ -3,6 +3,7 @@ import './ContactUs.css';
 import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
+import logoImg from "../logo2.png";
 
 
 export const ContactUs = () => {
@@ -172,9 +173,14 @@ export const ContactUs = () => {
     return (
         <div className="contact">
             <nav className="nav-bar">
-                <div className="leftnav">
-                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
-                </div>
+            <span>
+            <a href="#" onClick={handlelandingpage} >
+              <img
+                src={logoImg}
+                style={{ width: "300px", height: "90px", marginLeft: "50px" }}
+              ></img>
+              </a>
+            </span>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
                     <a href="#" onClick={handleaboutus}>About Us</a>

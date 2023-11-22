@@ -3,6 +3,9 @@ import { useNavigate,Link ,useLocation} from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 // import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import logoImg from "../logo2.png";
+import { exportedZipCode } from './landing_page'; 
+
 
 export function DynamicQuestionPage(props) {
   // const [errorMessage, setErrorMessage] = useState('');
@@ -23,6 +26,8 @@ export function DynamicQuestionPage(props) {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { questionIndex } = useParams();
+  const location = useLocation();
+  const codeForZip = new URLSearchParams(location.search).get('zip');
   useEffect(() => {
     setCurrentQuestionIndex(questionIndex ? parseInt(questionIndex, 10) : 0);
   }, [questionIndex]);
@@ -46,6 +51,7 @@ export function DynamicQuestionPage(props) {
   const currentQuestionNumber = currentQuestionIndex + 1;
   const progressPercentage = currentQuestionNumber === totalQuestions ? 100 : ((currentQuestionNumber - 1) / totalQuestions) * 100;
   // console.log(questions[currentQuestionIndex]);
+  
 
   useEffect(() => {
     fetchActiveQuestions();
@@ -59,20 +65,20 @@ export function DynamicQuestionPage(props) {
   //   renderDataSourceLink();
   // }, [currentQuestionIndex]); // Trigger the function when currentQuestionIndex changes
 
-  useEffect(() => {
-    // Load answers, carbon footprint, and number of trees from cookies on component mount
-    const storedAnswers = getCookie('answers') || '{}';
-    const storedCarbonFootprint = parseFloat(getCookie('carbonFootprint')) || 0;
-    const storedNumberOfTrees = parseInt(getCookie('numberOfTrees')) || 0;
-    const storedSelectedChoices = JSON.parse(getCookie('selectedChoices')) || [];
+  // useEffect(() => {
+  //   // Load answers, carbon footprint, and number of trees from cookies on component mount
+  //   const storedAnswers = getCookie('answers') || '{}';
+  //   const storedCarbonFootprint = parseFloat(getCookie('carbonFootprint')) || 0;
+  //   const storedNumberOfTrees = parseInt(getCookie('numberOfTrees')) || 0;
+  //   const storedSelectedChoices = JSON.parse(getCookie('selectedChoices')) || [];
 
 
-    setAnswers(JSON.parse(storedAnswers));
-    setCarbonFootprint(storedCarbonFootprint);
-    setNumberOfTrees(storedNumberOfTrees);
+  //   setAnswers(JSON.parse(storedAnswers));
+  //   setCarbonFootprint(storedCarbonFootprint);
+  //   setNumberOfTrees(storedNumberOfTrees);
 
-    // ... existing code ...
-  }, []);
+  //   // ... existing code ...
+  // }, []);
   
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -161,6 +167,48 @@ export function DynamicQuestionPage(props) {
     }
   };
 
+  const insertDataIntoCustomerTable = async (zipcode, finalFootprint, finalTrees, ageAnswer) => {
+    try {
+      // Make an API call to insert data into the Customer table
+      const response = await axiosInstance.post('/api/insertCustomerData', {
+        zipcode,
+        finalFootprint,
+        finalTrees,
+        age: ageAnswer,
+      });
+  
+      if (response.status === 200) {
+        console.log('Data inserted into Customer table successfully.');
+      } else {
+        console.error('Failed to insert data into Customer table.');
+      }
+    } catch (error) {
+      console.error('Error inserting data into Customer table:', error);
+    }
+  };
+
+  const getChoicesByAgeAnswer = (ageAnswer, questionsTable) => {
+    const ageQuestionId = 104;
+    const ageQuestion = questionsTable.find(question => question.id === ageQuestionId);
+  
+    if (!ageQuestion || !Array.isArray(ageQuestion.choices)) {
+      console.error('Error: Age question or its choices not found or not an array.');
+      return [];
+    }
+  
+    const choicesByAge = ageQuestion.choices.map(choicesArray => choicesArray[ageAnswer]);
+  
+    if (!Array.isArray(choicesByAge) || choicesByAge.length === 0) {
+      console.error('Error: Choices for the given ageAnswer not found or not an array.');
+      return [];
+    }
+  
+    const finalChoice = choicesByAge[0]; // Extract the first (and only) element
+    console.log('Choices based on age:', finalChoice);
+    return finalChoice;
+  };
+  
+
   const handleProceed = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       const currentQuestionId = questions[currentQuestionIndex]?.id; // Add this line
@@ -176,10 +224,10 @@ export function DynamicQuestionPage(props) {
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
 
        // Set the cookies with a one-minute expiration
-  const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
-  document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
-  document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
-  document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
+  // const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
+  // document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+  // document.cookie = `carbonFootprint=${carbonFootprint}; expires=${oneMinuteFromNow}; path=/`;
+  // document.cookie = `numberOfTrees=${numberOfTrees}; expires=${oneMinuteFromNow}; path=/`;
       navigate(`/question/${currentQuestionIndex + 1}?zip=${zipcodeurl}`);
     } else {
       // Calculate the footprint for the last question
@@ -197,10 +245,19 @@ export function DynamicQuestionPage(props) {
       console.log('lastQuestionFootprint:', lastQuestionFootprint);
 
        // Set the cookies for the last question
-       const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
-       document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
-       document.cookie = `carbonFootprint=${finalFootPrint}; expires=${oneMinuteFromNow}; path=/`;
-       document.cookie = `numberOfTrees=${finalTrees}; expires=${oneMinuteFromNow}; path=/`;
+      //  const oneMinuteFromNow = new Date(Date.now() + 5 * 60 * 1000).toUTCString();
+      //  document.cookie = `answers=${JSON.stringify(answers)}; expires=${oneMinuteFromNow}; path=/`;
+      //  document.cookie = `carbonFootprint=${finalFootPrint}; expires=${oneMinuteFromNow}; path=/`;
+      //  document.cookie = `numberOfTrees=${finalTrees}; expires=${oneMinuteFromNow}; path=/`;
+
+      // Insert data into the Customer table
+      const ageQuestionId = 104;
+      const ageAnswer = answers[ageQuestionId]; 
+      // const numericZipcode = parseInt(zipcodeurl, 10);
+      const choicesByAge = getChoicesByAgeAnswer(ageAnswer, questions);
+      console.log('Choices based on age:', choicesByAge);
+      await insertDataIntoCustomerTable(zipcodeurl, finalFootPrint, finalTrees, choicesByAge);
+      
 
       // Navigate to the FinalPage with the updated state
 
@@ -370,6 +427,7 @@ export function DynamicQuestionPage(props) {
         }));
         console.log("formula value", formulaValue);
         console.log("zip value", zip);
+
         const choices = questions[currentQuestionIndex]?.choices;
         if (choices !== null) {
           try {
@@ -446,15 +504,15 @@ export function DynamicQuestionPage(props) {
       questiontext = questions[currentQuestionIndex].questionContent;
   
       // Determine question utility based on question text
-      if (questiontext.toLowerCase().includes("elec")) {
+      if (questiontext.toLowerCase().includes("electricity")) {
         questionUtility = "Electricity";
       } else if (questiontext.toLowerCase().includes("gas") || questiontext.toLowerCase().includes("hydrogen") || questiontext.toLowerCase().includes("pallets") || questiontext.toLowerCase().includes("coal")) {
         questionUtility = "Gas";
-      } else if (questiontext.toLowerCase().includes("bike") || questiontext.toLowerCase().includes("car") || questiontext.toLowerCase().includes("commute") || questiontext.includes("mileage") || questiontext.includes("transport") || questiontext.includes("vehicle")) {
-        questionUtility = "Gas";
+      } else if (questiontext.toLowerCase().includes("bike") || questiontext.toLowerCase().includes("car") || questiontext.toLowerCase().includes("flight") || questiontext.toLowerCase().includes("commute") || questiontext.includes("mileage") || questiontext.includes("transport") || questiontext.includes("transit") || questiontext.includes("vehicle")) {
+        questionUtility = "Fuel";
       } else if (questiontext.includes("Water") || questiontext.includes("Diet") || questiontext.includes("eat")) {
         questionUtility = "Food";
-      } else if (questiontext.toLowerCase().includes("shop")) {
+      } else if (questiontext.toLowerCase().includes("shop") || questiontext.toLowerCase().includes("groceries") || questiontext.toLowerCase().includes("clothing")) {
         questionUtility = "Shopping";
       } else if (questiontext.toLowerCase().includes("waste") || questiontext.toLowerCase().includes("recycle")) {
         questionUtility = "Waste";
@@ -605,9 +663,14 @@ export function DynamicQuestionPage(props) {
         <div style={{ left: '1070px', top: '0px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 600, wordWrap: 'break-word', cursor: 'pointer' }}onClick={handleContactUs}>Contact Us</div>
     </div> */}
       <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
-        <div className="leftnav">
-          <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
-        </div>
+      <span>
+            <a href="#" onClick={navigateToHome} >
+              <img
+                src={logoImg}
+                style={{ width: "300px", height: "90px", marginLeft: "50px" }}
+              ></img>
+              </a>
+            </span>
         <div className="rightnav">
           <a href="#" onClick={navigateToHome}>Home</a>
           <a href="#" onClick={handleaboutus} >About Us</a>
