@@ -83,7 +83,7 @@ const [showPopup, setShowPopup] = useState(false);
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/questions`);
+        const response = await fetch(`${baseUrl}/api/questionsuser`);
         console.log("Response Status:", response.status);
 
         if (!response.ok) {
