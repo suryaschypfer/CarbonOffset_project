@@ -76,7 +76,8 @@ export function Landing_Page(props) {
     // Cookies.set('familyMembers', familyMembers, { expires: 5 / (24 * 60) }); // 5 minutes expiry
 
     // If all validations pass, navigate to the next page
-    navigate(`/question/0?zip=${zipCode}`, { state: { zip: zipCode, familySize: familyMembers } });
+    navigate(`/question/0?zip=${zipCode}&familySize=${familyMembers}`, { state: { zip: zipCode, familySize: familyMembers } });
+
     console.log('Family Members', familyMembers);
     console.log('Navigating to the next page...');
   };
