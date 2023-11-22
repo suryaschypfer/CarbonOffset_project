@@ -39,7 +39,7 @@ body {
     width: 130px;
     height: 30px;
     text-align: center;
-    padding: 3px;
+    padding: 0px;
 }
 
 
@@ -199,8 +199,39 @@ body {
     color: #000000;
     border-radius: 5px;
     white-space: nowrap;
+    max-height: 135px;
+    min-height: min-content;
+  }
+
+ /* In your CSS file */
+.custom-tooltip .tooltip-inner {
+    /* Remove max-width */
+    background-color: transparent; /* Set the background color to white */
+    color: #000000; 
+    border: none; /* Remove any borders */
+    box-shadow: none; /* Remove box shadows if any */
+    width: auto; /* Allow tooltip width to fit content up to a point */
+    min-width: 100px; /* Minimum width of the tooltip */
+    max-width: 130px; /* Maximum width of the tooltip - adjust as needed */
+    white-space: normal; /* Allow text to wrap to the next line */
+    text-align: left; /* Align text to the left */
   }
   
+  /* .custom-tooltip .arrow::before {
+    display: none; 
+  }
+   */
+  
+  /* In your CSS file */
+.data-source-button {
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: 'inline-block';
+  }
 
 /* .bottom_div {
     background-color: #ff9d76;

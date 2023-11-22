@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { baseUrl } from "../config";
 import FinalComponent from "./FinalComponent";
 import { Form } from "react-bootstrap";
-// import axios from "axios";
 import factLogo from "../assets/factLogo.png";
 import { useNavigate,Link ,useLocation} from 'react-router-dom';
 import axiosInstance from './axiosconfig';
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import FinalPage from "./FinalPage";
 import { useParams } from 'react-router-dom';
 import tree from "./../assets/tree.png";
@@ -15,11 +16,15 @@ import Modal from
 import Button from
  
 'react-bootstrap/Button';
+import "./ContactUs.css"
 
 const DynamicQuestionPage2 = () => {
   const [questions, setQuestions] = useState([]);
   const [fact, setFact] = useState("");
   const [image, setImage] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [dataSourceLink, setDataSourceLink] = useState('');
+  const [dataSourceText, setDataSourceText] = useState('Loading...');
   const [filteredQuestions, setFilteredQuestions] = useState(
     []
   );
@@ -43,6 +48,17 @@ const [savedData, setSavedData] = useState(() => {
     return {};
   }
 });
+
+
+
+// Your renderTooltip function
+const renderTooltip = (props) => (
+  <Tooltip id="button-tooltip" {...props} className="custom-tooltip">
+    {dataSourceText}
+  </Tooltip>
+);
+
+
 const [showPopup, setShowPopup] = useState(false);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -106,6 +122,118 @@ const [showPopup, setShowPopup] = useState(false);
     } catch (error) {
       console.error('Error fetching random fact:', error);
       // Optionally set some state here to show an error to the user.
+    }
+  };
+
+  useEffect(() => {
+    // Call the function on component mount and when dependencies change
+    renderDataSourceLink().then(dataSourceInfo => {
+      setDataSourceLink(dataSourceInfo.link);
+      setDataSourceText(dataSourceInfo.text);
+    });
+  }, [currentQuestionIndex, questions]);
+  
+  const fetchDataForZipcode = async () => {
+    try {
+      const response = await axiosInstance.post('/api/utilityzipcode', { zipcode: codeForZip });
+      if (response.status === 200) {
+        console.log("Successfully fetched zipcode details. Status:", response.status);
+        return response.data;
+      } else {
+        console.error("Failed to fetch zipcode details. Status:", response.status);
+        throw new Error(`Failed to fetch zipcode details. Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error fetching zipcode details:", error);
+      throw error;
+    }
+  };
+  
+  const renderDataSourceLink = async () => {
+    let questionLabel = "";
+    let questiontext = "";
+    let questionUtility = "";
+  
+    try {
+      let isZipcodeZero = questions[currentQuestionIndex].zipcode;
+      questionLabel = questions[currentQuestionIndex].label;
+      questiontext = questions[currentQuestionIndex].questionContent;
+  
+      // Determine question utility based on question text
+      if (questiontext.toLowerCase().includes("electricity")) {
+        questionUtility = "Electricity";
+      } else if (questiontext.toLowerCase().includes("gas") || questiontext.toLowerCase().includes("hydrogen") || questiontext.toLowerCase().includes("pallets") || questiontext.toLowerCase().includes("coal")) {
+        questionUtility = "Gas";
+      } else if (questiontext.toLowerCase().includes("bike") || questiontext.toLowerCase().includes("car") || questiontext.toLowerCase().includes("flight") || questiontext.toLowerCase().includes("commute") || questiontext.includes("mileage") || questiontext.includes("transport") || questiontext.includes("transit") || questiontext.includes("vehicle")) {
+        questionUtility = "Fuel";
+      } else if (questiontext.includes("Water") || questiontext.includes("Diet") || questiontext.includes("eat")) {
+        questionUtility = "Food";
+      } else if (questiontext.toLowerCase().includes("shop") || questiontext.toLowerCase().includes("groceries") || questiontext.toLowerCase().includes("clothing")) {
+        questionUtility = "Shopping";
+      } else if (questiontext.toLowerCase().includes("waste") || questiontext.toLowerCase().includes("recycle")) {
+        questionUtility = "Waste";
+      } else {
+        questionUtility = "";
+      }
+  
+      const data = await fetchDataForZipcode();
+  
+      if (!data || Object.keys(data).length === 0 || data === null) {
+        return {
+          text: "Our calculations are based on countrywide average data.",
+          link: 'https://www.epa.gov/egrid',
+        };
+      } else if (isZipcodeZero === 0) {
+        if (questionUtility === "Shopping" || questionUtility === "Food") {
+          return {
+            text: `Our calculations are based on the countrywide average data related to ${questionUtility} habits.`,
+            link: 'https://www.epa.gov/egrid',
+          };
+        } else if (questionUtility === "Waste") {
+          return {
+            text: `Our calculations are based on countrywide average ${questionUtility} management practices.`,
+            link: 'https://www.epa.gov/egrid',
+          };
+        } else if (questionUtility === "") {
+          return {
+            text: ``,
+            link: 'https://www.epa.gov/egrid',
+          };
+        } else {
+          return {
+            text: `Our calculations are based on the countrywide average rates for ${questionUtility} consumption.`,
+            link: 'https://www.epa.gov/egrid',
+          };
+        }
+      } else {
+        return {
+          text: `Our calculations are sourced from ${data.Sources} for your zipcode ${codeForZip}.`,
+          link: 'https://www.epa.gov/egrid',
+        };
+      }
+    } catch (error) {
+      console.error("Error rendering data source link:", error);
+      if (questionUtility === "Shopping" || questionUtility === "Food") {
+        return {
+          text: `Our calculations are based on the countrywide average data related to ${questionUtility} habits.`,
+          link: 'https://www.epa.gov/egrid',
+        };
+      } else if (questionUtility === "Waste") {
+        return {
+          text: `Our calculations are based on countrywide average ${questionUtility} management practices.`,
+          link: 'https://www.epa.gov/egrid',
+        };
+      } else if (questionUtility === "") {
+        return {
+          text: ``,
+          link: 'https://www.epa.gov/egrid',
+        };
+      } else {
+        return {
+          text: `Our calculations are based on the countrywide average rates for ${questionUtility} consumption.`,
+          link: 'https://www.epa.gov/egrid',
+        };
+      }
     }
   };
 
@@ -584,13 +712,55 @@ const [showPopup, setShowPopup] = useState(false);
             ></div>
           </div>
         </div>
-        <div
+        {/* <div
           style={{
             background: "#c6ecf7",
             marginTop: "20px",
             borderRadius: "20px",
           }}
-        >
+        > */}
+        <div
+  style={{
+    position: 'relative', // This makes sure that the video is positioned relatively to this div
+    marginTop: "20px",
+            borderRadius: "20px",
+    borderRadius: '20px', // The border radius for rounded corners
+    overflow: 'hidden', // This ensures the video does not flow outside the border radius
+  }}
+>
+  <video
+    autoPlay
+    muted
+    loop
+    style={{
+      position: 'absolute', // Position absolutely to stretch over the div area
+      width: '100%', // Ensure it covers the entire parent div
+      height: '100%', // Ensure it covers the entire parent div
+      objectFit: 'cover', // Ensure it covers the area without stretching
+      top: 0, // Align to the top
+      left: 0, // Align to the left
+      zIndex: -1, // Position it behind any other content
+    }}
+  >
+    <source
+      src="https://video.wixstatic.com/video/11062b_a05955ed1c70427da0c0da8b85a42836/1080p/mp4/file.mp4"
+      type="video/mp4"
+    />
+  </video>
+
+<OverlayTrigger
+        placement="bottom"
+        delay={{ show: 25, hide: 40 }}
+        overlay={renderTooltip} >
+        <button
+          onClick={() => window.open(dataSourceLink, '_blank')}
+          className="data-source-button"
+          style={{ position: 'absolute', top: '120px', left: '720px' }}
+          >
+          Data Source
+        </button>
+      </OverlayTrigger>
+
           {questionsCompleted ? (
             // Render the new component when questions are completed
             <div style={{height:"80vh"}}>
@@ -689,7 +859,6 @@ const [showPopup, setShowPopup] = useState(false);
                       width: "80%",
                       margin: "0 auto",
                       height: "40vh",
-                      background: "#cccecf",
                       color: "black",
                       fontWeight: "bold",
                       borderRadius: "10px",
@@ -1140,7 +1309,6 @@ const [showPopup, setShowPopup] = useState(false);
                     style={{
                       width: "",
                       height: "",
-                      background: "#cccecf",
                       marginTop: "20px",
                       marginLeft: "50px",
                       marginRight: "50px",
