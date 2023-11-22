@@ -748,18 +748,22 @@ const [showPopup, setShowPopup] = useState(false);
     />
   </video>
 
-<OverlayTrigger
-        placement="bottom"
-        delay={{ show: 25, hide: 40 }}
-        overlay={renderTooltip} >
-        <button
-          onClick={() => window.open(dataSourceLink, '_blank')}
-          className="data-source-button"
-          style={{ position: 'absolute', top: '120px', left: '720px' }}
-          >
-          Data Source
-        </button>
-      </OverlayTrigger>
+  {!questionsCompleted && (
+  <OverlayTrigger
+    placement="bottom"
+    delay={{ show: 25, hide: 40 }}
+    overlay={renderTooltip}
+  >
+    <button
+      onClick={() => window.open(dataSourceLink, '_blank')}
+      className="data-source-button"
+      style={{ position: 'absolute', top: '120px', left: '720px' }}
+    >
+      Data Source
+    </button>
+  </OverlayTrigger>
+)}
+
 
           {questionsCompleted ? (
             // Render the new component when questions are completed
