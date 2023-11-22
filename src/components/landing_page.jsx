@@ -129,7 +129,7 @@ export function Landing_Page(props) {
           <div style={{ width: '482px', height: '434px', left: '3px', top: '-10px', position: 'absolute', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 400, wordWrap: 'break-word', textAlign: 'justify' }}>At Offset CRBN, we're on a mission to make a positive impact on our planet's health. We understand that in today's world, it's essential to take responsibility for our carbon footprint. That's why we've created a simple yet powerful platform that empowers individuals like you to take action and make a difference.</div>
         </div>
       </div>
-      <div style={{ width: '485px', height: '397px', left: '128px', top: '400px', position: 'absolute', background: '#EDF7FC', borderRadius: '20px' }}></div>
+      <div style={{ width: '485px', height: '397px', left: '128px', top: '430px', position: 'absolute', background: '#EDF7FC', borderRadius: '20px' }}></div>
       <div style={{ width: '482px', height: '28px', left: '131px', top: '450px', position: 'absolute', textAlign: 'center', color: 'black', fontSize: '20px', fontFamily: '"Helvetica Neue", sans-serif', fontWeight: 500, wordWrap: 'break-word' }}>Answer below questions to start calculating your carbon footprint</div>
       <div>
         <div style={{ width: '398px', height: '100px', left: '169px', top: '520px', position: 'absolute' }}>
