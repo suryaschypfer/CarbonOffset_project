@@ -16,6 +16,9 @@ export function DynamicQuestionPage(props) {
   const [selectedChoices, setSelectedChoices] = useState([]);
   const [selectedChoices_Q1, setSelectedChoicesQ1] = useState([]);
   const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const location = useLocation();
+  const codeForZip = new URLSearchParams(location.search).get('zip');
   const [lastAnsweredQuestionIndex, setLastAnsweredQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [unitIndexes, setUnitIndex] = useState({});
