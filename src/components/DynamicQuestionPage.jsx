@@ -8,7 +8,13 @@ import { useNavigate,Link ,useLocation} from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 import FinalPage from "./FinalPage";
 import { useParams } from 'react-router-dom';
-import tree from "./../assets/tree.png"
+import tree from "./../assets/tree.png";
+import Modal from
+ 
+'react-bootstrap/Modal';
+import Button from
+ 
+'react-bootstrap/Button';
 
 const DynamicQuestionPage = () => {
   const [questions, setQuestions] = useState([]);
@@ -24,7 +30,20 @@ const DynamicQuestionPage = () => {
   const [selectedChoiceIndexes, setSelectedChoiceIndexes] = useState(
     []
   );
-  const [savedData, setSavedData] = useState({});
+//   const [savedData, setSavedData] = useState({});
+const [savedData, setSavedData] = useState(() => {
+  try {
+    const savedDataString = localStorage.getItem('savedData');
+    if (savedDataString) {
+      return JSON.parse(savedDataString);
+    }
+    return {};
+  } catch (error) {
+    console.error('Error retrieving saved data:', error);
+    return {};
+  }
+});
+const [showPopup, setShowPopup] = useState(false);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questionsCompleted, setQuestionsCompleted] = useState(false);
@@ -122,6 +141,42 @@ const DynamicQuestionPage = () => {
       setCurrentLabel(currentQuestion.label);
     }
   }, [currentQuestionIndex, filteredQuestions]);
+
+  useEffect(() => {
+    // Check for savedData in local storage
+    const savedDataString = localStorage.getItem('savedData');
+    if (savedDataString) {
+      const parsedSavedData = JSON.parse(savedDataString);
+      if (Object.keys(parsedSavedData).length > 0) { // Check if savedData is empty
+        setSavedData(parsedSavedData);
+        setShowPopup(true);
+      }
+    }
+  }, []);
+  
+
+  const handleLoadSavedData = () => {
+    // Load savedData from local storage and update state
+    const savedDataString = localStorage.getItem('savedData');
+    const parsedSavedData = JSON.parse(savedDataString);
+    setSavedData(parsedSavedData);
+
+    // Close popup
+    setShowPopup(false);
+  };
+
+  const handleDeleteSavedData = () => {
+    // Remove savedData from local storage and update state
+    localStorage.removeItem('savedData');
+    setSavedData({});
+
+    // Close popup
+    setShowPopup(false);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
   useEffect(() => {
    
     fetchRandomFact();
@@ -129,8 +184,15 @@ const DynamicQuestionPage = () => {
     
     // renderDataSourceLink();
   }, [currentQuestionIndex]);
+
+  useEffect(() => {
+    localStorage.setItem('savedData', JSON.stringify(savedData));
+  }, [savedData]);
+
+
   const handleNextQuestion = () => {
     // Increment the index to display the next question
+    const curRealQuestionId = filteredQuestions[currentQuestionIndex].id;
 
     if (
       filteredQuestions[currentQuestionIndex].questionType == 2 &&
@@ -151,6 +213,7 @@ const DynamicQuestionPage = () => {
           currentUnitIndex,
           choiceIndex,
           selectedChoiceIndexes,
+          curRealQuestionId,
         },
       }));
       setMf(1);
@@ -179,6 +242,7 @@ const DynamicQuestionPage = () => {
             currentUnitIndex,
             choiceIndex: choiceIndex,
             selectedChoiceIndexes,
+            curRealQuestionId,
           },
         }));
 
@@ -207,6 +271,7 @@ const DynamicQuestionPage = () => {
             currentUnitIndex,
             choiceIndex: choiceIndex,
             selectedChoiceIndexes,
+            curRealQuestionId,
           },
         }));
         setMf(1);
@@ -241,6 +306,7 @@ const DynamicQuestionPage = () => {
           currentUnitIndex,
           choiceIndex,
           selectedChoiceIndexes,
+          curRealQuestionId,
         },
       }));
 
@@ -272,6 +338,7 @@ const DynamicQuestionPage = () => {
           currentUnitIndex,
           choiceIndex,
           selectedChoiceIndexes,
+          curRealQuestionId,
         },
       }));
       setMf(1);
@@ -300,23 +367,13 @@ const DynamicQuestionPage = () => {
           currentUnitIndex,
           choiceIndex,
           selectedChoiceIndexes,
+          curRealQuestionId,
         },
       }));
 
       setType1Ans1(0);
     }
-    // setSavedData((prevData) => ({
-    //   ...prevData,
-    //   [currentQuestionIndex]: {
-    //     type1Ans1,
-    //     mf,
-    //     type2Ans1,
-    //     currentSelectedUnit,
-    //     currentUnitIndex,
-    //     choiceIndex,
-    //     selectedChoiceIndexes,
-    //   },
-    // }));
+    
 
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
 
@@ -463,6 +520,16 @@ const DynamicQuestionPage = () => {
     // Additional logic for handling the change...
 
     // Update the state if needed
+    // setSavedData((prevSavedData) => {
+    //     const newSavedData = { ...prevSavedData };
+    
+    //     if (newSavedData[currentQuestionIndex]) {
+    //       // Update the choiceIndex property in savedData
+    //       newSavedData[currentQuestionIndex].choiceIndex = -1;
+    //     }
+    
+    //     return newSavedData;
+    //   });
   };
   const [prog, updateProg] = useState(0);
   const navigateToHome = () => {
@@ -564,7 +631,9 @@ const DynamicQuestionPage = () => {
                         fontWeight: "bold",
                         width: "120px",
                       }}
-                      onClick={""}
+                      onClick={()=>{
+                        console.log(savedData);
+                      }}
                     >
                       Plant Trees{" "}
                     </button>
@@ -766,12 +835,30 @@ const DynamicQuestionPage = () => {
                                   className="form-check-input"
                                   id={`choice_${choiceIndex}`}
                                   name="singleAnswer"
-                                  // value={currentChoices[0][choiceIndex]}
+                                  
+                                //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
                                   onChange={(e) => {
                                     handleSingleAnswerChange(e, choice);
                                     setChoiceIndex(choiceIndex);
                                   }}
                                 />
+                                {/* <input
+  type="radio"
+  className="form-check-input"
+  id={`choice_${ind}`}
+  name="singleAnswer"
+  checked={savedData[currentQuestionIndex]?.choiceIndex !== -1
+        ? ind === savedData[currentQuestionIndex]?.choiceIndex
+        : choiceIn
+  }
+  onChange={(e) => {
+    handleSingleAnswerChange(e, choice);
+    setChoiceIndex(choiceIndex);
+    
+  }}
+/> */}
+
+
                                 <label
                                   className="form-check-label"
                                   htmlFor={`choice_${choiceIndex}`}
@@ -1220,7 +1307,18 @@ const DynamicQuestionPage = () => {
 
       </div>
    
-      
+      <Modal show={showPopup} onHide={handleClosePopup}>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ color: '#28a745', fontWeight: 'bold' }}>Saved Data Found</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p style={{ fontSize: '18px', lineHeight: '1.5' }}>You have saved data from a previous session. Would you like to load or delete this data?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleLoadSavedData}>Load Data</Button>
+          <Button variant="danger" onClick={handleDeleteSavedData}>Delete Data</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
