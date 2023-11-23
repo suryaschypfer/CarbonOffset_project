@@ -748,7 +748,7 @@ const [showPopup, setShowPopup] = useState(false);
     />
   </video>
 
-  {!questionsCompleted && (
+  {!questionsCompleted && currentQuestionIndex > 0 && (
   <OverlayTrigger
     placement="bottom"
     delay={{ show: 25, hide: 40 }}
@@ -763,6 +763,7 @@ const [showPopup, setShowPopup] = useState(false);
     </button>
   </OverlayTrigger>
 )}
+
 
 
           {questionsCompleted ? (
