@@ -221,10 +221,8 @@ export function Landing_Page(props) {
           </div>
         </div>
       </div>
-      <div style={{ width: '100%', height: '30px', left: '0px', top: '974px', position: 'absolute', background: 'rgb(255, 87, 1)', backdropFilter: 'blur(4px)' }}></div>
 
     </div>
-
   );
 }
 

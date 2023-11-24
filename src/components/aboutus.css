@@ -1,0 +1,142 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Helvetica Neue", "sans-serif";
+    background-color: #FFFFFF;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+}
+
+.main_aboutus {
+    background-color: white;
+}
+
+.nav-bar {
+    width: '100%';
+    display: 'flex';
+    border-bottom: '1px solid #000';
+}
+
+.logo_about_us {
+    width: 300px;
+    height: 90px;
+    margin-left: 50px;
+
+}
+
+.aboutus_startcontainer {
+    padding: 5px;
+}
+
+
+.block1,
+.block3 {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.block2,
+.block4 {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+    flex-direction: row-reverse;
+    padding-top: 10px;
+
+}
+
+.information_1,
+.information_3 {
+    flex: 1;
+    margin-right: 10%;
+}
+
+.infomation_2,
+.information_4 {
+    flex: 1;
+    margin-left: 10%;
+}
+
+.Vedio_1,
+.Vedio_3,
+.Vedio_2 {
+    flex: 1;
+    max-width: 35%;
+}
+
+.Vedio_4 {
+    max-width: 35%;
+}
+
+.Vedio_1 video,
+.Vedio_3 video,
+.Vedio_2 video,
+.Vedio_4 video {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+/* Add or modify the following styles in your CSS file or style tag */
+
+.info_details {
+    max-width: 100%;
+    margin: 20px auto;
+}
+
+.heading_contactus {
+    font-size: 24px;
+    /* Adjust the font size as needed */
+    font-weight: bold;
+    /* Adjust the font weight as needed */
+    margin-bottom: 20px;
+    /* Adjust the margin as needed */
+}
+
+.aboutus_details_info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 100%;
+    margin: 20px auto;
+}
+
+.Emailinfo,
+.phonoInfo,
+.Pininfo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    /* Adjust the margin for spacing between items */
+}
+
+.emailpicture,
+.phonepicture,
+.pinpicture {
+    width: 40px;
+    /* Adjust the width as needed */
+    height: 40px;
+    /* Adjust the height as needed */
+    margin-right: 10px;
+    /* Adjust the margin for spacing between icon and text */
+}
+
+.email_info_from_db,
+.phone_info_from_db,
+.pin_info_from_db {
+    font-size: 16px;
+    /* Adjust the font size as needed */
+}
+
+div p {
+    padding-right: 5px;
+}
