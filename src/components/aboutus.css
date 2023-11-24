@@ -57,12 +57,18 @@ body {
 .information_3 {
     flex: 1;
     margin-right: 10%;
+    font-size: larger;
+    font-weight: 400;
+    font-family: "Helvetica Neue", "sans-serif";
 }
 
 .infomation_2,
 .information_4 {
     flex: 1;
     margin-left: 10%;
+    font-size: larger;
+    font-weight: 400;
+    font-family: "Helvetica Neue", "sans-serif";
 }
 
 .Vedio_1,
