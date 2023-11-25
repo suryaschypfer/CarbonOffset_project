@@ -82,13 +82,28 @@ export function Landing_Page(props) {
     console.log('Navigating to the next page...');
   };
 
+  const handleContactUs = () => {
+    navigate('/contactus');
+  };
 
-
+  const handleAboutUs = () => {
+    navigate('/aboutus');
+  };
 
   return (
     <div style={{ background: 'white' }}>
-      <Header />
-      {/* <img style={{width: '842px', height: '497px', left: '598px', top: '301px', position: 'absolute', outline: 'none' , border: 'none' , userSelect: 'none' , pointerEvents: 'none'}} src="LandingPageImage.png" alt="Landing Page" /> */}
+      <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
+        <div className="leftnav">
+          <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
+        </div>
+        <div className="rightnav">
+          <a href="#" className="selected">Home</a>
+          <a href="#" onClick={handleAboutUs}>About Us</a>
+          <a href="#" onClick={handleContactUs}>Contact Us</a>
+        </div>
+
+      </nav>
+
       <div
         style={{
           width: '700px',
