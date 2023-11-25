@@ -697,6 +697,7 @@ const [showPopup, setShowPopup] = useState(false);
           <div style={{fontSize:"18px",fontWeight:"bold",marginTop:"20px",textAlign:"center"}}>{prog.toFixed(1)+"%"}</div>
           <div
             className="progress"
+            
             style={{
               // marginTop: "20px",
               // marginRight: "55px",
