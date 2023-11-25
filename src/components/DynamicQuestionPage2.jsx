@@ -694,14 +694,15 @@ const [showPopup, setShowPopup] = useState(false);
         }}
       >
         <div>
+          <div style={{fontSize:"18px",fontWeight:"bold",marginTop:"20px",textAlign:"center"}}>{prog.toFixed(1)+"%"}</div>
           <div
             className="progress"
             style={{
-              marginTop: "20px",
+              // marginTop: "20px",
               // marginRight: "55px",
               // marginLeft: "55px",
             }}
-          >
+          > 
             <div
               className="progress-bar progress-bar-striped progress-bar-animated bg-orange"
               role="progressbar"
@@ -709,7 +710,9 @@ const [showPopup, setShowPopup] = useState(false);
               aria-valuemin={0}
               aria-valuemax={100}
               style={{ width: `${prog}%`, backgroundColor: "#FF5701" }}
-            ></div>
+            >
+             
+            </div>
           </div>
         </div>
         {/* <div
@@ -1081,7 +1084,7 @@ const [showPopup, setShowPopup] = useState(false);
                         </Form.Select>
                         {currentUnitIndex !== -1 && (
                           <div style={{ marginTop: "20px" }}>
-                            {question.choices[currentUnitIndex].map(
+                            {question.choices[currentUnitIndex]?.map(
                               (choice, choiceInd) => (
                                 <div
                                   key={choiceInd}
@@ -1149,7 +1152,7 @@ const [showPopup, setShowPopup] = useState(false);
                         </Form.Select>
                         {currentUnitIndex !== -1 && (
                           <div style={{ marginTop: "20px" }}>
-                            {question.choices[currentUnitIndex].map(
+                            {question.choices[currentUnitIndex]?.map(
                               (choice, choiceIndex) => (
                                 <div
                                   key={choiceIndex}
