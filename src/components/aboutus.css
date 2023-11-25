@@ -16,11 +16,7 @@ body {
     background-color: white;
 }
 
-.nav-bar {
-    width: '100%';
-    display: 'flex';
-    border-bottom: '1px solid #000';
-}
+
 
 .logo_about_us {
     width: 300px;
@@ -75,11 +71,11 @@ body {
 .Vedio_3,
 .Vedio_2 {
     flex: 1;
-    max-width: 35%;
+    max-width: 50%;
 }
 
 .Vedio_4 {
-    max-width: 35%;
+    max-width: 50%;
 }
 
 .Vedio_1 video,
@@ -101,11 +97,8 @@ body {
 
 .heading_contactus {
     font-size: 24px;
-    /* Adjust the font size as needed */
     font-weight: bold;
-    /* Adjust the font weight as needed */
     margin-bottom: 20px;
-    /* Adjust the margin as needed */
 }
 
 .aboutus_details_info {

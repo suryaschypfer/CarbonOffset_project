@@ -54,19 +54,16 @@ export default function AboutUs() {
   //   };
   return (
     <div className='main_aboutus'>
-      <nav className="nav-bar">
-        <span>
-          <a href="#" onClick={handlelandingpage} >
-            <img className='logo_about_us' src={logoImg} />
-          </a>
-        </span>
-
+      <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
+        <div className="leftnav">
+          <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" onClick={handlelandingpage} />
+        </div>
         <div className="rightnav">
           <a href="#" onClick={handlelandingpage}>Home</a>
-          <a href="#" className="selected">About Us</a>
-          <a href="#">Calculator</a>
+          <a href="#" className="selected" >About Us</a>
           <a href="#" onClick={handleContactUs}>Contact Us</a>
         </div>
+
       </nav>
 
       <div className='aboutus_startcontainer'>
