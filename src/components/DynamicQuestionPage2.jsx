@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { baseUrl } from "../config";
 import FinalComponent from "./FinalComponent";
 import { Form } from "react-bootstrap";
@@ -28,6 +28,7 @@ const DynamicQuestionPage2 = () => {
   const [filteredQuestions, setFilteredQuestions] = useState(
     []
   );
+  const selectRef = useRef(null);
   const location = useLocation();
   const [prog, updateProg] = useState(0);
   const codeForZip = new URLSearchParams(location.search).get('zip');
@@ -58,7 +59,7 @@ const [savedData, setSavedData] = useState(() => {
 
 // Your renderTooltip function
 const renderTooltip = (props) => (
-  <Tooltip id="button-tooltip" {...props} className="custom-tooltip">
+  <Tooltip id="button-tooltip" {...props} className="custom-tooltip" >
     {dataSourceText}
   </Tooltip>
 );
@@ -581,6 +582,21 @@ const [showPopup, setShowPopup] = useState(false);
     }
   }, [prog, dataInserted]);
 
+  // useEffect(() => {
+  //   // Access the select element using the ref
+  //   var selectElement = selectRef.current;
+
+  //   if (selectElement) {
+  //     // Trigger a click event on the first option
+  //     var firstOption = selectElement.options[0];
+
+  //     if (firstOption) {
+  //       firstOption.selected = true; // select the first option
+  //       selectElement.dispatchEvent(new Event('change')); // dispatch a change event
+  //     }
+  //   }
+  // }, [currentQuestionIndex]);
+
   useEffect(() => {
     const calculateAndSaveFormula = async () => {
       try {
@@ -655,24 +671,25 @@ const [showPopup, setShowPopup] = useState(false);
   };
   const handleSingleAnswerChange = (
     e,
-    selectedChoice
+    selectedChoice,
+    selectedIndex,
   ) => {
     const checked = e.target.checked;
-    console.log(selectedChoice);
+    console.log("This is selectedchooice: ",selectedIndex);
 
     // Additional logic for handling the change...
 
     // Update the state if needed
-    // setSavedData((prevSavedData) => {
-    //     const newSavedData = { ...prevSavedData };
+    setSavedData((prevSavedData) => {
+        const newSavedData = { ...prevSavedData };
+        
+        if (newSavedData[currentQuestionIndex]) {
+          // Update the choiceIndex property in savedData
+          newSavedData[currentQuestionIndex].choiceIndex = selectedIndex;
+        }
     
-    //     if (newSavedData[currentQuestionIndex]) {
-    //       // Update the choiceIndex property in savedData
-    //       newSavedData[currentQuestionIndex].choiceIndex = -1;
-    //     }
-    
-    //     return newSavedData;
-    //   });
+        return newSavedData;
+      });
   };
   // const [prog, updateProg] = useState(0);
   const navigateToHome = () => {
@@ -698,7 +715,8 @@ const [showPopup, setShowPopup] = useState(false);
       console.error('Error inserting data into Customer table:', error);
     }
   };
-
+  
+  
 
   const checkAndInsertData = () => {
     // if (questionsCompleted) {
@@ -813,10 +831,23 @@ const [showPopup, setShowPopup] = useState(false);
     <button
       onClick={() => window.open(dataSourceLink, '_blank')}
       className="data-source-button"
-      style={{ position: 'absolute', top: '130px', left: '720px' }}
+      // style={{ position: 'absolute', top: '130px', left: '720px',marginTop:"10px" }}
+      style={{ position: 'absolute', top: '19%', right: '5%', margin: '10px' }}
+  
+
     >
       Data Source
     </button>
+    {/* <button
+      onClick={() => console.log(savedData[currentQuestionIndex])}
+      className="data-source-button"
+      // style={{ position: 'absolute', top: '130px', left: '720px',marginTop:"10px" }}
+      style={{ position: 'absolute', top: '19%', right: '5%', margin: '10px' }}
+  
+
+    >
+      click
+    </button> */}
   </OverlayTrigger>
 )}
 
@@ -895,6 +926,7 @@ const [showPopup, setShowPopup] = useState(false);
                       fontWeight: "bold",
                       paddingBottom: "10px",
                       paddingTop: "20px",
+                      
                     }}
                   >
                     Category: {question.label}
@@ -902,13 +934,15 @@ const [showPopup, setShowPopup] = useState(false);
                   <div
                     style={{
                       width: "90%",
-                      height: "60px",
+                      height: "70px",
                       background: "white",
                       margin: "0 auto",
-                      paddingTop: "20px",
+                      paddingTop: "10px",
                       paddingLeft: "20px",
                       borderRadius: "20px",
                       fontWeight: "bold",
+                      // marginBottom:"20px"
+                      alignItems:"center"
                     }}
                   >
                     {question.questionContent}
@@ -924,6 +958,7 @@ const [showPopup, setShowPopup] = useState(false);
                       fontWeight: "bold",
                       borderRadius: "10px",
                       marginTop: "10px",
+                  
                     }}
                   >
                     {question.questionType == 1 && question.choiceAns == "1" ? (
@@ -1060,18 +1095,44 @@ const [showPopup, setShowPopup] = useState(false);
                                 className="form-check"
                                 style={{ marginBottom: "10px" }}
                               >
-                                <input
+                                {savedData[currentQuestionIndex]?<input
                                   type="radio"
                                   className="form-check-input"
                                   id={`choice_${choiceIndex}`}
                                   name="singleAnswer"
-                                  
+                                  checked={choiceIndex === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
                                 //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
                                   onChange={(e) => {
-                                    handleSingleAnswerChange(e, choice);
                                     setChoiceIndex(choiceIndex);
+                                    handleSingleAnswerChange(e, choice,choiceIndex);
+                                    
                                   }}
-                                />
+                                />:<input
+                                type="radio"
+                                className="form-check-input"
+                                id={`choice_${choiceIndex}`}
+                                name="singleAnswer"
+                                // checked={choiceIndex === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                              //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
+                                onChange={(e) => {
+                                  setChoiceIndex(choiceIndex);
+                                  handleSingleAnswerChange(e, choice,choiceIndex);
+                                  
+                                }}
+                              />}
+                                {/* <input
+                                  type="radio"
+                                  className="form-check-input"
+                                  id={`choice_${choiceIndex}`}
+                                  name="singleAnswer"
+                                  checked={choiceIndex === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
+                                  onChange={(e) => {
+                                    setChoiceIndex(choiceIndex);
+                                    handleSingleAnswerChange(e, choice,choiceIndex);
+                                    
+                                  }}
+                                /> */}
                                 {/* <input
   type="radio"
   className="form-check-input"
@@ -1111,6 +1172,8 @@ const [showPopup, setShowPopup] = useState(false);
                       >
                         <p style={{}}>Select the Unit and Single Option</p>
                         <Form.Select
+                        // ref={selectRef} 
+                          className="q2t2"
                           //   className="mb-3 ms-2" // Add margin to the left to create space between the input and the select
                           aria-label="Select unit"
                           value={currentSelectedUnit}
@@ -1123,11 +1186,12 @@ const [showPopup, setShowPopup] = useState(false);
                               selectedIndex !== -1 ? selectedIndex : -1
                             );
                             setCurrentSelectedUnit(e.target.value);
+                            
                           }}
                           style={{ marginLeft: "20px" }}
                         >
                           <option value="" disabled>
-                            Select the unit
+                            Choose the suitable unit
                           </option>
                           {currentSelectedUnits?.map((unit, ind) => (
                             <option key={ind} value={unit}>
@@ -1135,6 +1199,7 @@ const [showPopup, setShowPopup] = useState(false);
                             </option>
                           ))}
                         </Form.Select>
+                        
                         {currentUnitIndex !== -1 && (
                           <div style={{ marginTop: "20px" }}>
                             {question.choices[currentUnitIndex]?.map(
@@ -1144,17 +1209,33 @@ const [showPopup, setShowPopup] = useState(false);
                                   className="form-check"
                                   style={{ marginBottom: "10px" }}
                                 >
-                                  <input
+                                  {savedData[currentQuestionIndex]?<input
                                     type="radio"
                                     className="form-check-input"
                                     id={`choice_${choiceInd}`}
                                     name="singleAnswer"
                                     value={choice}
+                                    checked={choiceInd === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
                                     onChange={(e) => {
-                                      handleSingleAnswerChange(e, choice);
                                       setChoiceIndex(choiceInd);
+                                      handleSingleAnswerChange(e, choice,choiceInd);
+                                      
                                     }}
-                                  />
+                                  />:<input
+                                  type="radio"
+                                  className="form-check-input"
+                                  id={`choice_${choiceInd}`}
+                                  name="singleAnswer"
+                                  value={choice}
+                                  // checked={choiceInd === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                  onChange={(e) => {
+                                    setChoiceIndex(choiceInd);
+                                    handleSingleAnswerChange(e, choice,choiceInd);
+                                    
+                                  }}
+                                />}
+                                  
+                                  
                                   <label
                                     className="form-check-label"
                                     htmlFor={`choice_${choiceIndex}`}
@@ -1501,13 +1582,13 @@ const [showPopup, setShowPopup] = useState(false);
           paddingTop: "20px",
           paddingLeft: "30px",
           paddingRight: "30px",
-          height: "90vh",
+          height: "95vh",
           display: "flex",
           flexDirection: "column",
         }}
       >
         <img src={factLogo} style={{ width: "100%" }} alt="fact logo"></img>
-        <div style={{ position: "relative", background: "red", flex: 1, borderRadius: "20px", overflow: "hidden" }}>
+        <div style={{ position: "relative", background: "", flex: 1, borderRadius: "20px", overflow: "hidden" }}>
   <img
     src={image}
     alt="Your Alt Text"
