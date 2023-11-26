@@ -128,9 +128,9 @@ body {
 input[type="text"] {
     margin-top: 3px;
     padding: 10px;
-    border-radius: 20px; /* Use border-radius to create curved edges */
+    border-radius: 10px; /* Use border-radius to create curved edges */
     font-size: 13px;
-    width: 150px;
+    width: 250px;
 }
 
 .sidebar {

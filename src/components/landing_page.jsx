@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 import { useLocation } from 'react-router-dom';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 import DynamicQuestionPage2 from './DynamicQuestionPage2';
 import './landing_page.css';
 
@@ -12,18 +12,26 @@ export function Landing_Page(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const codeForZip = new URLSearchParams(location.search).get('zip');
-  const [zipCode, setZipCode] = useState('');
   const [userAge, setUserAge] = useState('');
-  // const [zipCode, setZipCode] = useState('');
+  const [zipCode, setZipCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [familyMembers, setFamilyMembers] = useState('');
-  // const [familyMembers, setFamilyMembers] = useState('');
   const [familyErrorMessage, setFamilyErrorMessage] = useState('');
 
   const handleadmin = () => {
     navigate('/admin');
   };
 
+  useEffect(() => {
+    const savedZipCode = Cookies.get('zipCode');
+    const savedFamilyMembers = Cookies.get('familyMembers');
+    const savedUserAge = Cookies.get('userAge'); // Retrieve the userAge value from cookies
+  
+    if (savedZipCode) setZipCode(savedZipCode);
+    if (savedFamilyMembers) setFamilyMembers(savedFamilyMembers);
+    if (savedUserAge) setUserAge(savedUserAge); // Set the userAge state with the retrieved value
+  }, []);
+  
 
   // Construct the data to send in the request body
   const data = {
@@ -74,8 +82,9 @@ export function Landing_Page(props) {
       return; // Don't navigate
     }
 
-    // Cookies.set('zipCode', zipCode, { expires: 5 / (24 * 60) }); // 5 minutes expiry
-    // Cookies.set('familyMembers', familyMembers, { expires: 5 / (24 * 60) }); // 5 minutes expiry
+    Cookies.set('zipCode', zipCode, { expires: 500 / (24 * 60) }); // 5 minutes expiry
+    Cookies.set('familyMembers', familyMembers, { expires: 500 / (24 * 60) }); // 5 minutes expiry
+    Cookies.set('userAge', userAge, { expires: 500 / (24 * 60) }); // Store the userAge in cookies
 
     // If all validations pass, navigate to the next page
     navigate(`/question/0?zip=${zipCode}&familySize=${familyMembers}&ageGroup=${userAge}`, { state: { zip: zipCode, familySize: familyMembers, userAge: userAge} });
