@@ -150,7 +150,7 @@ input[type="text"] {
 
 .Age_information {
     background-color: rgb(255, 87, 1);
-    padding: 1vw;
+    padding: 1.5vw;
     border-radius: 20px;
     margin-bottom: 2vw;
     text-align: center;
@@ -166,14 +166,16 @@ input[type="text"] {
 
 .Age_information select {
     font-size: 15px;
-    border-radius: 20px; 
+    border-radius: 10px; 
     /* appearance: none;  */
     padding: 5px; 
-    color: grey; 
+    color: rgb(2, 2, 2); 
+    padding: 0.8vw;
+    width: 250px;
   }
   
   .Age_information select option[disabled] {
-    color: grey; 
+    color: rgb(18, 18, 18); 
   }
 
 
