@@ -744,8 +744,10 @@ const [showPopup, setShowPopup] = useState(false);
         }}
       >
         <div>
-          <div style={{fontSize:"18px",fontWeight:"bold",marginTop:"20px",textAlign:"center"}}>{prog.toFixed(1)+"%"}</div>
-          <div
+        <div style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", textAlign: "center" }}>
+  {isNaN(prog) ? "0%" : `${prog.toFixed(1)}%`}
+</div>
+<div
             className="progress"
             
             style={{
@@ -933,7 +935,7 @@ const [showPopup, setShowPopup] = useState(false);
                           textAlign: "center",
                         }}
                       >
-                        <p style={{}}>Enter the value in numbers</p>
+                        {/* <p style={{}}>Enter the value in numbers</p> */}
                         <input
                           value={type1Ans1}
                           type="number"
@@ -954,7 +956,7 @@ const [showPopup, setShowPopup] = useState(false);
                             textAlign: "center",
                           }}
                         >
-                          <p style={{}}>Enter the value in numbers</p>
+                          {/* <p style={{}}>Enter the value in numbers</p> */}
                         </div>
                         <div
                           style={{
