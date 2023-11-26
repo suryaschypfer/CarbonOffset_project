@@ -17,6 +17,7 @@ export function Landing_Page(props) {
   const [errorMessage, setErrorMessage] = useState('');
   const [familyMembers, setFamilyMembers] = useState('');
   const [familyErrorMessage, setFamilyErrorMessage] = useState('');
+  const [ageErrorMessage, setAgeErrorMessage] = useState('');
 
   const handleadmin = () => {
     navigate('/admin');
@@ -25,13 +26,13 @@ export function Landing_Page(props) {
   useEffect(() => {
     const savedZipCode = Cookies.get('zipCode');
     const savedFamilyMembers = Cookies.get('familyMembers');
-    const savedUserAge = Cookies.get('userAge'); // Retrieve the userAge value from cookies
-  
+    const savedUserAge = Cookies.get('userAge');
+
     if (savedZipCode) setZipCode(savedZipCode);
     if (savedFamilyMembers) setFamilyMembers(savedFamilyMembers);
-    if (savedUserAge) setUserAge(savedUserAge); // Set the userAge state with the retrieved value
+    if (savedUserAge) setUserAge(savedUserAge);
   }, []);
-  
+
 
   // Construct the data to send in the request body
   const data = {
@@ -65,9 +66,10 @@ export function Landing_Page(props) {
   const handleFirstQuestion = () => {
 
     // Check if the zipCode is empty
-    if (!zipCode && !familyMembers) {
+    if (!zipCode && !familyMembers && !userAge) {
       setErrorMessage('Please enter this field to continue');
       setFamilyErrorMessage('Please enter this field to continue');
+      setAgeErrorMessage('Please enter this field to continue');
       return; // Don't navigate
     }
 
@@ -82,12 +84,17 @@ export function Landing_Page(props) {
       return; // Don't navigate
     }
 
+    if (!userAge) {
+      setAgeErrorMessage('Please select your age group to continue');
+      return; // Don't navigate
+    }
+
     Cookies.set('zipCode', zipCode, { expires: 500 / (24 * 60) }); // 5 minutes expiry
     Cookies.set('familyMembers', familyMembers, { expires: 500 / (24 * 60) }); // 5 minutes expiry
     Cookies.set('userAge', userAge, { expires: 500 / (24 * 60) }); // Store the userAge in cookies
 
     // If all validations pass, navigate to the next page
-    navigate(`/question/0?zip=${zipCode}&familySize=${familyMembers}&ageGroup=${userAge}`, { state: { zip: zipCode, familySize: familyMembers, userAge: userAge} });
+    navigate(`/question/0?zip=${zipCode}&familySize=${familyMembers}&ageGroup=${userAge}`, { state: { zip: zipCode, familySize: familyMembers, userAge: userAge } });
 
     console.log('Family Members', familyMembers);
     console.log('Navigating to the next page...');
@@ -118,8 +125,9 @@ export function Landing_Page(props) {
       <div className='landingpage_start'>
         <div className='container_main'>
           <div className='vedio_start_gif'>
-            <video autoPlay muted loop>
-              <source src="https://video.wixstatic.com/video/c253c4_51f0cf76ff124d7783cc34c394893ed3/720p/mp4/file.mp4" type="video/mp4" />
+            <video autoPlay muted loop style={{ opacity: 1 }}>
+              {/* <source src="https://video.wixstatic.com/video/c253c4_51f0cf76ff124d7783cc34c394893ed3/720p/mp4/file.mp4" type="video/mp4" /> */}
+              <source src="https://video.wixstatic.com/video/11062b_d578b9d4ffba48c68d086ec29fe9e6f0/720p/mp4/file.mp4" type="video/mp4" />
             </video>
             <div className='text_overlay'>
               <div className='vedio_heading'>Empowering You to Plant a Greener Future</div>
@@ -135,6 +143,7 @@ export function Landing_Page(props) {
             <div className='zipcode_heading'>Enter your Zipcode</div>
             <input
               type="text"
+              className='input_text_landingpage'
               name="zipcode"
               id="zipcode"
               placeholder="Enter ZIP Code"
@@ -152,6 +161,7 @@ export function Landing_Page(props) {
             <div className='Family_heading'>How many members in your family?</div>
             <input
               type="text"
+              className='input_text_landingpage'
               name="numericValue"
               placeholder="Enter Number"
               maxLength="2"
@@ -174,7 +184,10 @@ export function Landing_Page(props) {
             <div className='Age_heading'>Select Your Age Group</div>
             <select
               value={userAge}
-              onChange={(e) => setUserAge(e.target.value)}
+              onChange={(e) => {
+                setUserAge(e.target.value);
+                setAgeErrorMessage('');  // Clear the error message
+              }}
             >
               <option value="" disabled hidden>Select Age Group</option>
               <option value="Teenager (Under 18)">Teenager (Under 18)</option>
@@ -182,7 +195,7 @@ export function Landing_Page(props) {
               <option value="Middle-Aged Adult (40 to 65)">Middle-Aged Adult (40 to 65)</option>
               <option value="Senior Citizen (Above 65)">Senior Citizen (Above 65)</option>
             </select>
-            <div className='Family_error'>{familyErrorMessage}</div>
+            <div className='Family_error'>{ageErrorMessage}</div>
           </div>
 
 

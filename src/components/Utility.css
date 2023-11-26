@@ -1,9 +1,8 @@
-
 body {
     padding-left: 65px;
 }
 
-.top-nav{
+.top-nav {
     font-family: "Helvetica Neue", sans-serif;
     font-size: large;
     font-weight: 500;
@@ -11,14 +10,15 @@ body {
     text-align: right;
     border-bottom: 3px solid #333;
     margin-bottom: 20px;
- }
- a:link {
+}
+
+a:link {
     text-decoration: none;
 }
 
-.Values{
+.Values {
     font-family: "Helvetica Neue", sans-serif;
-    font-size:large;
+    font-size: large;
     font-weight: 750;
     color: black;
     margin-left: 10px;
@@ -26,52 +26,52 @@ body {
     margin-right: 20px;
 }
 
-.Home{
+.Home {
     font-family: "Helvetica Neue", sans-serif;
-    font-size:large;
+    font-size: large;
     font-weight: 750;
     font-family: Arial, sans-serif;
     color: black;
     margin-right: 10px;
 }
 
-.Questions{
+.Questions {
     font-family: "Helvetica Neue", sans-serif;
-    font-size:large;
+    font-size: large;
     font-weight: 750;
     color: black;
     margin-right: 20px;
 }
 
-.Contact{
+.Contact {
     font-family: "Helvetica Neue", sans-serif;
-    font-size:large;
+    font-size: large;
     font-weight: 750;
     color: black;
     margin-right: 20px;
 }
 
-.Support{
+.Support {
     font-family: "Helvetica Neue", sans-serif;
-    font-size:large;
+    font-size: large;
     font-weight: 750;
     color: black;
     margin-right: 20px;
 }
 
-.Logout{
+.Logout {
     font-family: "Helvetica Neue", sans-serif;
-    font-size:large;
+    font-size: large;
     font-weight: 750;
     color: black;
     margin-right: 20px;
 }
 
-.action{
+.action {
     margin-top: 30px;
 }
 
-.action-item{
+.action-item {
     font-size: large;
     font-weight: 500;
     vertical-align: middle;
@@ -81,11 +81,11 @@ body {
     margin-right: 5px;
 }
 
-.modify{
+.modify {
     text-align: right;
     display: inline;
     vertical-align: middle;
-   
+
 }
 
 /* img {
@@ -95,21 +95,21 @@ body {
     height: 25px;
     width: 25px;
   } */
-  
-  img:hover {
-    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
-  }
 
-.utilities-and-search{
+img:hover {
+    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+
+.utilities-and-search {
     text-align: right;
     margin-top: 15px;
     margin-bottom: 10px;
 }
 
-.utilities{
+.utilities {
     /*margin-top: 25px;*/
     font-family: "Helvetica Neue", sans-serif;
-    font-size:larger;
+    font-size: larger;
     font-weight: 750;
     display: inline;
     margin-right: 350px;
@@ -125,10 +125,11 @@ body {
     margin-right: 70px;
 }
 
-input[type="text"] {
+.utility_input {
     margin-top: 3px;
     padding: 10px;
-    border-radius: 10px; /* Use border-radius to create curved edges */
+    border-radius: 10px;
+    /* Use border-radius to create curved edges */
     font-size: 13px;
     width: 250px;
 }
@@ -144,14 +145,14 @@ input[type="text"] {
     left: 0;
     bottom: 0;
     top: 0;
-    background-color:  hsl(114, 25%, 71%);
+    background-color: hsl(114, 25%, 71%);
     width: 72px;
     z-index: 5;
     padding-bottom: 250px;
 }
 
-.attribute-names{
-    padding-top:10px;
+.attribute-names {
+    padding-top: 10px;
     color: black;
     display: flex;
     justify-content: space-between;
@@ -166,26 +167,27 @@ input[type="text"] {
     background-color: white;
     z-index: 1;
 }
-th{ 
-    color:black;
+
+th {
+    color: black;
     font-weight: 600 !important;
     background-color: white;
     position: sticky;
-    padding-top: 1px  !important;
-    padding-bottom: 1px  !important;
-    }
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+}
 
 input[type="checkbox"] {
     transform: scale(2.5);
-    margin-left: 10px; 
+    margin-left: 10px;
     margin-top: 11px !important;
 }
 
 
-.table-wrapper{
+.table-wrapper {
     display: flex;
     max-height: 290px;
-    overflow-y:scroll;
+    overflow-y: scroll;
 }
 
 .tabl-sapce {
@@ -193,28 +195,28 @@ input[type="checkbox"] {
     margin: 0;
     padding: 0;
     border-collapse: collapse;
-  }
-  
-  .tabl-sapce th,
-  .tabl-sapce td {
+}
+
+.tabl-sapce th,
+.tabl-sapce td {
     padding: 8px;
     text-align: center;
     vertical-align: middle;
     border: 1px solid #ddd;
-  }
-  
-  .tabl-sapce th {
+}
+
+.tabl-sapce th {
     background-color: #f2f2f2;
     font-weight: bold;
-  }
-  
-  /* Optional: Style the hover effect for rows */
-  .tabl-sapce tbody tr:hover {
-    background-color: #f5f5f5;
-  }
-  
+}
 
-.data{
+/* Optional: Style the hover effect for rows */
+.tabl-sapce tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+
+.data {
     padding-top: 10px;
     flex: column;
     justify-content: space-between;
@@ -253,9 +255,9 @@ input[type="checkbox"] {
     align-items: center;
 }*/
 
-.data input{
+.data input {
     width: 30px;
-    cursor:pointer;
+    cursor: pointer;
     height: 30px;
     color: black
 }
@@ -265,7 +267,7 @@ input[type="checkbox"] {
     margin-left: 15px;
     margin-bottom: 500px;
     background-color: hsl(114, 25%, 71%);
-    color:black;
+    color: black;
     height: 50px;
     width: 100px;
     border-radius: 15px;
@@ -276,8 +278,10 @@ input[type="checkbox"] {
 
 .back:hover {
     cursor: pointer;
-    background-color:   rgb(19, 190, 19); /* Darker green on hover */
-    color: white; /* White text color on hover */
+    background-color: rgb(19, 190, 19);
+    /* Darker green on hover */
+    color: white;
+    /* White text color on hover */
 }
 
 .bottom-border {

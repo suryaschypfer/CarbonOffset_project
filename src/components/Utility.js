@@ -1,23 +1,23 @@
-import React, { useEffect, useState, Component  } from 'react';
+import React, { useEffect, useState, Component } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Utility.css'; // Import your CSS file
 /*import datas from "./data.json"*/
 import axios from 'axios'; // Import Axios library
 
 
-const Utility =() => {
+const Utility = () => {
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
   const handlequestions = () => {
     navigate('/questions'); // Use navigate to go to the desired route
-    };
-    const handleadmin = () => {
-        navigate('/admin'); // Use navigate to go to the desired route
-    };
+  };
+  const handleadmin = () => {
+    navigate('/admin'); // Use navigate to go to the desired route
+  };
 
-   // Function to fetch data from the server
-   const fetchData = async () => {
+  // Function to fetch data from the server
+  const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/Utility');
       console.log('Response data:', response.data);
@@ -27,29 +27,29 @@ const Utility =() => {
     }
   };
 
-    const handleSearch = () => {
-      const searchInput = document.getElementById('search-input');
-      const value = searchInput.value.toLowerCase();
-      const filteredData = searchTable(value, data);
-      setData(filteredData);
-    };
+  const handleSearch = () => {
+    const searchInput = document.getElementById('search-input');
+    const value = searchInput.value.toLowerCase();
+    const filteredData = searchTable(value, data);
+    setData(filteredData);
+  };
 
-    const searchTable = (value, data) => {
-      const filteredData = [];
-      for (let i = 0; i < data.length; i++) {
-        const Utility = data[i].Utility.toLowerCase();
-        if (Utility.includes(value)) {
-          filteredData.push(data[i]);
-        }
+  const searchTable = (value, data) => {
+    const filteredData = [];
+    for (let i = 0; i < data.length; i++) {
+      const Utility = data[i].Utility.toLowerCase();
+      if (Utility.includes(value)) {
+        filteredData.push(data[i]);
       }
-      return filteredData;
-    };
+    }
+    return filteredData;
+  };
 
-    
+
   useEffect(() => {
     handleSearch(); // Initially, show all data
   }, []);
-  
+
   useEffect(() => {
     fetchData(); // Fetch data from the API when the component mounts
   }, []);
@@ -89,9 +89,10 @@ const Utility =() => {
           <input
             id="search-input"
             type="text"
+            className='utility_input'
             placeholder="Search..."
             onChange={handleSearch}
-          
+
           />
         </div>
       </div>
@@ -104,42 +105,42 @@ const Utility =() => {
         </div>
         <div>
           <a href="#">
-            <img src="/admin.png" alt="admin"/></a>
+            <img src="/admin.png" alt="admin" /></a>
         </div>
         <div>
           <a href="#">
-            <img src="/utilities.png" alt="Utilities"/></a>
+            <img src="/utilities.png" alt="Utilities" /></a>
         </div>
         <div>
           <a href="#">
-            <img src="/payment.png" alt="lines"/></a>
+            <img src="/payment.png" alt="lines" /></a>
         </div>
         <div>
           <a href="#">
-            <img src="/formulas.png" alt="formulas"/></a>
+            <img src="/formulas.png" alt="formulas" /></a>
         </div>
       </div>
 
 
       <div className="table-wrapper">
         <table className="tabl-sapce">
-        <thead>
-          <tr  className="bg-info sticky-header">
-            <th>Select</th>
-            <th>Val_Id</th>
-            <th>Zipcode</th>
-            <th>Country</th>
-            <th>City</th>
-            <th>Utility</th>
-            <th>Utility Value</th>
-            <th>Utility_Units</th>
-            <th>Carbon Intensity</th>
-            <th>Carbon Intensity_Unit</th>
-            <th>Ref Value(lbs of Co2)</th>
-            <th>Sources</th>
-            <th>Date of Source</th>
-          </tr>
-        </thead>
+          <thead>
+            <tr className="bg-info sticky-header">
+              <th>Select</th>
+              <th>Val_Id</th>
+              <th>Zipcode</th>
+              <th>Country</th>
+              <th>City</th>
+              <th>Utility</th>
+              <th>Utility Value</th>
+              <th>Utility_Units</th>
+              <th>Carbon Intensity</th>
+              <th>Carbon Intensity_Unit</th>
+              <th>Ref Value(lbs of Co2)</th>
+              <th>Sources</th>
+              <th>Date of Source</th>
+            </tr>
+          </thead>
 
           <tbody id="myTable">
             {data.map((item) => (
@@ -164,7 +165,7 @@ const Utility =() => {
           </tbody>
         </table>
       </div>
-      
+
       <button className="back">BACK</button>
 
       <div className="bottom-border"></div>
