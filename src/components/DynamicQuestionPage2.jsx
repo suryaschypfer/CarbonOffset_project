@@ -667,7 +667,7 @@ const [showPopup, setShowPopup] = useState(false);
   return (
     <><nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
     <div className="leftnav">
-      <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" />
+      <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" onClick={navigateToHome}/>
     </div>
     <div className="rightnav">
       <a href="#" onClick={navigateToHome}>Home</a>
@@ -761,7 +761,7 @@ const [showPopup, setShowPopup] = useState(false);
     <button
       onClick={() => window.open(dataSourceLink, '_blank')}
       className="data-source-button"
-      style={{ position: 'absolute', top: '120px', left: '720px' }}
+      style={{ position: 'absolute', top: '130px', left: '720px' }}
     >
       Data Source
     </button>
