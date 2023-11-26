@@ -13,6 +13,7 @@ export function Landing_Page(props) {
   const location = useLocation();
   const codeForZip = new URLSearchParams(location.search).get('zip');
   const [zipCode, setZipCode] = useState('');
+  const [userAge, setUserAge] = useState('');
   // const [zipCode, setZipCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [familyMembers, setFamilyMembers] = useState('');
@@ -26,7 +27,8 @@ export function Landing_Page(props) {
 
   // Construct the data to send in the request body
   const data = {
-    familyMembers: familyMembers
+    familyMembers: familyMembers,
+    ageGroup: userAge
   };
 
   // Use axiosInstance to send a POST request
@@ -76,7 +78,7 @@ export function Landing_Page(props) {
     // Cookies.set('familyMembers', familyMembers, { expires: 5 / (24 * 60) }); // 5 minutes expiry
 
     // If all validations pass, navigate to the next page
-    navigate(`/question/0?zip=${zipCode}&familySize=${familyMembers}`, { state: { zip: zipCode, familySize: familyMembers } });
+    navigate(`/question/0?zip=${zipCode}&familySize=${familyMembers}&ageGroup=${userAge}`, { state: { zip: zipCode, familySize: familyMembers, userAge: userAge} });
 
     console.log('Family Members', familyMembers);
     console.log('Navigating to the next page...');
@@ -157,6 +159,21 @@ export function Landing_Page(props) {
               }}
             />
             <div className='Family_error' >{familyErrorMessage}</div>
+          </div>
+
+          <div className='Age_information'>
+            <div className='Age_heading'>Select Your Age Group</div>
+            <select
+              value={userAge}
+              onChange={(e) => setUserAge(e.target.value)}
+            >
+              <option value="" disabled hidden>Select Age Group</option>
+              <option value="Teenager (Under 18)">Teenager (Under 18)</option>
+              <option value="Young Adult (19 to 39)">Young Adult (19 to 39)</option>
+              <option value="Middle-Aged Adult (40 to 65)">Middle-Aged Adult (40 to 65)</option>
+              <option value="Senior Citizen (Above 65)">Senior Citizen (Above 65)</option>
+            </select>
+            <div className='Family_error'>{familyErrorMessage}</div>
           </div>
 
 

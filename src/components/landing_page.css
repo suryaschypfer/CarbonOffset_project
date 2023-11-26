@@ -96,7 +96,7 @@ video {
 }
 
 .form_start {
-    padding-top: 3vw;
+    padding-top: 1.7vw;
     color: black;
     text-align: center;
     font-family: "Helvetica Neue",
@@ -104,14 +104,14 @@ video {
     font-size: large;
     word-wrap: break-word;
     font-weight: 700;
-    padding-bottom: 3vw;
+    padding-bottom: 1.7vw;
 }
 
 .zipcode_information {
     background-color: rgb(255, 87, 1);
     padding: 1vw;
     border-radius: 20px;
-    margin-bottom: 2vw;
+    margin-bottom: 1.5vw;
     text-align: center;
 
 }
@@ -128,7 +128,7 @@ video {
     background-color: rgb(255, 87, 1);
     padding: 1vw;
     border-radius: 20px;
-    margin-bottom: 4vw;
+    margin-bottom: 1.5vw;
     text-align: center;
 }
 
@@ -142,10 +142,40 @@ video {
 
 input[type="text"] {
     background: white;
+    font-size: 15px !important;
     border-radius: 20px;
     border: none;
     margin-top: 1vw;
 }
+
+.Age_information {
+    background-color: rgb(255, 87, 1);
+    padding: 1vw;
+    border-radius: 20px;
+    margin-bottom: 2vw;
+    text-align: center;
+}
+
+.Age_heading {
+    font-family: "Helvetica Neue",
+        sans-serif;
+    font-size: large;
+    word-wrap: break-word;
+    font-weight: 500;
+}
+
+.Age_information select {
+    font-size: 15px;
+    border-radius: 20px; 
+    /* appearance: none;  */
+    padding: 5px; 
+    color: grey; 
+  }
+  
+  .Age_information select option[disabled] {
+    color: grey; 
+  }
+
 
 .landing_button {
     text-align: center;

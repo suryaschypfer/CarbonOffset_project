@@ -29,8 +29,13 @@ const DynamicQuestionPage2 = () => {
     []
   );
   const location = useLocation();
+  const [prog, updateProg] = useState(0);
   const codeForZip = new URLSearchParams(location.search).get('zip');
+  const zipcodess = new URLSearchParams(location.search).get('zip');
+  const ageGroup = new URLSearchParams(location.search).get('ageGroup');
+  console.log('age roup',ageGroup)
   const familySize = parseFloat( new URLSearchParams(location.search).get('familySize'));
+  const [dataInserted, setDataInserted] = useState(false);
   const navigate = useNavigate();
   const [selectedChoiceIndexes, setSelectedChoiceIndexes] = useState(
     []
@@ -508,6 +513,7 @@ const [showPopup, setShowPopup] = useState(false);
     // Check if all questions are completed
     if (currentQuestionIndex === filteredQuestions.length - 1) {
       setQuestionsCompleted(true);
+      // insertDataIntoCustomerTable(zipcodess, carbonCount, carbonCount / 48, ageGroup);
     }
   };
   //   const calculateFormula = async (formulaName: string) => {
@@ -568,6 +574,14 @@ const [showPopup, setShowPopup] = useState(false);
   }, [currentQuestionIndex]);
 
   useEffect(() => {
+    // Call checkAndInsertData when progress reaches 100%
+    if (prog === 100 && !dataInserted) {
+      checkAndInsertData();
+      setDataInserted(true); // Update state to avoid repeated calls
+    }
+  }, [prog, dataInserted]);
+
+  useEffect(() => {
     const calculateAndSaveFormula = async () => {
       try {
         if (currentUnitIndex !== -1) {
@@ -621,6 +635,7 @@ const [showPopup, setShowPopup] = useState(false);
       );
     }
   };
+
   const handlePreviousQuestion = () => {
     if(currentQuestionIndex==0){
         navigate("/");
@@ -659,10 +674,45 @@ const [showPopup, setShowPopup] = useState(false);
     //     return newSavedData;
     //   });
   };
-  const [prog, updateProg] = useState(0);
+  // const [prog, updateProg] = useState(0);
   const navigateToHome = () => {
     navigate('/');
   }
+
+  const insertDataIntoCustomerTable = async (zipcode, finalFootprint, finalTrees, ageAnswer) => {
+    try {
+      // Make an API call to insert data into the Customer table
+      const response = await axiosInstance.post('/api/insertCustomerData', {
+        zipcode,
+        finalFootprint,
+        finalTrees,
+        age: ageAnswer,
+      });
+
+      if (response.status === 200) {
+        console.log('Data inserted into Customer table successfully.');
+      } else {
+        console.error('Failed to insert data into Customer table.');
+      }
+    } catch (error) {
+      console.error('Error inserting data into Customer table:', error);
+    }
+  };
+
+
+  const checkAndInsertData = () => {
+    // if (questionsCompleted) {
+      const ageAnswer = ageGroup;
+      const numericZipcode = zipcodess;
+      const finalFootprint = carbonCount;
+      const finalTrees = carbonCount / 48;
+      console.log('Data to be inserted:', { numericZipcode, finalFootprint, finalTrees, ageAnswer });
+
+      
+      insertDataIntoCustomerTable(numericZipcode, finalFootprint, finalTrees, ageAnswer);
+    // }
+};
+
 
   return (
     <><nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
