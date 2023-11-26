@@ -3,6 +3,7 @@ import './ContactUs.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
+import person from "../assets/person.webp";
 import logoImg from "../logo2.png";
 
 
@@ -184,20 +185,46 @@ export const ContactUs = () => {
 
             </nav>
             <div className="page">
-                <div className="text-container">
-                    <div className="contact">Contact Us</div>
-                    <p className="conv">
+            {/* <div className='contactustext'>
+            <video
+                        autoPlay
+                        muted
+                        loop
+                    >
+                        <source
+                            src="https://video.wixstatic.com/video/11062b_d578b9d4ffba48c68d086ec29fe9e6f0/1080p/mp4/file.mp4"
+                            type="video/mp4"
+                        />
+                    </video>
+            <div className="contact" style={{ top:'-200px'}}>Contact Us</div>
+                    <p className="conv" >
                         Let’s have a conversation!! <br />
-                        Fill the below form with your query and someone from our team will reach out to you soon.
+                        Fill the form with your query and someone from our team will reach out to you soon.
                     </p>
+                    </div> */}
+        <div className='container1_main'>
+          <div className='contactusvedio_start_gif'>
+          <img src={person} alt="fact logo"></img>
+            {/* <video autoPlay muted loop>
+              <source src="https://video.wixstatic.com/video/c253c4_51f0cf76ff124d7783cc34c394893ed3/720p/mp4/file.mp4" type="video/mp4" />
+            </video> */}
+            <div className='contactustext_overlay'>
+              <div className='contactusvedio_heading'>Contact Us</div>
+              <div className='contactusvedio_paragragh'> Let’s work together on your journey and align our goals to create a sustainable world with environmental, economic, and social benefits. <br />
+                        Fill the form with your query and someone from our team will reach out to you soon.</div>
+            </div>
+          </div>
+        </div>
+
+               
                     <div className='custdetails'>
-                        <div className="FName">
+                        <div className="FName" style={{ width:'500px' }}>
                             First Name*
                             <br />
                             <input type="text" placeholder="Enter your first name" onChange={handleFNameChange} />
                             {FErrorMessage && <div className="error-message">{FErrorMessage}</div>}
                         </div>
-                        <div className="LName">
+                        <div className="LName" style={{ width:'500px' }}>
                             Last Name*
                             <br />
                             <input type="text" placeholder="Enter your last name" onChange={handleLNameChange} />
@@ -209,7 +236,7 @@ export const ContactUs = () => {
                              <input type="text" placeholder="Enter your age" onChange={handleAgeChange} />
                              {AErrorMessage && <div className="error-message">{AErrorMessage}</div>}
                         </div> */}
-                        <div className='Email'>
+                        <div className='Email' style={{ width:'500px' }}>
                             Email*
                             <br />
                             <input type="text" placeholder="Your email please" />
@@ -220,13 +247,13 @@ export const ContactUs = () => {
                             <br />
                             <input type="text" placeholder="What is your query" />
                         </div> */}
-                        <div className='Query'>
+                        <div className='Query' style={{ width:'500px' }}>
                             Query
                             <br />
                             <textarea
                                 type="text"
                                 placeholder="What is your query"
-                                style={{ width: '95%', height: '75', borderRadius: '20px', padding: '10px', paddingRight: '10px', fontStyle: 'helvetica' }}
+                                style={{ width: '100%', height: '50%', borderRadius: '10px', padding: '10px', paddingRight: '10px', fontStyle: 'helvetica' }}
                                 rows={5} // Adjust the number of rows based on your preference
                                 required
                             />
@@ -236,30 +263,6 @@ export const ContactUs = () => {
                         </div>
                     </div>
 
-                </div>
-                <div className="image-container">
-                    <video
-                        style={{
-                            width: '90%',
-                            height: '80%',
-                            objectFit: 'cover',
-                            borderRadius: '20px', // Adjust the scale as needed to maintain the aspect ratio
-                            outline: 'none',
-                            border: 'none',
-                            userSelect: 'none',
-                            pointerEvents: 'none',
-                            marginRight: '2.5vw'
-                        }}
-                        autoPlay
-                        muted
-                        loop
-                    >
-                        <source
-                            src="https://video.wixstatic.com/video/11062b_d578b9d4ffba48c68d086ec29fe9e6f0/1080p/mp4/file.mp4"
-                            type="video/mp4"
-                        />
-                    </video>
-                </div>
                 {/* <footer className="bottom_div"></footer> */}
             </div>
             {/* {ErrorMessage && <div className="error-message">{ErrorMessage}</div>} */}
