@@ -26,13 +26,13 @@ export function Landing_Page(props) {
   useEffect(() => {
     const savedZipCode = Cookies.get('zipCode');
     const savedFamilyMembers = Cookies.get('familyMembers');
-    const savedUserAge = Cookies.get('userAge'); 
-  
+    const savedUserAge = Cookies.get('userAge');
+
     if (savedZipCode) setZipCode(savedZipCode);
     if (savedFamilyMembers) setFamilyMembers(savedFamilyMembers);
-    if (savedUserAge) setUserAge(savedUserAge); 
+    if (savedUserAge) setUserAge(savedUserAge);
   }, []);
-  
+
 
   // Construct the data to send in the request body
   const data = {
@@ -94,7 +94,7 @@ export function Landing_Page(props) {
     Cookies.set('userAge', userAge, { expires: 500 / (24 * 60) }); // Store the userAge in cookies
 
     // If all validations pass, navigate to the next page
-    navigate(`/question/0?zip=${zipCode}&familySize=${familyMembers}&ageGroup=${userAge}`, { state: { zip: zipCode, familySize: familyMembers, userAge: userAge} });
+    navigate(`/question/0?zip=${zipCode}&familySize=${familyMembers}&ageGroup=${userAge}`, { state: { zip: zipCode, familySize: familyMembers, userAge: userAge } });
 
     console.log('Family Members', familyMembers);
     console.log('Navigating to the next page...');
@@ -143,6 +143,7 @@ export function Landing_Page(props) {
             <div className='zipcode_heading'>Enter your Zipcode</div>
             <input
               type="text"
+              className='input_text_landingpage'
               name="zipcode"
               id="zipcode"
               placeholder="Enter ZIP Code"
@@ -160,6 +161,7 @@ export function Landing_Page(props) {
             <div className='Family_heading'>How many members in your family?</div>
             <input
               type="text"
+              className='input_text_landingpage'
               name="numericValue"
               placeholder="Enter Number"
               maxLength="2"
