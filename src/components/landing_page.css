@@ -68,7 +68,7 @@ video {
     text-align: center;
     z-index: 1;
     width: 100%;
-    color: white;
+    color: rgba(255, 255, 255, 0.743);
     max-width: 80%;
     /* Set a maximum width for the text overlay */
     margin: 0 auto;
