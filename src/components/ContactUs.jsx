@@ -15,7 +15,7 @@ export const ContactUs = () => {
     const [FErrorMessage, setFErrorMessage] = useState('');
     const [LErrorMessage, setLErrorMessage] = useState('');
     const [EErrorMessage, setEErrorMessage] = useState('');
-    const [AErrorMessage, setAErrorMessage] = useState('');
+    const [QErrorMessage, setQErrorMessage] = useState('');
     const [SuccessMessage, setSuccessMessage] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -125,6 +125,14 @@ export const ContactUs = () => {
             return;
         }
 
+        if (!query) {
+            setQErrorMessage('Please type in your query');
+            setTimeout(() => {
+                setQErrorMessage('');
+            }, 1000);
+            return;
+        }
+
 
 
 
@@ -222,6 +230,7 @@ export const ContactUs = () => {
                             rows={5}
                             required
                         />
+                         {QErrorMessage && <div className="error-message">{QErrorMessage}</div>}
                     </div>
                     <div className="send">
                         <button onClick={handleSend} className="send-button">Send</button>

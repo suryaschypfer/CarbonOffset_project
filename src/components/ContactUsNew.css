@@ -130,7 +130,7 @@ body {
     background: white;
     font-size: 15px !important;
     border-radius: 10px;
-    border: 2px solid black;
+    border: 2px solid rgba(0, 0, 0, 0.219);
     margin-top: 0.2vw;
     width: 30vw;
     height: 3vw;
@@ -143,7 +143,7 @@ body {
     background: white;
     width: 30vw;
     height: 6vw;
-    border: 2px solid black;
+    border: 2px solid rgba(0, 0, 0, 0.219);
     padding: 5px;
     font-style: 'helvetica';
 }
@@ -175,4 +175,5 @@ body {
 .error-message {
     background-color: transparent;
     color: #dc0707;
+    font-size: medium;
 }
