@@ -25,9 +25,8 @@ body {
 }
 
 .mainlogo {
-    width: 20vw !important;
-    height: 12vh !important;
-    ;
+    width: 300px;
+    height: 100px;
     background-color: none;
 }
 
