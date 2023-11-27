@@ -66,7 +66,7 @@ const renderTooltip = (props) => (
 
 
 const [showPopup, setShowPopup] = useState(false);
-const [showPopup2, setShowPopup2] = useState(false);
+// const [showPopup2, setShowPopup2] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questionsCompleted, setQuestionsCompleted] = useState(false);
   const [type1Ans1, setType1Ans1] = useState(0);
@@ -293,14 +293,11 @@ const [showPopup2, setShowPopup2] = useState(false);
     // Load savedData from local storage and update state
     const savedDataString = localStorage.getItem('savedData');
     const parsedSavedData = JSON.parse(savedDataString);
+    
+    
+    setSavedData(parsedSavedData);
+    
     setShowPopup(false);
-    if(Object.keys(parsedSavedData).length===filteredQuestions.length){
-      setSavedData(parsedSavedData);
-    }
-    else{
-      setShowPopup2(true);
-      handleDeleteSavedData();
-    }
 
     // Close popup
     
@@ -318,9 +315,7 @@ const [showPopup2, setShowPopup2] = useState(false);
   const handleClosePopup = () => {
     setShowPopup(false);
   };
-  const handleClosePopup2 = () => {
-    setShowPopup2(false);
-  };
+  
   useEffect(() => {
    
     fetchRandomFact();
@@ -554,6 +549,9 @@ const [showPopup2, setShowPopup2] = useState(false);
   //       console.log(a);
   //     }
   //   }, [currentUnitIndex]);
+  const vh = 90; // Set your desired vh value
+const percentage = 1.875;
+const height = `${vh * (percentage / 100)}vh`;
   useEffect(() => {
     // Load data for the current question index
     const currentQuestionData = savedData[currentQuestionIndex];
@@ -758,30 +756,33 @@ return (
 </nav>
 <div
       className="container-fluid d-flex justify-content-center"
-      style={{ paddingLeft: "2%", paddingRight: "2%" }}
+      style={{ paddingLeft: "2%", paddingRight: "2%", height:"90vh"}}
     >
 
 <div
       className="b1"
       style={{
         width: "70%",
-        height: "80%",
-        background: "",
+        height: "100%",
+        // background: "red",
+        flexDirection:"column"
       //   paddingTop:"0px"
         // marginTop: "100px",
       }}
     >
       <div>
-      <div style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", textAlign: "center" }}>
+      <div style={{ fontSize: "18px", fontWeight: "bold", marginTop: "2.25vh", textAlign: "center" , height:"2.8125vh"}}>
 {isNaN(prog) ? "0%" : `${prog.toFixed(1)}%`}
 </div>
-<div
+        <div
           className="progress"
           
           style={{
             // marginTop: "20px",
             // marginRight: "55px",
             // marginLeft: "55px",
+            height:"1.6875vh",
+            // background:"black"
           }}
         > 
           <div
@@ -796,18 +797,14 @@ return (
           </div>
         </div>
       </div>
-      {/* <div
-        style={{
-          background: "#c6ecf7",
-          marginTop: "20px",
-          borderRadius: "20px",
-        }}
-      > */}
+    
       <div
 style={{
   position: 'relative', // This makes sure that the video is positioned relatively to this div
-  marginTop: "20px",
+  marginTop: "2.25vh",
           borderRadius: "20px",
+          height:"81vh",
+          // background:"black",
   borderRadius: '20px', // The border radius for rounded corners
   overflow: 'hidden', // This ensures the video does not flow outside the border radius
 }}
@@ -842,7 +839,7 @@ style={{
       onClick={() => window.open(dataSourceLink, '_blank')}
       className="data-source-button"
       // style={{ position: 'absolute', top: '130px', left: '720px',marginTop:"10px" }}
-      style={{ position: 'absolute', top: '19%', right: '5%', margin: '10px' }}
+      style={{ position: 'absolute',top:"13vh", right: '5%', margin: '10px' }}
   
 
     >
@@ -937,7 +934,8 @@ style={{
                       fontWeight: "bold",
                       paddingBottom: "10px",
                       paddingTop: "20px",
-                      
+                      height:"5vh",
+                      // background:"red"
                     }}
                   >
                     Category: {question.label}
@@ -945,7 +943,7 @@ style={{
                   <div
                     style={{
                       width: "90%",
-                      height: "70px",
+                      height: "8vh",
                       background: "white",
                       margin: "0 auto",
                       paddingTop: "10px",
@@ -968,9 +966,10 @@ style={{
                       margin: "0 auto",
                       height: "40vh",
                       color: "black",
+                      // background:"yellow",
                       fontWeight: "bold",
                       borderRadius: "10px",
-                      marginTop: "10px",
+                      
                   
                     }}
                   >
@@ -1422,13 +1421,14 @@ style={{
                 <div
                   className="backSaveButton"
                   style={{
-                    marginTop: "auto",
+                    // marginTop: "3vh",
                     display: "flex",
                     justifyContent: "space-between",
                     width: "90%",
-                    height: "60px",
+                
+                    height: "6vh",
                     margin: "0 auto",
-                    paddingTop: "20px",
+                    paddingTop: "10px",
                     paddingLeft: "10%",
                     borderRadius: "20px",
                     paddingRight: "10%",
@@ -1440,7 +1440,7 @@ style={{
                       background: "black",
                       fontWeight: "bold",
                       border: "None",
-                      width: "120px",
+                      width: "150px",
                     }}
                     onClick={handlePreviousQuestion}
                   >
@@ -1452,7 +1452,7 @@ style={{
                       background: "black",
                       border: "None",
                       fontWeight: "bold",
-                      width: "120px",
+                      width: "150px",
                     }}
                     onClick={handleNextQuestion}
                   >
@@ -1463,9 +1463,10 @@ style={{
                 <div
                   style={{
                     width: "",
-                    height: "",
-                    marginTop: "20px",
+                    height: "18vh",
+                    marginTop: "4vh",
                     marginLeft: "50px",
+                    // background:"gold",
                     marginRight: "50px",
                     borderRadius: "20px",
                     paddingBottom:"20px",
@@ -1478,20 +1479,23 @@ style={{
                   <div
                       style={{
                           width: "40%",
-                          height: "100px",
+                          height: "14vh",
                           background: "white",
-                          marginTop: "25px",
+                          marginTop: "2vh",
                           marginLeft: "50px",
                           borderRadius: "10px",
                           display: "flex",
+                          marginBottom:"2vh",
                           flexDirection: "column", // Arrange items vertically
                           alignItems: "center", // Align items to the center horizontally
+                          
                       }}
                       >
-                      <p style={{ marginBottom: "10px", paddingTop:"10px" , fontWeight:"bold", fontSize: "1.22vw"}}>No. of Trees to be planted</p>
+                      <p style={{ marginBottom: "1vh", paddingTop:"10px" , height:"3vh", fontWeight:"bold", fontSize: "18px"}}>No. of Trees to be planted</p>
                       <div
                           style={{
                           display: "flex",
+                          height:"11vh",
                           alignItems: "center", // Align items in the center vertically
                           justifyContent: "space-between", // Space items equally
                           width: "100%", // Occupy the full width of the container
@@ -1515,20 +1519,22 @@ style={{
                       <div
                       style={{
                           width: "40%",
-                          height: "100px",
+                          height: "14vh",
                           background: "white",
-                          marginTop: "25px",
+                          marginTop: "2vh",
                           marginRight: "50px",
                           borderRadius: "10px",
                           display: "flex",
+                          marginBottom:"2vh",
                           flexDirection: "column", // Arrange items vertically
                           alignItems: "center", // Align items to the center horizontally
                       }}
                       >
-                      <p style={{ marginBottom: "10px" ,paddingTop:"10px", fontWeight:"bold", fontSize: "1.22vw"}}>Your Carbon Footprint</p>
+                      <p style={{ marginBottom: "1vh" ,paddingTop:"10px",height:"3vh", fontWeight:"bold", fontSize: "18px"}}>Your Carbon Footprint</p>
                       <div
                           style={{
                           display: "flex",
+                          height:"11vh",
                           alignItems: "center", // Align items in the center vertically
                           justifyContent: "space-between", // Space items equally
                           width: "100%", // Occupy the full width of the container
@@ -1593,12 +1599,12 @@ style={{
       </div>
       <div
         style={{
-          background: "",
+          // background: "black",
           width: "30%",
           paddingTop: "20px",
           paddingLeft: "30px",
           paddingRight: "30px",
-          height: "95vh",
+          height: "90vh",
           display: "flex",
           flexDirection: "column",
         }}
@@ -1610,6 +1616,7 @@ style={{
     alt="Your Alt Text"
     style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "20px" }}
   />
+  <div></div>
   <div
     style={{
       position: "absolute",
@@ -1646,20 +1653,7 @@ style={{
       </Modal.Footer>
     </Modal>
 
-    <Modal show={showPopup2} onHide={handleClosePopup2}>
-  <Modal.Header closeButton>
-    <Modal.Title style={{ color: 'red', fontWeight: 'bold' }}>Oops! We Encountered an Issue</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <p style={{ fontSize: '18px', lineHeight: '1.5' }}>
-      It seems there was an issue retrieving your old data. This may be due to incomplete answers or changes in the number of questions. As a result, the stored data is no longer valid.
-    </p>
-  </Modal.Body>
-  {/* <Modal.Footer>
-    <Button variant="success" onClick={handleLoadSavedData}>Load Data</Button>
-    <Button variant="danger" onClick={handleDeleteSavedData}>Delete Data</Button>
-  </Modal.Footer> */}
-</Modal>
+    
 
   </>
 );
