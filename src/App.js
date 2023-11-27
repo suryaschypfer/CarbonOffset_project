@@ -7,10 +7,10 @@ const App = () => {
   return (
     <>
       <Toaster />
-      <main className="">
-        <Container>
+      <main style={{ width: "90vw", margin: "0 auto" }}>
+        <div style={{ width: "100%" }}>
           <Outlet />
-        </Container>
+        </div>
       </main>
     </>
   );

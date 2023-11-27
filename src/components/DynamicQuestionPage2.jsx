@@ -739,14 +739,19 @@ const height = `${vh * (percentage / 100)}vh`;
     // }
 };
 useEffect(()=>{
-  if(questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="1"){
+  if(!savedData.hasOwnProperty(currentQuestionIndex) && questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="1"){
     setCurrentUnitIndex(0);
     setCurrentSelectedUnit(questions[currentQuestionIndex]?.selectedUnits[0]);
   }
-  if(questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="2"){
+  else if(!savedData.hasOwnProperty(currentQuestionIndex) && questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="2"){
     setCurrentUnitIndex(0);
     setCurrentSelectedUnit(questions[currentQuestionIndex]?.selectedUnits[0]);
   }
+  // else if(savedData.hasOwnProperty(currentQuestionIndex)){
+    
+  //   setCurrentUnitIndex(0);
+  //   setCurrentSelectedUnit(savedData[currentQuestionIndex].currentSelectedUnit);
+  // }
 
 },[currentQuestionIndex]);
 
