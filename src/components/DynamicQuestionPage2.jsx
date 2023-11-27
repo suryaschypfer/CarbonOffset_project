@@ -750,6 +750,18 @@ useEffect(()=>{
 
 },[currentQuestionIndex]);
 
+useEffect(()=>{
+  if(questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="1"){
+    setCurrentUnitIndex(0);
+    setCurrentSelectedUnit(questions[currentQuestionIndex]?.selectedUnits[0]);
+  }
+  if(questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="2"){
+    setCurrentUnitIndex(0);
+    setCurrentSelectedUnit(questions[currentQuestionIndex]?.selectedUnits[0]);
+  }
+
+},[filteredQuestions]);
+
 return (
   <><nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
   <div className="leftnav">
