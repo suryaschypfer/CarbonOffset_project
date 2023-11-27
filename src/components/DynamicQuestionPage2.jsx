@@ -738,7 +738,17 @@ const height = `${vh * (percentage / 100)}vh`;
       insertDataIntoCustomerTable(numericZipcode, finalFootprint, finalTrees, ageAnswer);
     // }
 };
+useEffect(()=>{
+  if(questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="1"){
+    setCurrentUnitIndex(0);
+    setCurrentSelectedUnit(questions[currentQuestionIndex]?.selectedUnits[0]);
+  }
+  if(questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="2"){
+    setCurrentUnitIndex(0);
+    setCurrentSelectedUnit(questions[currentQuestionIndex]?.selectedUnits[0]);
+  }
 
+},[currentQuestionIndex]);
 
 return (
   <><nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
@@ -1038,9 +1048,9 @@ style={{
                           }}
                           style={{ marginLeft: "20px" }}
                         >
-                          <option value="" disabled>
+                          {/* <option value="" disabled>
                             Select the unit
-                          </option>
+                          </option> */}
                           {currentSelectedUnits?.map((unit, ind) => (
                             <option key={ind} value={unit}>
                               {unit}
@@ -1182,7 +1192,7 @@ style={{
                           paddingTop: "20px",
                         }}
                       >
-                        <p style={{}}>Select the Unit and Single Option</p>
+                        <p style={{}}>Choose Single Option</p>
                         <Form.Select
                         // ref={selectRef} 
                           className="q2t2"
@@ -1270,7 +1280,7 @@ style={{
                         paddingTop: "20px",
                       }}
                     >
-                      <p style={{}}>Select the Unit and Multiple Options</p>
+                      <p style={{}}>Choose Multiple Answers</p>
                       <Form.Select
                         //   className="mb-3 ms-2" // Add margin to the left to create space between the input and the select
                         aria-label="Select unit"
@@ -1342,7 +1352,7 @@ style={{
                       }}
                     >
                       <div style={{ marginTop: "20px" }}>
-                        <p style={{}}>Select the Unit and Multiple Options</p>
+                        <p style={{}}>Choose Multiple Options</p>
                         {Array.isArray(question.choices[0]) &&
                           question.choices[0].map((choice, choiceIndex) => (
                             <div
@@ -1603,7 +1613,7 @@ style={{
           width: "30%",
           paddingTop: "20px",
           paddingLeft: "30px",
-          paddingRight: "30px",
+          // paddingRight: "30px",
           height: "90vh",
           display: "flex",
           flexDirection: "column",
@@ -1616,7 +1626,7 @@ style={{
     alt="Your Alt Text"
     style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "20px" }}
   />
-  <div></div>
+  
   <div
     style={{
       position: "absolute",
