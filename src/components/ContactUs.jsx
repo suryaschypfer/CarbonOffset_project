@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 import person from "../assets/person.webp";
-import logoImg from "../logo2.png";
+// import logoImg from "../logo2.png";
+import logoImg from "../assets/logo.svg";
 import './ContactUsNew.css'
 
 
@@ -185,7 +186,7 @@ export const ContactUs = () => {
         <div className="contact">
             <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
                 <div className="leftnav">
-                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" onClick={handlelandingpage} />
+                    <img className="mainlogo" src={logoImg} alt="OFFSET CRBN" onClick={handlelandingpage} />
                 </div>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
