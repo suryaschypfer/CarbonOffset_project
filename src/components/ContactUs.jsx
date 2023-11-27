@@ -188,7 +188,7 @@ export const ContactUs = () => {
             </nav>
             <div className="page" >
                 <div className='container1_main' >
-                    <div className='contactusvedio_start_gif' >
+                    <div className='contactusvedio_start_gif'>
                         <img className="image_in_contact_us" src={person} alt="fact logo" ></img>
                         <div className='contactustext_overlay'>
                             <div className='contactusvedio_heading'>Contact Us</div>
