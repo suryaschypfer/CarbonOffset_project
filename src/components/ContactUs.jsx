@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 import person from "../assets/person.webp";
 import logoImg from "../logo2.png";
+import './ContactUsNew.css'
+
 
 
 export const ContactUs = () => {
@@ -80,10 +82,10 @@ export const ContactUs = () => {
     //   };
 
     const handleSend = () => {
-        const firstNameInput = document.querySelector('.FName input')
-        const lastNameInput = document.querySelector('.LName input')
-        const emailInput = document.querySelector('.Email input')
-        const queryInput = document.querySelector('.Query textarea')
+        const firstNameInput = document.querySelector('.first_name input')
+        const lastNameInput = document.querySelector('.last_name input')
+        const emailInput = document.querySelector('.Email_address input')
+        const queryInput = document.querySelector('.query_message textarea')
 
         const firstName = firstNameInput.value;
         const lastName = lastNameInput.value;
@@ -154,20 +156,20 @@ export const ContactUs = () => {
                     setSuccessMessage('Enquiry and Customer added successfully');
                     setTimeout(() => {
                         setSuccessMessage('');
-                    }, 1000);
+                    }, 3000);
                 } else {
                     setErrorMessage('Error adding the Enquiry and Customer');
                 }
                 setTimeout(() => {
                     setErrorMessage('');
-                }, 2000);
+                }, 3000);
             })
             .catch(error => {
                 console.error(error);
                 setErrorMessage('Error adding into the Enquiry and Customer');
                 setTimeout(() => {
                     setErrorMessage('');
-                }, 2000);
+                }, 3000);
             });
     };
 
@@ -184,89 +186,50 @@ export const ContactUs = () => {
                 </div>
 
             </nav>
-            <div className="page">
-            {/* <div className='contactustext'>
-            <video
-                        autoPlay
-                        muted
-                        loop
-                    >
-                        <source
-                            src="https://video.wixstatic.com/video/11062b_d578b9d4ffba48c68d086ec29fe9e6f0/1080p/mp4/file.mp4"
-                            type="video/mp4"
-                        />
-                    </video>
-            <div className="contact" style={{ top:'-200px'}}>Contact Us</div>
-                    <p className="conv" >
-                        Let’s have a conversation!! <br />
-                        Fill the form with your query and someone from our team will reach out to you soon.
-                    </p>
-                    </div> */}
-        <div className='container1_main'>
-          <div className='contactusvedio_start_gif'>
-          <img src={person} alt="fact logo"></img>
-            {/* <video autoPlay muted loop>
-              <source src="https://video.wixstatic.com/video/c253c4_51f0cf76ff124d7783cc34c394893ed3/720p/mp4/file.mp4" type="video/mp4" />
-            </video> */}
-            <div className='contactustext_overlay'>
-              <div className='contactusvedio_heading'>Contact Us</div>
-              <div className='contactusvedio_paragragh'> Let’s work together on your journey and align our goals to create a sustainable world with environmental, economic, and social benefits. <br />
-                        Fill the form with your query and someone from our team will reach out to you soon.</div>
-            </div>
-          </div>
-        </div>
-
-               
-                    <div className='custdetails'>
-                        <div className="FName" style={{ width:'500px' }}>
-                            First Name*
-                            <br />
-                            <input type="text" placeholder="Enter your first name" onChange={handleFNameChange} />
-                            {FErrorMessage && <div className="error-message">{FErrorMessage}</div>}
-                        </div>
-                        <div className="LName" style={{ width:'500px' }}>
-                            Last Name*
-                            <br />
-                            <input type="text" placeholder="Enter your last name" onChange={handleLNameChange} />
-                            {LErrorMessage && <div className="error-message">{LErrorMessage}</div>}
-                        </div>
-                        {/* <div className='Age'>
-                            Age*
-                             <br />
-                             <input type="text" placeholder="Enter your age" onChange={handleAgeChange} />
-                             {AErrorMessage && <div className="error-message">{AErrorMessage}</div>}
-                        </div> */}
-                        <div className='Email' style={{ width:'500px' }}>
-                            Email*
-                            <br />
-                            <input type="text" placeholder="Your email please" />
-                            {EErrorMessage && <div className="error-message">{EErrorMessage}</div>}
-                        </div>
-                        {/* <div className='Query'>
-                            Query
-                            <br />
-                            <input type="text" placeholder="What is your query" />
-                        </div> */}
-                        <div className='Query' style={{ width:'500px' }}>
-                            Query
-                            <br />
-                            <textarea
-                                type="text"
-                                placeholder="What is your query"
-                                style={{ width: '100%', height: '50%', borderRadius: '10px', padding: '10px', paddingRight: '10px', fontStyle: 'helvetica' }}
-                                rows={5} // Adjust the number of rows based on your preference
-                                required
-                            />
-                        </div>
-                        <div className="send">
-                            <button onClick={handleSend} className="send-button">Send</button>
+            <div className="page" >
+                <div className='container1_main' >
+                    <div className='contactusvedio_start_gif' >
+                        <img className="image_in_contact_us" src={person} alt="fact logo" ></img>
+                        <div className='contactustext_overlay'>
+                            <div className='contactusvedio_heading'>Contact Us</div>
+                            <div className='contactusvedio_paragragh'> Let’s work together on your journey and align our goals to create a sustainable world with environmental, economic, and social benefits. <br />
+                                Fill the form with your query and someone from our team will reach out to you soon.</div>
                         </div>
                     </div>
+                </div>
+                <div className='customerdetails'>
+                    <div className='first_name'>
+                        <div className='fname_heading'>First Name*</div>
+                        <input className='input_text_contactus' type="text" placeholder="Enter your first name" onChange={handleFNameChange} />
+                        {FErrorMessage && <div className="error-message">{FErrorMessage}</div>}
+                    </div>
+                    <div className='last_name'>
+                        <div className='lname_heading'>Last Name*</div>
+                        <input className='input_text_contactus' type="text" placeholder="Enter your last name" onChange={handleLNameChange} />
+                        {LErrorMessage && <div className="error-message">{LErrorMessage}</div>}
+                    </div>
+                    <div className='Email_address'>
+                        <div className='Email_heading'>Email*</div>
+                        <input className='input_text_contactus' type="text" placeholder="Your email please" />
+                        {EErrorMessage && <div className="error-message">{EErrorMessage}</div>}
+                    </div>
+                    <div className='query_message'>
+                        <div className='query_heading'>Query</div>
+                        <textarea
+                            type="text"
+                            placeholder="What is your query"
+                            className='textarea_contact_us'
+                            rows={5}
+                            required
+                        />
+                    </div>
+                    <div className="send">
+                        <button onClick={handleSend} className="send-button">Send</button>
+                        {SuccessMessage && <div className="success-message">{SuccessMessage}</div>}
+                    </div>
 
-                {/* <footer className="bottom_div"></footer> */}
+                </div>
             </div>
-            {/* {ErrorMessage && <div className="error-message">{ErrorMessage}</div>} */}
-            {SuccessMessage && <div className="success-message">{SuccessMessage}</div>}
         </div>
     );
 };
