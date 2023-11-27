@@ -851,7 +851,7 @@ style={{
   />
 </video>
 
-  {!questionsCompleted && currentQuestionIndex > 0 && (
+  {!questionsCompleted && (
   <OverlayTrigger
     placement="bottom"
     delay={{ show: 25, hide: 40 }}
@@ -868,16 +868,6 @@ style={{
       Data Source
 
     </button>
-    {/* <button
-      onClick={() => console.log(savedData[currentQuestionIndex])}
-      className="data-source-button"
-      // style={{ position: 'absolute', top: '130px', left: '720px',marginTop:"10px" }}
-      style={{ position: 'absolute', top: '19%', right: '5%', margin: '10px' }}
-  
-
-    >
-      click
-    </button> */}
   </OverlayTrigger>
 )}
 
@@ -968,7 +958,7 @@ style={{
                       height: "8vh",
                       background: "white",
                       margin: "0 auto",
-                      paddingTop: "10px",
+                      paddingTop: "2px",
                       paddingLeft: "20px",
                       borderRadius: "20px",
                       fontWeight: "bold",
