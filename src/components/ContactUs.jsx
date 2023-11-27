@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './axiosconfig';
 import person from "../assets/person.webp";
-import logoImg from "../logo2.png";
+// import logoImg from "../logo2.png";
+import logoImg from "../assets/logo.svg";
 import './ContactUsNew.css'
 
 
@@ -15,7 +16,7 @@ export const ContactUs = () => {
     const [FErrorMessage, setFErrorMessage] = useState('');
     const [LErrorMessage, setLErrorMessage] = useState('');
     const [EErrorMessage, setEErrorMessage] = useState('');
-    const [AErrorMessage, setAErrorMessage] = useState('');
+    const [QErrorMessage, setQErrorMessage] = useState('');
     const [SuccessMessage, setSuccessMessage] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -125,6 +126,14 @@ export const ContactUs = () => {
             return;
         }
 
+        if (!query) {
+            setQErrorMessage('Please type in your query');
+            setTimeout(() => {
+                setQErrorMessage('');
+            }, 1000);
+            return;
+        }
+
 
 
 
@@ -177,7 +186,7 @@ export const ContactUs = () => {
         <div className="contact">
             <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
                 <div className="leftnav">
-                    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" onClick={handlelandingpage} />
+                    <img className="mainlogo" src={logoImg} alt="OFFSET CRBN" onClick={handlelandingpage} />
                 </div>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
@@ -222,6 +231,7 @@ export const ContactUs = () => {
                             rows={5}
                             required
                         />
+                         {QErrorMessage && <div className="error-message">{QErrorMessage}</div>}
                     </div>
                     <div className="send">
                         <button onClick={handleSend} className="send-button">Send</button>

@@ -112,6 +112,7 @@ video {
     border-radius: 20px;
     margin-bottom: 1.5vw;
     text-align: center;
+    font-size: medium;
 
 }
 
@@ -129,6 +130,7 @@ video {
     border-radius: 20px;
     margin-bottom: 1.5vw;
     text-align: center;
+    font-size: medium;
 }
 
 .Family_heading {
@@ -156,6 +158,7 @@ video {
     border-radius: 20px;
     margin-bottom: 2vw;
     text-align: center;
+    font-size: medium;
 }
 
 .Age_heading {

@@ -771,7 +771,7 @@ useEffect(()=>{
 return (
   <><nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
   <div className="leftnav">
-    <img className="mainlogo" src="/logo2.png" alt="OFFSET CRBN" onClick={navigateToHome}/>
+    <img className="mainlogo" src="/logo.svg" alt="OFFSET CRBN" onClick={navigateToHome}/>
   </div>
   <div className="rightnav">
     <a href="#" onClick={navigateToHome}>Home</a>
