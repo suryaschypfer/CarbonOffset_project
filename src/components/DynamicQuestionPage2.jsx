@@ -66,7 +66,7 @@ const renderTooltip = (props) => (
 
 
 const [showPopup, setShowPopup] = useState(false);
-
+const [showPopup2, setShowPopup2] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questionsCompleted, setQuestionsCompleted] = useState(false);
   const [type1Ans1, setType1Ans1] = useState(0);
@@ -293,10 +293,17 @@ const [showPopup, setShowPopup] = useState(false);
     // Load savedData from local storage and update state
     const savedDataString = localStorage.getItem('savedData');
     const parsedSavedData = JSON.parse(savedDataString);
-    setSavedData(parsedSavedData);
+    setShowPopup(false);
+    if(Object.keys(parsedSavedData).length===filteredQuestions.length){
+      setSavedData(parsedSavedData);
+    }
+    else{
+      setShowPopup2(true);
+      handleDeleteSavedData();
+    }
 
     // Close popup
-    setShowPopup(false);
+    
   };
 
   const handleDeleteSavedData = () => {
@@ -310,6 +317,9 @@ const [showPopup, setShowPopup] = useState(false);
 
   const handleClosePopup = () => {
     setShowPopup(false);
+  };
+  const handleClosePopup2 = () => {
+    setShowPopup2(false);
   };
   useEffect(() => {
    
@@ -837,7 +847,7 @@ style={{
 
     >
       Data Source
-      
+
     </button>
     {/* <button
       onClick={() => console.log(savedData[currentQuestionIndex])}
@@ -1635,6 +1645,22 @@ style={{
         <Button variant="danger" onClick={handleDeleteSavedData}>Delete Data</Button>
       </Modal.Footer>
     </Modal>
+
+    <Modal show={showPopup2} onHide={handleClosePopup2}>
+  <Modal.Header closeButton>
+    <Modal.Title style={{ color: 'red', fontWeight: 'bold' }}>Oops! We Encountered an Issue</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <p style={{ fontSize: '18px', lineHeight: '1.5' }}>
+      It seems there was an issue retrieving your old data. This may be due to incomplete answers or changes in the number of questions. As a result, the stored data is no longer valid.
+    </p>
+  </Modal.Body>
+  {/* <Modal.Footer>
+    <Button variant="success" onClick={handleLoadSavedData}>Load Data</Button>
+    <Button variant="danger" onClick={handleDeleteSavedData}>Delete Data</Button>
+  </Modal.Footer> */}
+</Modal>
+
   </>
 );
 };
