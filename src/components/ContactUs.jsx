@@ -162,7 +162,7 @@ export const ContactUs = () => {
                     lastNameInput.value = '';
                     emailInput.value = '';
                     queryInput.value = '';
-                    setSuccessMessage('Enquiry and Customer added successfully');
+                    setSuccessMessage('Enquiry added successfully');
                     setTimeout(() => {
                         setSuccessMessage('');
                     }, 3000);
