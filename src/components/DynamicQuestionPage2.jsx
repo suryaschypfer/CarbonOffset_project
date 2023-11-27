@@ -739,6 +739,7 @@ const height = `${vh * (percentage / 100)}vh`;
     // }
 };
 useEffect(()=>{
+  
   if(!savedData.hasOwnProperty(currentQuestionIndex) && questions[currentQuestionIndex]?.questionType ===2 && questions[currentQuestionIndex]?.choiceAns ==="1"){
     setCurrentUnitIndex(0);
     setCurrentSelectedUnit(questions[currentQuestionIndex]?.selectedUnits[0]);
