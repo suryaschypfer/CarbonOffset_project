@@ -43,41 +43,6 @@ body {
 }
 
 
-.page {
-    display: flex;
-    width: 100%;
-}
-
-.text-container {
-    margin-top: 3.5vh;
-    margin-left: 8.5vw;
-    width: 50%;
-    float: left;
-    flex: 4;
-    display: flex;
-    flex-direction: column;
-
-}
-
-.contact {
-    font-size: xx-large;
-    font-weight: 700;
-    display: flex;
-    flex-direction: column;
-    padding-left: 10px;
-    position: relative;    
-}
-
-.conv {
-    padding: 55px;
-    margin-left: -40px;
-    margin-top: -230px;
-    display: flex;
-    font-size: medium !important;
-    font-weight: 500 !important;
-}
-
-
 .image-container {
     flex: 6;
     display: flex;
@@ -93,118 +58,6 @@ body {
     height: 70%;
 }
 
-.contactustext{
-    margin-top: 5vh;
-    padding-top: 40vh;
-    margin-left: 30px;
-    display: flex;
-    height: 10%;
-    flex-direction: column;
-    padding-left: 20px;
-    text-align: left;
-    width: 30%;
-    /* Adjust the width as needed */
-    background-color: rgb(236, 234, 234);
-    border-radius: 10px;
-    padding-bottom: 2vh;
-}
-
-.custdetails {
-    margin-top: 1vh;
-    padding-top: 2vh;
-    display: flex;
-    flex-direction: column;
-    padding-left: 450px;
-    text-align: left;
-    width: 50%;
-    height: 520px;
-    position: relative;
-    left: -250px;
-    top: 7vh;
-    background-color: rgba(237, 237, 237, 0.476);
-    border-radius: 20px;
-    padding-bottom: 2vh;
-}
-
-
-.custdetails input[type="text"] {
-    width: 100%;
-    position: relative;
-    border-radius: 10px;
-    border: 1px solid black;
-    /* Adjust the width of the input box */
-}
-
-.FName,
-.LName,
-.Email,
-.Query,
-.Age {
-    padding: 1vh;
-    position: relative;
-    left: -60vh;
-    /* margin-left: 2vh; */
-    margin-top: 0.25vh;
-    font-family: helvetica;
-    background-color:transparent;
-    font-size: medium;
-    font-weight: 500;
-}
-
-  
-.Query textarea {
-    width: 100%; /* Set the width to 100% */
-    height: 150px; /* Set the desired height */
-    padding: 10px;
-    font-family: helvetica;
-    resize: none; /* Disable resizing of the textarea */
-}
-
-.send-button {
-    display: block;
-    text-align: center;
-    height: 60%;
-    background-color: black;
-    /* background-color: rgba(132, 210, 243, 1); */
-    width: 50%;
-    position: relative;
-    top: -50px;
-    left: -270px;
-    /* Adjust the width as needed */
-    border-radius: 5px;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin: 0 auto;
-    margin-top: 4.0vh !important;
-}
-
-.error-message {
-    /* position: fixed;
-    bottom: 8px;
-    left: 50%; 
-    /* transform: translateX(-50%); */
-    background-color: transparent;
-    color: #dc0707;
-    /* padding: 10px;
-    border-radius: 5px; */
-}
-
-.success-message {
-    margin-bottom: 5.5vh;
-    position: fixed;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #A7C8A3;
-    color: #ffffff;
-    padding: 5px;
-    border-radius: 5px;
-    line-height: 1; /* Adjust line-height if needed */
-    height: 30px;
-    font-size: large; 
-}
-
 .info-button {
     padding: 10px 20px;
     background-color: #3498db;
@@ -213,9 +66,9 @@ body {
     border-radius: 5px;
     cursor: pointer;
     display: 'inline-block';
-  }
+}
 
-  /* padding: '10px 20px',
+/* padding: '10px 20px',
       backgroundColor: '#3498db',
       color: '#fff',
       border: 'none',
@@ -224,10 +77,11 @@ body {
       display: 'inline-block',
       textAlign: 'center',
       lineHeight: 'initial', */
-  
-  .tooltip {
+
+.tooltip {
     position: absolute;
-    bottom: -40px; /* Adjust the position as needed */
+    bottom: -40px;
+    /* Adjust the position as needed */
     left: 50%;
     transform: translateX(-50%);
     padding: 5px;
@@ -237,28 +91,36 @@ body {
     white-space: nowrap;
     max-height: 135px;
     min-height: min-content;
-  }
+}
 
- /* In your CSS file */
+/* In your CSS file */
 .custom-tooltip .tooltip-inner {
     /* Remove max-width */
-    background-color: transparent; /* Set the background color to white */
-    color: #000000; 
-    border: none; /* Remove any borders */
-    box-shadow: none; /* Remove box shadows if any */
-    width: auto; /* Allow tooltip width to fit content up to a point */
-    min-width: 100px; /* Minimum width of the tooltip */
-    max-width: 130px; /* Maximum width of the tooltip - adjust as needed */
-    white-space: normal; /* Allow text to wrap to the next line */
-    text-align: left; /* Align text to the left */
-  }
-  
-  /* .custom-tooltip .arrow::before {
+    background-color: transparent;
+    /* Set the background color to white */
+    color: #000000;
+    border: none;
+    /* Remove any borders */
+    box-shadow: none;
+    /* Remove box shadows if any */
+    width: auto;
+    /* Allow tooltip width to fit content up to a point */
+    min-width: 100px;
+    /* Minimum width of the tooltip */
+    max-width: 130px;
+    /* Maximum width of the tooltip - adjust as needed */
+    white-space: normal;
+    /* Allow text to wrap to the next line */
+    text-align: left;
+    /* Align text to the left */
+}
+
+/* .custom-tooltip .arrow::before {
     display: none; 
   }
    */
-  
-  /* In your CSS file */
+
+/* In your CSS file */
 .data-source-button {
     padding: 5px 10px;
     background-color: #3498db;
@@ -267,78 +129,4 @@ body {
     border-radius: 5px;
     cursor: pointer;
     display: 'inline-block';
-  }
-
-/* .bottom_div {
-    background-color: #ff9d76;
-    height: 30px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-} */
-
-.container1_main {
-    flex: 0 0 60vw;
-    padding-right: 10px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.contactusvedio_start_gif {
-    width: 60%;
-    height: 70%;
-    position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    left: -100px;
-    top: -55px;
-}
-
-.contactusvideo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 20px;
-    outline: none;
-    border: none;
-    user-select: none;
-    pointer-events: none;
-}
-
-.contactustext_overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 1;
-    width: 100%;
-    color: white;
-    max-width: 80%;
-    /* Set a maximum width for the text overlay */
-    margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-    .contactustext_overlay {
-        max-width: 100%;
-        /* Adjust the maximum width for smaller screens */
-    }
-}
-
-.contactusvedio_heading {
-    margin-bottom: 30px;
-    font-size: 2.5vw;
-    font-weight: bolder;
-    word-wrap: break-word;
-}
-
-.contactusvedio_paragragh {
-    font-size: 1.5vw;
-    font-weight: 700;
-    word-wrap: break-word;
 }

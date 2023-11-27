@@ -1,0 +1,178 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: larger;
+    font-weight: 600;
+    background-color: #FFFFFF;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+}
+
+.page {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 40px;
+    height: 100%;
+}
+
+.customerdetails {
+    flex: 1;
+    padding-left: 50px;
+    background-color: #eef2f4;
+    border-radius: 20px;
+    padding-right: 100px;
+    height: 100%;
+    text-align: left;
+}
+
+
+.container1_main {
+    flex: 0 0 40vw;
+    padding-right: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-right: 6vw;
+}
+
+.contactusvedio_start_gif {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 20px;
+    overflow: hidden;
+
+}
+
+.image_in_contact_us {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+.contactustext_overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+    width: 100%;
+    color: rgba(255, 255, 255, 0.743);
+    max-width: 80%;
+    /* Set a maximum width for the text overlay */
+    margin: 0 auto;
+}
+
+@media (max-width: 1000px) {
+    .contactustext_overlay {
+        max-width: 100%;
+    }
+
+    .container1_main {
+        margin-right: 2vw;
+    }
+
+    .customerdetails {
+        max-width: 75%;
+    }
+
+}
+
+.contactusvedio_heading {
+    margin-bottom: 30px;
+    font-weight: 900;
+    font-size: 2.5vw;
+    font-weight: bolder;
+    word-wrap: break-word;
+}
+
+.contactusvedio_paragragh {
+    font-size: 1.5vw;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.first_name,
+.last_name,
+.Email_address,
+.query_message {
+    padding: 1vw;
+    text-align: left;
+    margin-top: 0.2vw;
+}
+
+.fname_heading,
+.lname_heading,
+.Email_heading,
+.query_heading {
+    font-family: "Helvetica Neue",
+        sans-serif;
+    font-size: large;
+    word-wrap: break-word;
+    font-weight: 500;
+}
+
+.input_text_contactus {
+    background: white;
+    font-size: 15px !important;
+    border-radius: 10px;
+    border: 2px solid black;
+    margin-top: 0.2vw;
+    width: 30vw;
+    height: 3vw;
+    padding: 5px;
+}
+
+.textarea_contact_us {
+    border-radius: 10px;
+    font-size: 15px !important;
+    background: white;
+    width: 30vw;
+    height: 6vw;
+    border: 2px solid black;
+    padding: 5px;
+    font-style: 'helvetica';
+}
+
+.send-button {
+    display: block;
+    text-align: center;
+    height: 3vw;
+    background-color: black;
+    /* background-color: rgba(132, 210, 243, 1); */
+    width: 8vw;
+    position: relative;
+
+    /* Adjust the width as needed */
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 0 auto;
+    margin-top: 1.5vw !important;
+    margin-bottom: 1vw;
+}
+
+.success-message {
+    color: green;
+    text-align: center;
+}
+
+.error-message {
+    background-color: transparent;
+    color: #dc0707;
+}
