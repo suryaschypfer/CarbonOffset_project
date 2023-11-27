@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { baseUrl } from "../config";
 import FinalComponent from "./FinalComponent";
 import { Form } from "react-bootstrap";
@@ -28,6 +28,7 @@ const DynamicQuestionPage2 = () => {
   const [filteredQuestions, setFilteredQuestions] = useState(
     []
   );
+  const selectRef = useRef(null);
   const location = useLocation();
   const [prog, updateProg] = useState(0);
   const codeForZip = new URLSearchParams(location.search).get('zip');
@@ -58,14 +59,14 @@ const [savedData, setSavedData] = useState(() => {
 
 // Your renderTooltip function
 const renderTooltip = (props) => (
-  <Tooltip id="button-tooltip" {...props} className="custom-tooltip">
+  <Tooltip id="button-tooltip" {...props} className="custom-tooltip" >
     {dataSourceText}
   </Tooltip>
 );
 
 
 const [showPopup, setShowPopup] = useState(false);
-
+const [showPopup2, setShowPopup2] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questionsCompleted, setQuestionsCompleted] = useState(false);
   const [type1Ans1, setType1Ans1] = useState(0);
@@ -292,10 +293,17 @@ const [showPopup, setShowPopup] = useState(false);
     // Load savedData from local storage and update state
     const savedDataString = localStorage.getItem('savedData');
     const parsedSavedData = JSON.parse(savedDataString);
-    setSavedData(parsedSavedData);
+    setShowPopup(false);
+    if(Object.keys(parsedSavedData).length===filteredQuestions.length){
+      setSavedData(parsedSavedData);
+    }
+    else{
+      setShowPopup2(true);
+      handleDeleteSavedData();
+    }
 
     // Close popup
-    setShowPopup(false);
+    
   };
 
   const handleDeleteSavedData = () => {
@@ -309,6 +317,9 @@ const [showPopup, setShowPopup] = useState(false);
 
   const handleClosePopup = () => {
     setShowPopup(false);
+  };
+  const handleClosePopup2 = () => {
+    setShowPopup2(false);
   };
   useEffect(() => {
    
@@ -581,6 +592,21 @@ const [showPopup, setShowPopup] = useState(false);
     }
   }, [prog, dataInserted]);
 
+  // useEffect(() => {
+  //   // Access the select element using the ref
+  //   var selectElement = selectRef.current;
+
+  //   if (selectElement) {
+  //     // Trigger a click event on the first option
+  //     var firstOption = selectElement.options[0];
+
+  //     if (firstOption) {
+  //       firstOption.selected = true; // select the first option
+  //       selectElement.dispatchEvent(new Event('change')); // dispatch a change event
+  //     }
+  //   }
+  // }, [currentQuestionIndex]);
+
   useEffect(() => {
     const calculateAndSaveFormula = async () => {
       try {
@@ -655,24 +681,25 @@ const [showPopup, setShowPopup] = useState(false);
   };
   const handleSingleAnswerChange = (
     e,
-    selectedChoice
+    selectedChoice,
+    selectedIndex,
   ) => {
     const checked = e.target.checked;
-    console.log(selectedChoice);
+    console.log("This is selectedchooice: ",selectedIndex);
 
     // Additional logic for handling the change...
 
     // Update the state if needed
-    // setSavedData((prevSavedData) => {
-    //     const newSavedData = { ...prevSavedData };
+    setSavedData((prevSavedData) => {
+        const newSavedData = { ...prevSavedData };
+        
+        if (newSavedData[currentQuestionIndex]) {
+          // Update the choiceIndex property in savedData
+          newSavedData[currentQuestionIndex].choiceIndex = selectedIndex;
+        }
     
-    //     if (newSavedData[currentQuestionIndex]) {
-    //       // Update the choiceIndex property in savedData
-    //       newSavedData[currentQuestionIndex].choiceIndex = -1;
-    //     }
-    
-    //     return newSavedData;
-    //   });
+        return newSavedData;
+      });
   };
   // const [prog, updateProg] = useState(0);
   const navigateToHome = () => {
@@ -698,7 +725,8 @@ const [showPopup, setShowPopup] = useState(false);
       console.error('Error inserting data into Customer table:', error);
     }
   };
-
+  
+  
 
   const checkAndInsertData = () => {
     // if (questionsCompleted) {
@@ -804,148 +832,166 @@ style={{
   />
 </video>
 
-{!questionsCompleted && currentQuestionIndex > 0 && (
-<OverlayTrigger
-  placement="bottom"
-  delay={{ show: 25, hide: 40 }}
-  overlay={renderTooltip}
->
-  <button
-    onClick={() => window.open(dataSourceLink, '_blank')}
-    className="data-source-button"
-    style={{ position: 'absolute', top: '130px', left: '720px' }}
+  {!questionsCompleted && currentQuestionIndex > 0 && (
+  <OverlayTrigger
+    placement="bottom"
+    delay={{ show: 25, hide: 40 }}
+    overlay={renderTooltip}
   >
-    Data Source
-  </button>
-</OverlayTrigger>
+    <button
+      onClick={() => window.open(dataSourceLink, '_blank')}
+      className="data-source-button"
+      // style={{ position: 'absolute', top: '130px', left: '720px',marginTop:"10px" }}
+      style={{ position: 'absolute', top: '19%', right: '5%', margin: '10px' }}
+  
+
+    >
+      Data Source
+
+    </button>
+    {/* <button
+      onClick={() => console.log(savedData[currentQuestionIndex])}
+      className="data-source-button"
+      // style={{ position: 'absolute', top: '130px', left: '720px',marginTop:"10px" }}
+      style={{ position: 'absolute', top: '19%', right: '5%', margin: '10px' }}
+  
+
+    >
+      click
+    </button> */}
+  </OverlayTrigger>
 )}
 
 
 
-        {questionsCompleted ? (
-          // Render the new component when questions are completed
-          <div style={{height:"80vh"}}>
-            <FinalComponent carbonCount={carbonCount}/>
-            <div
-                  className="backSaveButton"
-                  style={{
-                    marginTop: "auto",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "90%",
-                    height: "60px",
-                    margin: "0 auto",
-                    paddingTop: "20px",
-                    paddingLeft: "10%",
-                    borderRadius: "20px",
-                    paddingRight: "10%",
-                  //   marginBottom:"20px"
-                  }}
-                >
-                  <button
-                    className="btn btn-primary"
+          {questionsCompleted ? (
+            // Render the new component when questions are completed
+            <div style={{height:"80vh"}}>
+              <FinalComponent carbonCount={carbonCount}/>
+              <div
+                    className="backSaveButton"
                     style={{
-                      background: "black",
-                      fontWeight: "bold",
-                      border: "None",
-                      width: "120px",
-                    }}
-                    onClick={handlePreviousQuestion}
-                  >
-                    Back
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    style={{
-                      background: "black",
-                      border: "None",
-                      fontWeight: "bold",
-                      width: "120px",
-                    }}
-                    onClick={()=>{
-                      console.log(savedData);
+                      marginTop: "auto",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "90%",
+                      height: "60px",
+                      margin: "0 auto",
+                      paddingTop: "20px",
+                      paddingLeft: "10%",
+                      borderRadius: "20px",
+                      paddingRight: "10%",
+                    //   marginBottom:"20px"
                     }}
                   >
-                    Plant Trees{" "}
-                  </button>
-                </div>
-          </div>
-        ) : (
-          filteredQuestions.map((question, index) =>
-            index === currentQuestionIndex ? (
-              <div key={index}>
-                {/* <div
-                style={{
-                  width: "90%",
-                  height: "100px",
-                  background: "#FF5701 ",
-                  margin: "0 auto",
-                  marginTop: "50px",
-                  borderRadius: "20px",
-                  paddingTop: "20px",
-                }}
-              > */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column", // Vertical alignment
-                    alignItems: "center", // Horizontal alignment
-                    justifyContent: "center", // Vertical and horizontal centering
-                    margin: "0 auto",
-                    fontWeight: "bold",
-                    paddingBottom: "10px",
-                    paddingTop: "20px",
-                  }}
-                >
-                  Category: {question.label}
-                </div>
-                <div
-                  style={{
-                    width: "90%",
-                    height: "70px",
-                    background: "white",
-                    margin: "0 auto",
-                    // paddingTop: "20px",
-                    display: "flex",  // Add display: flex
-                    alignItems: "center",  // Center vertically
-                    paddingLeft: "20px",
-                    borderRadius: "20px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {question.questionContent}
-                </div>
-                {/* </div> */}
-                <div
-                  className="userInput"
-                  style={{
-                    width: "80%",
-                    margin: "0 auto",
-                    height: "40vh",
-                    color: "black",
-                    fontWeight: "bold",
-                    borderRadius: "10px",
-                    marginTop: "10px",
-                  }}
-                >
-                  {question.questionType == 1 && question.choiceAns == "1" ? (
-                    <div
+                    <button
+                      className="btn btn-primary"
                       style={{
-                        width: "300px",
-                        margin: "0 auto",
-                        paddingTop: "50px",
-                        textAlign: "center",
+                        background: "black",
+                        fontWeight: "bold",
+                        border: "None",
+                        width: "120px",
+                      }}
+                      onClick={handlePreviousQuestion}
+                    >
+                      Back
+                    </button>
+                    <button
+                      className="btn btn-primary"
+                      style={{
+                        background: "black",
+                        border: "None",
+                        fontWeight: "bold",
+                        width: "120px",
+                      }}
+                      onClick={()=>{
+                        console.log(savedData);
                       }}
                     >
-                      {/* <p style={{}}>Enter the value in numbers</p> */}
-                      <input
-                        value={type1Ans1}
-                        type="number"
-                        className="form-control rounded"
-                        onChange={handleInputChange1}
-                      />
-                    </div>
-                  ) : null}
+                      Plant Trees{" "}
+                    </button>
+                  </div>
+            </div>
+          ) : (
+            filteredQuestions.map((question, index) =>
+              index === currentQuestionIndex ? (
+                <div key={index}>
+                  {/* <div
+                  style={{
+                    width: "90%",
+                    height: "100px",
+                    background: "#FF5701 ",
+                    margin: "0 auto",
+                    marginTop: "50px",
+                    borderRadius: "20px",
+                    paddingTop: "20px",
+                  }}
+                > */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column", // Vertical alignment
+                      alignItems: "center", // Horizontal alignment
+                      justifyContent: "center", // Vertical and horizontal centering
+                      margin: "0 auto",
+                      fontWeight: "bold",
+                      paddingBottom: "10px",
+                      paddingTop: "20px",
+                      
+                    }}
+                  >
+                    Category: {question.label}
+                  </div>
+                  <div
+                    style={{
+                      width: "90%",
+                      height: "70px",
+                      background: "white",
+                      margin: "0 auto",
+                      paddingTop: "10px",
+                      paddingLeft: "20px",
+                      borderRadius: "20px",
+                      fontWeight: "bold",
+                      // marginBottom:"20px"
+                      display: "flex",  // Add display: flex
+                    alignItems: "center", 
+                      // alignItems:"center"
+                    }}
+                  >
+                    {question.questionContent}
+                  </div>
+                  {/* </div> */}
+                  <div
+                    className="userInput"
+                    style={{
+                      width: "80%",
+                      margin: "0 auto",
+                      height: "40vh",
+                      color: "black",
+                      fontWeight: "bold",
+                      borderRadius: "10px",
+                      marginTop: "10px",
+                  
+                    }}
+                  >
+                    {question.questionType == 1 && question.choiceAns == "1" ? (
+                      <div
+                        style={{
+                          width: "300px",
+                          margin: "0 auto",
+                          paddingTop: "50px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {/* <p style={{}}>Enter the value in numbers</p> */}
+                        <input
+                          value={type1Ans1}
+                          type="number"
+                          className="form-control rounded"
+                          onChange={handleInputChange1}
+                        />
+                      </div>
+                    ) : null}
 
                   {question.questionType == 2 && question.choiceAns == "1" ? (
                     <>
@@ -1044,50 +1090,76 @@ style={{
                   </div>
                 ) : null} */}
 
-                  {question.questionType === 1 &&
-                  question.choiceAns === "2" ? (
-                    <div
-                      style={{
-                        width: "400px",
-                        margin: "0 auto",
-                        paddingTop: "20px",
-                      }}
-                    >
-                      <div style={{ marginTop: "20px" }}>
-                        <p style={{}}>Select Single Option</p>
-                        {Array.isArray(question.choices[0]) &&
-                          question.choices[0]?.map((choice, choiceIndex) => (
-                            <div
-                              key={choiceIndex}
-                              className="form-check"
-                              style={{ marginBottom: "10px" }}
-                            >
-                              <input
+                    {question.questionType === 1 &&
+                    question.choiceAns === "2" ? (
+                      <div
+                        style={{
+                          width: "400px",
+                          margin: "0 auto",
+                          paddingTop: "20px",
+                        }}
+                      >
+                        <div style={{ marginTop: "20px" }}>
+                          <p style={{}}>Select Single Option</p>
+                          {Array.isArray(question.choices[0]) &&
+                            question.choices[0]?.map((choice, choiceIndex) => (
+                              <div
+                                key={choiceIndex}
+                                className="form-check"
+                                style={{ marginBottom: "10px" }}
+                              >
+                                {savedData[currentQuestionIndex]?<input
+                                  type="radio"
+                                  className="form-check-input"
+                                  id={`choice_${choiceIndex}`}
+                                  name="singleAnswer"
+                                  checked={choiceIndex === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
+                                  onChange={(e) => {
+                                    setChoiceIndex(choiceIndex);
+                                    handleSingleAnswerChange(e, choice,choiceIndex);
+                                    
+                                  }}
+                                />:<input
                                 type="radio"
                                 className="form-check-input"
                                 id={`choice_${choiceIndex}`}
                                 name="singleAnswer"
-                                
+                                // checked={choiceIndex === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
                               //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
                                 onChange={(e) => {
-                                  handleSingleAnswerChange(e, choice);
                                   setChoiceIndex(choiceIndex);
+                                  handleSingleAnswerChange(e, choice,choiceIndex);
+                                  
                                 }}
-                              />
-                              {/* <input
-type="radio"
-className="form-check-input"
-id={`choice_${ind}`}
-name="singleAnswer"
-checked={savedData[currentQuestionIndex]?.choiceIndex !== -1
-      ? ind === savedData[currentQuestionIndex]?.choiceIndex
-      : choiceIn
-}
-onChange={(e) => {
-  handleSingleAnswerChange(e, choice);
-  setChoiceIndex(choiceIndex);
-  
-}}
+                              />}
+                                {/* <input
+                                  type="radio"
+                                  className="form-check-input"
+                                  id={`choice_${choiceIndex}`}
+                                  name="singleAnswer"
+                                  checked={choiceIndex === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
+                                  onChange={(e) => {
+                                    setChoiceIndex(choiceIndex);
+                                    handleSingleAnswerChange(e, choice,choiceIndex);
+                                    
+                                  }}
+                                /> */}
+                                {/* <input
+  type="radio"
+  className="form-check-input"
+  id={`choice_${ind}`}
+  name="singleAnswer"
+  checked={savedData[currentQuestionIndex]?.choiceIndex !== -1
+        ? ind === savedData[currentQuestionIndex]?.choiceIndex
+        : choiceIn
+  }
+  onChange={(e) => {
+    handleSingleAnswerChange(e, choice);
+    setChoiceIndex(choiceIndex);
+    
+  }}
 /> */}
 
 
@@ -1103,73 +1175,93 @@ onChange={(e) => {
                     </div>
                   ) : null}
 
-                  {question.questionType == 2 && question.choiceAns == "2" ? (
-                    <div
-                      style={{
-                        width: "400px",
-                        margin: "0 auto",
-                        paddingTop: "20px",
-                      }}
-                    >
-                      <p style={{}}>Select the Unit and Single Option</p>
-                      <Form.Select
-                        //   className="mb-3 ms-2" // Add margin to the left to create space between the input and the select
-                        aria-label="Select unit"
-                        value={currentSelectedUnit}
-                        onChange={(e) => {
-                          const selectedIndex =
-                            currentSelectedUnits?.findIndex(
-                              (unit) => unit === e.target.value
-                            );
-                          setCurrentUnitIndex(
-                            selectedIndex !== -1 ? selectedIndex : -1
-                          );
-                          setCurrentSelectedUnit(e.target.value);
+                    {question.questionType == 2 && question.choiceAns == "2" ? (
+                      <div
+                        style={{
+                          width: "400px",
+                          margin: "0 auto",
+                          paddingTop: "20px",
                         }}
-                        style={{ marginLeft: "20px" }}
                       >
-                        <option value="" disabled>
-                          Select the unit
-                        </option>
-                        {currentSelectedUnits?.map((unit, ind) => (
-                          <option key={ind} value={unit}>
-                            {unit}
+                        <p style={{}}>Select the Unit and Single Option</p>
+                        <Form.Select
+                        // ref={selectRef} 
+                          className="q2t2"
+                          //   className="mb-3 ms-2" // Add margin to the left to create space between the input and the select
+                          aria-label="Select unit"
+                          value={currentSelectedUnit}
+                          onChange={(e) => {
+                            const selectedIndex =
+                              currentSelectedUnits?.findIndex(
+                                (unit) => unit === e.target.value
+                              );
+                            setCurrentUnitIndex(
+                              selectedIndex !== -1 ? selectedIndex : -1
+                            );
+                            setCurrentSelectedUnit(e.target.value);
+                            
+                          }}
+                          style={{ marginLeft: "20px" }}
+                        >
+                          <option value="" disabled>
+                            Choose the suitable unit
                           </option>
-                        ))}
-                      </Form.Select>
-                      {currentUnitIndex !== -1 && (
-                        <div style={{ marginTop: "20px" }}>
-                          {question.choices[currentUnitIndex]?.map(
-                            (choice, choiceInd) => (
-                              <div
-                                key={choiceInd}
-                                className="form-check"
-                                style={{ marginBottom: "10px" }}
-                              >
-                                <input
+                          {currentSelectedUnits?.map((unit, ind) => (
+                            <option key={ind} value={unit}>
+                              {unit}
+                            </option>
+                          ))}
+                        </Form.Select>
+                        
+                        {currentUnitIndex !== -1 && (
+                          <div style={{ marginTop: "20px" }}>
+                            {question.choices[currentUnitIndex]?.map(
+                              (choice, choiceInd) => (
+                                <div
+                                  key={choiceInd}
+                                  className="form-check"
+                                  style={{ marginBottom: "10px" }}
+                                >
+                                  {savedData[currentQuestionIndex]?<input
+                                    type="radio"
+                                    className="form-check-input"
+                                    id={`choice_${choiceInd}`}
+                                    name="singleAnswer"
+                                    value={choice}
+                                    checked={choiceInd === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                    onChange={(e) => {
+                                      setChoiceIndex(choiceInd);
+                                      handleSingleAnswerChange(e, choice,choiceInd);
+                                      
+                                    }}
+                                  />:<input
                                   type="radio"
                                   className="form-check-input"
                                   id={`choice_${choiceInd}`}
                                   name="singleAnswer"
                                   value={choice}
+                                  // checked={choiceInd === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
                                   onChange={(e) => {
-                                    handleSingleAnswerChange(e, choice);
                                     setChoiceIndex(choiceInd);
+                                    handleSingleAnswerChange(e, choice,choiceInd);
+                                    
                                   }}
-                                />
-                                <label
-                                  className="form-check-label"
-                                  htmlFor={`choice_${choiceIndex}`}
-                                >
-                                  {choice}
-                                </label>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ) : null}
+                                />}
+                                  
+                                  
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor={`choice_${choiceIndex}`}
+                                  >
+                                    {choice}
+                                  </label>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ) : null}
 
                   {question.questionType == 2 && question.choiceAns == "3" ? (
                     <div
@@ -1460,79 +1552,79 @@ onChange={(e) => {
                       </div>
                       </div>
 
-                  {/* <div
-                    style={{
-                      width: "40%",
-                      height: "100px",
-                      background: "white",
-                      marginTop: "25px",
-                      marginRight: "50px",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    {" "}
-                    <div
+                    {/* <div
                       style={{
-                        fontSize: "30px",
-                        width: "100px",
-                        paddingLeft: "30px",
-                        fontWeight: "bold",
+                        width: "40%",
+                        height: "100px",
+                        background: "white",
+                        marginTop: "25px",
+                        marginRight: "50px",
+                        borderRadius: "10px",
                       }}
                     >
-                      {carbonCount}
-                    </div>
-                  </div> */}
+                      {" "}
+                      <div
+                        style={{
+                          fontSize: "30px",
+                          width: "100px",
+                          paddingLeft: "30px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {carbonCount}
+                      </div>
+                    </div> */}
+                  </div>
+                  {/* <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    console.log(answers);
+                    console.log(selectedChoiceIndexes);
+                    console.log(prog);
+                  }}
+                >
+                  Answers
+                </button> */}
                 </div>
-                {/* <button
-                className="btn btn-primary"
-                onClick={() => {
-                  console.log(answers);
-                  console.log(selectedChoiceIndexes);
-                  console.log(prog);
-                }}
-              >
-                Answers
-              </button> */}
-              </div>
-            ) : null
-          )
-        )}
+              ) : null
+            )
+          )}
+        </div>
       </div>
-    </div>
-    <div
-      style={{
-        background: "",
-        width: "30%",
-        paddingTop: "20px",
-        paddingLeft: "30px",
-        paddingRight: "30px",
-        height: "90vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <img src={factLogo} style={{ width: "100%" }} alt="fact logo"></img>
-      <div style={{ position: "relative", background: "red", flex: 1, borderRadius: "20px", overflow: "hidden" }}>
-<img
-  src={image}
-  alt="Your Alt Text"
-  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "20px" }}
-/>
-<div
-  style={{
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: "20px",
-    fontWeight:"bold",
-    color: "black",
-    backdropFilter: "blur(5px)", // Adjust the blur amount as needed
-    backgroundColor: "rgba(255, 255, 255, 0.5)", // Adjust the background color and opacity
-  }}
->
-  {fact}
-</div>
+      <div
+        style={{
+          background: "",
+          width: "30%",
+          paddingTop: "20px",
+          paddingLeft: "30px",
+          paddingRight: "30px",
+          height: "95vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <img src={factLogo} style={{ width: "100%" }} alt="fact logo"></img>
+        <div style={{ position: "relative", background: "", flex: 1, borderRadius: "20px", overflow: "hidden" }}>
+  <img
+    src={image}
+    alt="Your Alt Text"
+    style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "20px" }}
+  />
+  <div
+    style={{
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      padding: "20px",
+      fontWeight:"bold",
+      color: "black",
+      backdropFilter: "blur(5px)", // Adjust the blur amount as needed
+      backgroundColor: "rgba(255, 255, 255, 0.5)", // Adjust the background color and opacity
+    }}
+  >
+    {fact}
+  </div>
 </div>
 
     </div>
@@ -1553,6 +1645,22 @@ onChange={(e) => {
         <Button variant="danger" onClick={handleDeleteSavedData}>Delete Data</Button>
       </Modal.Footer>
     </Modal>
+
+    <Modal show={showPopup2} onHide={handleClosePopup2}>
+  <Modal.Header closeButton>
+    <Modal.Title style={{ color: 'red', fontWeight: 'bold' }}>Oops! We Encountered an Issue</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <p style={{ fontSize: '18px', lineHeight: '1.5' }}>
+      It seems there was an issue retrieving your old data. This may be due to incomplete answers or changes in the number of questions. As a result, the stored data is no longer valid.
+    </p>
+  </Modal.Body>
+  {/* <Modal.Footer>
+    <Button variant="success" onClick={handleLoadSavedData}>Load Data</Button>
+    <Button variant="danger" onClick={handleDeleteSavedData}>Delete Data</Button>
+  </Modal.Footer> */}
+</Modal>
+
   </>
 );
 };
