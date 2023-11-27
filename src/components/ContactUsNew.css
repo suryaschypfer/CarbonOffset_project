@@ -71,7 +71,7 @@ body {
     text-align: center;
     z-index: 1;
     width: 100%;
-    color: rgba(255, 255, 255, 0.743);
+    color: rgb(255, 255, 255);
     max-width: 80%;
     /* Set a maximum width for the text overlay */
     margin: 0 auto;
