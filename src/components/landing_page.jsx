@@ -190,10 +190,10 @@ export function Landing_Page(props) {
               }}
             >
               <option value="" disabled hidden>Select Age Group</option>
-              <option value="Teenager (Under 18)">Teenager (Under 18)</option>
-              <option value="Young Adult (19 to 39)">Young Adult (19 to 39)</option>
-              <option value="Middle-Aged Adult (40 to 65)">Middle-Aged Adult (40 to 65)</option>
-              <option value="Senior Citizen (Above 65)">Senior Citizen (Above 65)</option>
+              <option value="Teenager (Under 18)">Teenager</option>
+              <option value="Young Adult (19 to 39)">Young Adult</option>
+              <option value="Middle-Aged Adult (40 to 65)">Middle-Aged Adult</option>
+              <option value="Senior Citizen (Above 65)">Senior Citizen</option>
             </select>
             <div className='Family_error'>{ageErrorMessage}</div>
           </div>
