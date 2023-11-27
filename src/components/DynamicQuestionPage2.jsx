@@ -799,7 +799,7 @@ return (
       }}
     >
       <div>
-      <div style={{ fontSize: "18px", fontWeight: "bold", marginTop: "2.25vh", textAlign: "center" , height:"2.8125vh"}}>
+      <div style={{ fontSize: "18px", fontWeight: "bold", marginTop: "1.75vh", textAlign: "center" , height:"2.8125vh", marginBottom:"0.5vh"}}>
 {isNaN(prog) ? "0%" : `${prog.toFixed(1)}%`}
 </div>
         <div
