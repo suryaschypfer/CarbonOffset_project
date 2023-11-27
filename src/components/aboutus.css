@@ -134,7 +134,7 @@ body {
 .phone_info_from_db,
 .pin_info_from_db {
     font-size: 16px;
-    /* Adjust the font size as needed */
+    margin-top: 10px;
 }
 
 div p {
