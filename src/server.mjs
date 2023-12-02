@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const port = 3000;
 
 const dbConfig = {
-  host: "18.189.11.24",
+  host: "3.139.57.17",
   user: "carbonuser",
   password: "Carbon@123", // Fix the case of 'PASSWORD' to 'password'
   database: "CRBN", // Fix the case of 'DB' to 'database'
@@ -95,11 +95,9 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
   ) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
-    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND zipcode = '${zipcode}' AND total_carbon_footprint ${
-      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-    } ${carbonFootprintFilter} AND number_of_trees ${
-      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-    } ${treesFilter}`;
+    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND zipcode = '${zipcode}' AND total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+      } ${carbonFootprintFilter} AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+      } ${treesFilter}`;
   } else if (
     fromDate &&
     toDate &&
@@ -110,11 +108,9 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
   ) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
-    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND total_carbon_footprint ${
-      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-    } ${carbonFootprintFilter} AND number_of_trees ${
-      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-    } ${treesFilter}`;
+    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+      } ${carbonFootprintFilter} AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+      } ${treesFilter}`;
   } else if (fromDate && toDate && zipcode) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
@@ -122,15 +118,13 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
   } else if (fromDate && toDate && carbonComparison && carbonFootprintFilter) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
-    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND total_carbon_footprint ${
-      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-    } ${carbonFootprintFilter}`;
+    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+      } ${carbonFootprintFilter}`;
   } else if (fromDate && toDate && treesComparison && treesFilter) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
-    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND number_of_trees ${
-      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-    } ${treesFilter}`;
+    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+      } ${treesFilter}`;
   } else if (fromDate && toDate) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
@@ -143,27 +137,21 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
     treesComparison &&
     treesFilter
   ) {
-    query += ` WHERE total_carbon_footprint ${
-      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-    } ${carbonFootprintFilter} AND number_of_trees ${
-      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-    } ${treesFilter}`;
+    query += ` WHERE total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+      } ${carbonFootprintFilter} AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+      } ${treesFilter}`;
   } else if (carbonComparison && carbonFootprintFilter) {
-    query += ` WHERE total_carbon_footprint ${
-      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-    } ${carbonFootprintFilter}`;
+    query += ` WHERE total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+      } ${carbonFootprintFilter}`;
   } else if (treesComparison && treesFilter) {
-    query += ` WHERE number_of_trees ${
-      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-    } ${treesFilter}`;
+    query += ` WHERE number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+      } ${treesFilter}`;
   } else if (zipcode && carbonComparison && carbonFootprintFilter) {
-    query += ` WHERE zipcode = '${zipcode}' AND total_carbon_footprint ${
-      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-    } ${carbonFootprintFilter}`;
+    query += ` WHERE zipcode = '${zipcode}' AND total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+      } ${carbonFootprintFilter}`;
   } else if (zipcode && treesComparison && treesFilter) {
-    query += ` WHERE zipcode = '${zipcode}' AND number_of_trees ${
-      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-    } ${treesFilter}`;
+    query += ` WHERE zipcode = '${zipcode}' AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+      } ${treesFilter}`;
   }
 
   mysqlConnection.query(query, (error, results) => {
@@ -1191,7 +1179,7 @@ app.post("/api/sendCustomerEnquiryEmail", (req, res) => {
 // Define a route to retrieve questions with a specific flag from the database
 app.get("/api/questionsuser", cors(), (req, res) => {
   const sql =
-  "SELECT * FROM CRBN.questionsTable WHERE enabled = 1 ORDER BY CASE WHEN label = 'Personal' THEN 1 ELSE 2 END, label, id";
+    "SELECT * FROM CRBN.questionsTable WHERE enabled = 1 ORDER BY CASE WHEN label = 'Personal' THEN 1 ELSE 2 END, label, id";
 
 
 
@@ -1828,7 +1816,7 @@ app.post("/api/calculateFormula", async (req, res) => {
 
     res.json({ result });
     multiplyingFactor = result;
-      console.log("multiplying Factor",result);
+    console.log("multiplying Factor", result);
   } catch (error) {
     console.error("Error calculating formula:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -1858,124 +1846,124 @@ app.post("/api/calculateFormula", async (req, res) => {
 // });
 
 app.post('/api/calculateFootprint', cors(), async (req, res) => {
-  console.log("Answers Array",req.body.answersArr);
-  console.log("Indexes Array",req.body.unitIndexArr);
-  console.log("Formula Values Array",req.body.formulaValArr);
+  console.log("Answers Array", req.body.answersArr);
+  console.log("Indexes Array", req.body.unitIndexArr);
+  console.log("Formula Values Array", req.body.formulaValArr);
 
   const answers = req.body.answersArr; // Array containing question IDs, user answers, and household values
   const unitIndexes = req.body.unitIndexArr;
   const formulaVals = req.body.formulaValArr;
 
   let totalCarbonFootprint = 0;
-  console.log("Answers ---->",answers);
+  console.log("Answers ---->", answers);
   try {
-      for (let answer of answers) {
-          console.log("answer",answer);
-          const id = answer.id;
-          const userValue = answer.value;
-          let unit_Index;
-          let formulaValue;
+    for (let answer of answers) {
+      console.log("answer", answer);
+      const id = answer.id;
+      const userValue = answer.value;
+      let unit_Index;
+      let formulaValue;
 
-          for(let arr of unitIndexes){
-            if(arr.id == id){
+      for (let arr of unitIndexes) {
+        if (arr.id == id) {
 
-              if(arr.index === undefined){
-                unit_Index=arr.unitIndex;
-              }
-              else{
-                unit_Index=arr.index;
-              }
-              
-            }
+          if (arr.index === undefined) {
+            unit_Index = arr.unitIndex;
+          }
+          else {
+            unit_Index = arr.index;
           }
 
-          for(let arr of formulaVals){
-            if(arr.id == id){
-              formulaValue = arr.formulaVal
-            }
-          }
-          // Fetch refs (constants or formulas) for the question based on questionType and choiceAns
-          const [results] = await mysqlConnection.promise().query("SELECT refs, questionType, household, choiceAns FROM CRBN.questionsTable WHERE id = ?", [id]);
-          
-          
-          
-          if (results.length === 0) {
-              continue; // Skip the rest of this iteration and proceed to the next id in the loop
-          }
-          const refs = results[0].refs;
-          let household= results[0].household;
-          const questionType = results[0].questionType;
-          const choiceAns = results[0].choiceAns;
-
-          // Calculate carbon footprint based on questionType and choiceAns using the dynamically set familyMembers
-          let carbonValue = 0;
-          if (questionType === 1) {
-              if (choiceAns === "1") {
-                  carbonValue = household ? (refs * userValue)/familyMembers : (refs * userValue); // Use the user-selected choice's refValue
-              } else if (choiceAns === "2") {
-                  if (userValue >= 0 && userValue < refs[0].length) {
-                      carbonValue = household ? (refs[0][userValue])/familyMembers : refs[0][userValue] ; 
-                  } else {
-                      console.error("Invalid user-selected choice index:", userValue);
-                  }
-              } else if (choiceAns === "3") {
-                  // User can select multiple choices
-                  if (Array.isArray(userValue)) {
-                      const selectedChoices = userValue;
-                      // Calculate footprint based on selected choices
-                      for (const choiceIndex of selectedChoices) {
-                          if (choiceIndex >= 0 && choiceIndex < refs[0].length) {
-                              carbonValue += household ? (refs[0][choiceIndex])/familyMembers : (refs[0][choiceIndex]);
-                          } else {
-                              console.error("Invalid user-selected choice index:", choiceIndex);
-                          }
-                      }
-                  } else {
-                      console.error("Invalid user-selected choices:", userValue);
-                  }
-              }
-          }
-          else{
-            if(choiceAns === "1"){
-              console.log("family members",familyMembers);
-              carbonValue = (userValue * formulaValue)/familyMembers;
-            }
-            else if(choiceAns === "2"){
-              if(unit_Index >= 0 && userValue >=0){
-              carbonValue = (refs[unit_Index][userValue] * formulaValue)/familyMembers;
-              }
-            }
-            else if (choiceAns === "3") {
-              // User can select multiple choices
-              if (Array.isArray(userValue)) {
-                  const selectedChoices = userValue;
-                  // Calculate footprint based on selected choices
-                  for (const choiceIndex of selectedChoices) {
-                      if (choiceIndex >= 0 && choiceIndex < refs[0].length) {
-                          carbonValue += household ? ((refs[unit_Index][choiceIndex]) * formulaValue)/familyMembers : ((refs[unit_Index][choiceIndex]) * formulaValue);
-                      } else {
-                          console.error("Invalid user-selected choice index:", choiceIndex);
-                      }
-                  }
-              } else {
-                  console.error("Invalid user-selected choices:", userValue);
-              }
-          }
-          }
-          
-          totalCarbonFootprint += Math.ceil(carbonValue);
+        }
       }
 
-      const CO2_PER_TREE_PER_YEAR = 48;
-      const totalTreesRequired = Math.ceil(totalCarbonFootprint / CO2_PER_TREE_PER_YEAR);
+      for (let arr of formulaVals) {
+        if (arr.id == id) {
+          formulaValue = arr.formulaVal
+        }
+      }
+      // Fetch refs (constants or formulas) for the question based on questionType and choiceAns
+      const [results] = await mysqlConnection.promise().query("SELECT refs, questionType, household, choiceAns FROM CRBN.questionsTable WHERE id = ?", [id]);
 
-      res.json({
-          carbonFootprint: totalCarbonFootprint,
-          numberOfTrees: totalTreesRequired
-      });
+
+
+      if (results.length === 0) {
+        continue; // Skip the rest of this iteration and proceed to the next id in the loop
+      }
+      const refs = results[0].refs;
+      let household = results[0].household;
+      const questionType = results[0].questionType;
+      const choiceAns = results[0].choiceAns;
+
+      // Calculate carbon footprint based on questionType and choiceAns using the dynamically set familyMembers
+      let carbonValue = 0;
+      if (questionType === 1) {
+        if (choiceAns === "1") {
+          carbonValue = household ? (refs * userValue) / familyMembers : (refs * userValue); // Use the user-selected choice's refValue
+        } else if (choiceAns === "2") {
+          if (userValue >= 0 && userValue < refs[0].length) {
+            carbonValue = household ? (refs[0][userValue]) / familyMembers : refs[0][userValue];
+          } else {
+            console.error("Invalid user-selected choice index:", userValue);
+          }
+        } else if (choiceAns === "3") {
+          // User can select multiple choices
+          if (Array.isArray(userValue)) {
+            const selectedChoices = userValue;
+            // Calculate footprint based on selected choices
+            for (const choiceIndex of selectedChoices) {
+              if (choiceIndex >= 0 && choiceIndex < refs[0].length) {
+                carbonValue += household ? (refs[0][choiceIndex]) / familyMembers : (refs[0][choiceIndex]);
+              } else {
+                console.error("Invalid user-selected choice index:", choiceIndex);
+              }
+            }
+          } else {
+            console.error("Invalid user-selected choices:", userValue);
+          }
+        }
+      }
+      else {
+        if (choiceAns === "1") {
+          console.log("family members", familyMembers);
+          carbonValue = (userValue * formulaValue) / familyMembers;
+        }
+        else if (choiceAns === "2") {
+          if (unit_Index >= 0 && userValue >= 0) {
+            carbonValue = (refs[unit_Index][userValue] * formulaValue) / familyMembers;
+          }
+        }
+        else if (choiceAns === "3") {
+          // User can select multiple choices
+          if (Array.isArray(userValue)) {
+            const selectedChoices = userValue;
+            // Calculate footprint based on selected choices
+            for (const choiceIndex of selectedChoices) {
+              if (choiceIndex >= 0 && choiceIndex < refs[0].length) {
+                carbonValue += household ? ((refs[unit_Index][choiceIndex]) * formulaValue) / familyMembers : ((refs[unit_Index][choiceIndex]) * formulaValue);
+              } else {
+                console.error("Invalid user-selected choice index:", choiceIndex);
+              }
+            }
+          } else {
+            console.error("Invalid user-selected choices:", userValue);
+          }
+        }
+      }
+
+      totalCarbonFootprint += Math.ceil(carbonValue);
+    }
+
+    const CO2_PER_TREE_PER_YEAR = 48;
+    const totalTreesRequired = Math.ceil(totalCarbonFootprint / CO2_PER_TREE_PER_YEAR);
+
+    res.json({
+      carbonFootprint: totalCarbonFootprint,
+      numberOfTrees: totalTreesRequired
+    });
   } catch (error) {
-      console.error("Error calculating values:", error);
-      res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error calculating values:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
