@@ -1731,10 +1731,10 @@ const DynamicQuestionPage2 = () => {
         <Modal.Body>
           <p style={{ fontSize: '18px', lineHeight: '1.5' }}>You have saved data from a previous session. Loading the previous session!</p>
         </Modal.Body>
-        <Modal.Footer>
+        {/* <Modal.Footer>
           <Button variant="success" onClick={handleLoadSavedData}>Load Data</Button>
           <Button variant="danger" onClick={handleDeleteSavedData}>Delete Data</Button>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
 
 
