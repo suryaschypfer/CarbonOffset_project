@@ -29,6 +29,7 @@ const DynamicQuestionPage2 = () => {
   const [filteredQuestions, setFilteredQuestions] = useState(
     []
   );
+  const [notAnswered,setNotAnswered] = useState(false);
   const selectRef = useRef(null);
   const location = useLocation();
   const [prog, updateProg] = useState(0);
@@ -334,7 +335,14 @@ const DynamicQuestionPage2 = () => {
 
   const handleNextQuestion = () => {
     // Increment the index to display the next question
+    
     const curRealQuestionId = filteredQuestions[currentQuestionIndex].id;
+    if(choiceIndex==-1 && selectedChoiceIndexes.length==0 && (filteredQuestions[currentQuestionIndex].choiceAns=='2' || filteredQuestions[currentQuestionIndex].choiceAns=='3')){
+      setNotAnswered(true);
+
+    }else{
+      setNotAnswered(false);
+    
 
     if (
       filteredQuestions[currentQuestionIndex].questionType == 2 &&
@@ -523,7 +531,7 @@ const DynamicQuestionPage2 = () => {
     if (currentQuestionIndex === filteredQuestions.length - 1) {
       setQuestionsCompleted(true);
       // insertDataIntoCustomerTable(zipcodess, carbonCount, carbonCount / 48, ageGroup);
-    }
+    }}
   };
   //   const calculateFormula = async (formulaName: string) => {
   //     // Make an API call to calculate the formula
@@ -688,6 +696,7 @@ const DynamicQuestionPage2 = () => {
   };
 
   const handlePreviousQuestion = () => {
+    setNotAnswered(false);
     if (currentQuestionIndex == 0) {
       navigate("/");
     }
@@ -982,7 +991,7 @@ const DynamicQuestionPage2 = () => {
                         fontWeight: "bold",
                         paddingBottom: "10px",
                         paddingTop: "20px",
-                        height: "5vh",
+                        height: "4.5vh",
                         // background:"red"
                       }}
                     >
@@ -991,7 +1000,7 @@ const DynamicQuestionPage2 = () => {
                     <div
                       style={{
                         width: "90%",
-                        height: "8vh",
+                        height: "7.5vh",
                         background: "white",
                         margin: "0 auto",
                         paddingTop: "2px",
@@ -1006,6 +1015,32 @@ const DynamicQuestionPage2 = () => {
                     >
                       {question.questionContent}
                     </div>
+                    {notAnswered ? 
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          height: "1vh", // Adjust the height as needed
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "red",
+                        }}
+                      >
+                        Please answer this question to proceed!
+                      </div>:<div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          height: "1vh", // Adjust the height as needed
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "red",
+                        }}
+                      >
+                        {/* Please answer this question to proceed! */}
+                      </div>
+}
+
                     {/* </div> */}
                     <div
                       className="userInput"
@@ -1464,6 +1499,7 @@ const DynamicQuestionPage2 = () => {
                     }
                   </div>
                 ) : null} */}
+                
                     </div>
                     {/* buttons save and back */}
                     <div
@@ -1695,10 +1731,10 @@ const DynamicQuestionPage2 = () => {
         <Modal.Body>
           <p style={{ fontSize: '18px', lineHeight: '1.5' }}>You have saved data from a previous session. Loading the previous session!</p>
         </Modal.Body>
-        {/* <Modal.Footer>
+        <Modal.Footer>
           <Button variant="success" onClick={handleLoadSavedData}>Load Data</Button>
           <Button variant="danger" onClick={handleDeleteSavedData}>Delete Data</Button>
-        </Modal.Footer> */}
+        </Modal.Footer>
       </Modal>
 
 

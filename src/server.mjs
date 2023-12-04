@@ -5,27 +5,38 @@ import mysql1 from "mysql2/promise";
 import bodyParser from "body-parser";
 import nodemailer from "nodemailer";
 import { randomBytes } from "crypto";
+import multer from "multer";
+import csvParser from "csv-parser";
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
 const port = 3000;
+const codeport = 5173;
+
+const storage = multer.memoryStorage();
+const upload = multer();
+
+const csvParserOptions = {
+  mapHeaders: ({ header, index }) => header.trim(),
+};
+
+const hostmain = "18.222.248.198";
 
 const dbConfig = {
-  host: "18.224.17.131",
-  user: "carbonuser",
-  password: "Carbon@123", // Fix the case of 'PASSWORD' to 'password'
+  host: "127.0.0.1",
+  user: "root",
+  password: "Sahil@123456", // Fix the case of 'PASSWORD' to 'password'
   database: "CRBN", // Fix the case of 'DB' to 'database'
 };
 
 // const dbConfig = {
 //   host: "127.0.0.1",
 //   user: "root",
-//   password: "Carbon@123", // Fix the case of 'PASSWORD' to 'password'
+//   password: "Sahil@123456", // Fix the case of 'PASSWORD' to 'password'
 //   database: "CRBN", // Fix the case of 'DB' to 'database'
 // };
-
 
 // const port = 3001;
 
@@ -42,28 +53,30 @@ mysqlConnection.connect((err) => {
   }
 });
 
-app.post('/api/insertCustomerData', cors(), (req, res) => {
+app.post("/api/insertCustomerData", cors(), (req, res) => {
   const { zipcode, finalFootprint, finalTrees, age } = req.body;
 
   const insertQuery =
-    'INSERT INTO CRBN.Customer (total_carbon_footprint, number_of_trees, zipcode, age, date_answered) VALUES (?, ?, ?, ?, CURDATE())';
+    "INSERT INTO CRBN.Customer (total_carbon_footprint, number_of_trees, zipcode, age, date_answered) VALUES (?, ?, ?, ?, CURDATE())";
 
-  mysqlConnection.query(insertQuery, [finalFootprint, finalTrees, zipcode, age], (error, results) => {
-    if (error) {
-      console.error('Error inserting data into customer table:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    } else {
-      console.log('Data inserted into customer table successfully:', results);
-      res.status(200).json({ message: 'Data inserted successfully' });
+  mysqlConnection.query(
+    insertQuery,
+    [finalFootprint, finalTrees, zipcode, age],
+    (error, results) => {
+      if (error) {
+        console.error("Error inserting data into customer table:", error);
+        res.status(500).json({ error: "Internal server error" });
+      } else {
+        console.log("Data inserted into customer table successfully:", results);
+        res.status(200).json({ message: "Data inserted successfully" });
+      }
     }
-  });
+  );
 });
-
-
 
 app.get("/api/Customer", cors(), (req, res) => {
   const query =
-    "SELECT cust_id, first_name,last_name, age, email, total_carbon_footprint, number_of_trees, date_answered, zipcode FROM CRBN.Customer";
+    "SELECT cust_id, age, total_carbon_footprint, number_of_trees, date_answered, zipcode FROM CRBN.Customer";
   mysqlConnection.query(query, (error, results) => {
     if (error) throw error;
     res.send(results);
@@ -82,7 +95,7 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
     treesFilter,
   } = req.query;
   let query =
-    "SELECT cust_id, first_name, last_name, age, email, total_carbon_footprint, number_of_trees, date_answered, zipcode FROM CRBN.Customer";
+    "SELECT cust_id, age, total_carbon_footprint, number_of_trees, date_answered, zipcode FROM CRBN.Customer";
 
   if (
     fromDate &&
@@ -95,9 +108,11 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
   ) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
-    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND zipcode = '${zipcode}' AND total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-      } ${carbonFootprintFilter} AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-      } ${treesFilter}`;
+    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND zipcode = '${zipcode}' AND total_carbon_footprint ${
+      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+    } ${carbonFootprintFilter} AND number_of_trees ${
+      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+    } ${treesFilter}`;
   } else if (
     fromDate &&
     toDate &&
@@ -108,9 +123,11 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
   ) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
-    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-      } ${carbonFootprintFilter} AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-      } ${treesFilter}`;
+    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND total_carbon_footprint ${
+      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+    } ${carbonFootprintFilter} AND number_of_trees ${
+      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+    } ${treesFilter}`;
   } else if (fromDate && toDate && zipcode) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
@@ -118,13 +135,15 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
   } else if (fromDate && toDate && carbonComparison && carbonFootprintFilter) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
-    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-      } ${carbonFootprintFilter}`;
+    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND total_carbon_footprint ${
+      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+    } ${carbonFootprintFilter}`;
   } else if (fromDate && toDate && treesComparison && treesFilter) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
-    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-      } ${treesFilter}`;
+    query += ` WHERE date_answered BETWEEN STR_TO_DATE('${formattedFromDate}', '%Y-%m-%d') AND STR_TO_DATE('${formattedToDate}', '%Y-%m-%d') AND number_of_trees ${
+      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+    } ${treesFilter}`;
   } else if (fromDate && toDate) {
     const formattedFromDate = fromDate.split("/").reverse().join("-");
     const formattedToDate = toDate.split("/").reverse().join("-");
@@ -137,26 +156,215 @@ app.get("/api/filterCustomer", cors(), (req, res) => {
     treesComparison &&
     treesFilter
   ) {
-    query += ` WHERE total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-      } ${carbonFootprintFilter} AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-      } ${treesFilter}`;
+    query += ` WHERE total_carbon_footprint ${
+      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+    } ${carbonFootprintFilter} AND number_of_trees ${
+      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+    } ${treesFilter}`;
   } else if (carbonComparison && carbonFootprintFilter) {
-    query += ` WHERE total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-      } ${carbonFootprintFilter}`;
+    query += ` WHERE total_carbon_footprint ${
+      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+    } ${carbonFootprintFilter}`;
   } else if (treesComparison && treesFilter) {
-    query += ` WHERE number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-      } ${treesFilter}`;
+    query += ` WHERE number_of_trees ${
+      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+    } ${treesFilter}`;
   } else if (zipcode && carbonComparison && carbonFootprintFilter) {
-    query += ` WHERE zipcode = '${zipcode}' AND total_carbon_footprint ${carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
-      } ${carbonFootprintFilter}`;
+    query += ` WHERE zipcode = '${zipcode}' AND total_carbon_footprint ${
+      carbonComparison === "=" ? "=" : carbonComparison === ">" ? ">" : "<"
+    } ${carbonFootprintFilter}`;
   } else if (zipcode && treesComparison && treesFilter) {
-    query += ` WHERE zipcode = '${zipcode}' AND number_of_trees ${treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
-      } ${treesFilter}`;
+    query += ` WHERE zipcode = '${zipcode}' AND number_of_trees ${
+      treesComparison === "=" ? "=" : treesComparison === ">" ? ">" : "<"
+    } ${treesFilter}`;
   }
 
   mysqlConnection.query(query, (error, results) => {
     if (error) throw error;
     res.send(results);
+  });
+});
+
+app.get("/api/country_list", cors(), (req, res) => {
+  console.log("Received request for /api/country_list");
+  const sql = "SELECT country_name FROM CRBN.Country";
+
+  mysqlConnection.query(sql, (error, results) => {
+    if (error) {
+      console.error("Error executing SQL query:", error.message);
+      res
+        .status(500)
+        .json({ error: "Error retrieving countries from the database" });
+      return;
+    }
+    res.json(results);
+  });
+});
+
+app.get("/api/utility_list", cors(), (req, res) => {
+  const sql = "SELECT * FROM CRBN.Utility";
+
+  mysqlConnection.query(sql, (error, results) => {
+    if (error) {
+      console.error("Error executing SQL query:", error.message);
+      res
+        .status(500)
+        .json({ error: "Error retrieving utilities from the database" });
+      return;
+    }
+    res.json(results);
+  });
+});
+
+app.get("/api/get_utilities", cors(), (req, res) => {
+  const sql = "SELECT utility_name FROM CRBN.Utility";
+
+  mysqlConnection.query(sql, (error, results) => {
+    if (error) {
+      console.error("Error executing SQL query:", error.message);
+      res
+        .status(500)
+        .json({ error: "Error retrieving utilities from the database" });
+      return;
+    }
+    res.json(results);
+  });
+});
+
+app.post("/api/new_utility_add", cors(), (req, res) => {
+  const { utility_name, utility_units } = req.body;
+
+  if (!utility_name || !utility_units) {
+    return res
+      .status(400)
+      .json({ error: "Utility name and units are required" });
+  }
+
+  const sql =
+    "INSERT INTO CRBN.Utility (utility_name, utility_units) VALUES (?, ?)";
+
+  mysqlConnection.query(
+    sql,
+    [utility_name, utility_units],
+    (error, results) => {
+      if (error) {
+        console.error("Error executing SQL query:", error.message);
+        return res
+          .status(500)
+          .json({ error: "Error adding utility to the database" });
+      }
+
+      // If the utility was added successfully, return the new utility details
+      const newUtilityId = results.insertId;
+      const newUtility = {
+        utility_id: newUtilityId,
+        utility_name,
+        utility_units,
+      };
+      res.status(200).json(newUtility);
+    }
+  );
+});
+
+app.post(
+  "/api/new_utilities_add_bulk",
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      console.log("Route reached");
+
+      // Check if the request body has data property
+      if (!req.body.data) {
+        console.error("No data found in the request body.");
+        return res.status(400).json({ error: "Bad Request" });
+      }
+
+      const newData = JSON.parse(req.body.data);
+
+      // Using a transaction for atomicity (all or nothing)
+      const connection = await pool.getConnection();
+      console.log("Received data:", newData);
+
+      try {
+        await connection.beginTransaction();
+
+        // Assuming 'utilities' is your table name
+        const insertQuery =
+          "INSERT INTO CRBN.utilities (Zipcode, Country, City, Utility, Utility_Value, Utility_Units, Sources, Date_of_Source) VALUES ?";
+
+        // Mapping data to an array of values
+        const values = newData.map((item) => [
+          item.Zipcode,
+          item.Country,
+          item.City,
+          item.Utility,
+          item.Utility_Value,
+          item.Utility_Units,
+          item.Sources,
+          item.Date_of_Source,
+        ]);
+
+        // Performing the bulk insert
+        await connection.query(insertQuery, [values]);
+
+        // Committing the transaction
+        await connection.commit();
+
+        res.status(200).json({ message: "Data saved successfully" });
+      } catch (error) {
+        // Rolling back the transaction in case of an error
+        await connection.rollback();
+        console.error("Error saving data:", error);
+        res.status(500).json({ error: "Internal server error" });
+      } finally {
+        // Releasing the connection back to the pool
+        connection.release();
+      }
+    } catch (error) {
+      console.error("Error processing file:", error);
+      res.status(400).json({ error: "Error processing file" });
+    }
+  }
+);
+
+app.post("/api/update_utility_name/:utilityId", cors(), (req, res) => {
+  const utilityId = req.params.utilityId;
+  console.log("Utility ID:", utilityId);
+
+  const { utility_name, utility_units } = req.body;
+  console.log("Utility Name:", utility_name);
+  console.log("Utility Units:", utility_units);
+
+  const query =
+    "UPDATE CRBN.Utility SET utility_name = ?, utility_units = ? WHERE utility_id = ?";
+  const values = [utility_name, utility_units, utilityId];
+
+  mysqlConnection.query(query, values, (error, results) => {
+    if (error) {
+      console.error("Error updating utility data: " + error);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.status(200).json({ message: "Utility data updated successfully" });
+    }
+  });
+});
+
+app.delete("/api/delete_utility_name/:utilityId", cors(), (req, res) => {
+  const utilityId = req.params.utilityId;
+
+  // Perform the deletion in the database
+  const query = "DELETE FROM CRBN.Utility WHERE utility_id = ?";
+  mysqlConnection.query(query, [utilityId], (error, results) => {
+    if (error) {
+      console.error("Error deleting utility data: " + error);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      if (results.affectedRows > 0) {
+        res.status(200).json({ message: "Utility data deleted successfully" });
+      } else {
+        res.status(404).json({ message: "Utility data not found" });
+      }
+    }
   });
 });
 
@@ -177,10 +385,8 @@ app.get("/api/utility_add", cors(), (req, res) => {
   });
 });
 
-
-
 // Define a route to save new utility data
-app.post("/api/new_utility_add", (req, res) => {
+app.post("/api/new_utilities_add", (req, res) => {
   const {
     Zipcode,
     Country,
@@ -313,25 +519,29 @@ app.post("/api/ContactUs", cors(), (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
       }
 
+      return res
+        .status(200)
+        .json({ message: "Enquiry and Customer added successfully" });
+
       // const enquiryId = result.insertId;
 
-      // 2) Inserting a new entry into the Customer table
-      const insertCustomerSql = `INSERT INTO Customer (date_answered, session_id, first_name, last_name, email, total_carbon_footprint, answers, number_of_trees, zipcode) 
-      VALUES (CURDATE(), "N/A", ?, ?, ?, 0, "N/A", 0, "N/A")`;
-      mysqlConnection.query(
-        insertCustomerSql,
-        [firstName, lastName, email],
-        (err, insertResult) => {
-          if (err) {
-            console.error("Error inserting into Customer table:", err);
-            return res.status(500).json({ error: "Internal Server Error" });
-          }
+      // // 2) Inserting a new entry into the Customer table
+      // const insertCustomerSql = `INSERT INTO Customer (date_answered, session_id, first_name, last_name, email, total_carbon_footprint, answers, number_of_trees, zipcode)
+      // VALUES (CURDATE(), "N/A", ?, ?, ?, 0, "N/A", 0, "N/A")`;
+      // mysqlConnection.query(
+      //   insertCustomerSql,
+      //   [firstName, lastName, email],
+      //   (err, insertResult) => {
+      //     if (err) {
+      //       console.error("Error inserting into Customer table:", err);
+      //       return res.status(500).json({ error: "Internal Server Error" });
+      //     }
 
-          return res
-            .status(200)
-            .json({ message: "Enquiry and Customer added successfully" });
-        }
-      );
+      //     return res
+      //       .status(200)
+      //       .json({ message: "Enquiry and Customer added successfully" });
+      //   }
+      // );
     }
   );
 });
@@ -456,7 +666,7 @@ app.post("/api/admin/login", cors(), (req, res) => {
   const { email, password } = req.body;
 
   // Replace this with your actual query to check the credentials
-  const sql = `SELECT * FROM CRBN.admin WHERE email = ? AND password = ?`;
+  const sql = `SELECT * FROM CRBN.admin WHERE email = ? AND password = ? and flag=1`;
   mysqlConnection.query(sql, [email, password], (err, results) => {
     if (err) {
       console.error("Database query error:", err);
@@ -551,18 +761,80 @@ app.get("/api/Category", cors(), (req, res) => {
   });
 });
 
+app.get("/api/Category", cors(), (req, res) => {
+  const sql = "SELECT * FROM CRBN.Category";
+
+  // Execute the SQL query using the MySQL connection
+  mysqlConnection.query(sql, (error, results) => {
+    if (error) {
+      console.error("Error executing SQL query:", error.message);
+      res
+        .status(500)
+        .json({ error: "Error retrieving questions from the database" });
+      return;
+    }
+
+    // Send the retrieved questions as a JSON response
+    res.json(results);
+  });
+});
+
 app.delete("/api/Category/delete", (req, res) => {
   const { categoryIds } = req.body;
 
-  const query = "DELETE FROM  CRBN.Category WHERE category_id IN (?)";
-  mysqlConnection.query(query, [categoryIds], (error, results) => {
-    if (error) {
-      console.error("Error deleting utilities:", error);
-      res.status(500).json({ message: "Internal Server Error" });
-    } else {
-      res.status(200).json({ message: "Utilities deleted successfully" });
+  // Retrieve category names before deletion
+  const getCategoryNamesQuery =
+    "SELECT category_name FROM CRBN.Category WHERE category_id IN (?)";
+  mysqlConnection.query(
+    getCategoryNamesQuery,
+    [categoryIds],
+    (selectError, selectResults) => {
+      if (selectError) {
+        console.error("Error retrieving category names:", selectError);
+        res.status(500).json({ message: "Internal Server Error" });
+      } else {
+        const categoryNames = selectResults.map(
+          (result) => result.category_name
+        );
+
+        // Perform deletion
+        const deleteCategoryQuery =
+          "DELETE FROM CRBN.Category WHERE category_id IN (?)";
+        mysqlConnection.query(
+          deleteCategoryQuery,
+          [categoryIds],
+          (deleteError, deleteResults) => {
+            if (deleteError) {
+              console.error("Error deleting categories:", deleteError);
+              res.status(500).json({ message: "Internal Server Error" });
+            } else {
+              // Update CRBN.questionsTable to set enabled = 0 where label = category_name
+              const updateQuestionsQuery =
+                "UPDATE CRBN.questionsTable SET enabled = 0 WHERE label IN (?)";
+              mysqlConnection.query(
+                updateQuestionsQuery,
+                [categoryNames],
+                (updateError, updateResults) => {
+                  if (updateError) {
+                    console.error(
+                      "Error updating questionsTable:",
+                      updateError
+                    );
+                    res.status(500).json({ message: "Internal Server Error" });
+                  } else {
+                    res.status(200).json({
+                      message:
+                        "Categories deleted and questions updated successfully",
+                    });
+                  }
+                }
+              );
+            }
+          }
+        );
+      }
     }
-  });
+  );
 });
 
 app.post("/api/toggleQuestion", async (req, res) => {
@@ -1043,23 +1315,6 @@ app.post("/api/send-email", async (req, res) => {
           transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
               console.error("Error sending email:", error);
-            } else {
-              // If the email was sent successfully, insert a record into the notifications table
-              const notificationData = {
-                customer_Emailid: customerEmail,
-                notification_subject: subject,
-                notification_message: body,
-              };
-
-              mysqlConnection.query(
-                "INSERT INTO CRBN.notification SET ?",
-                notificationData,
-                (error) => {
-                  if (error) {
-                    console.error("Error inserting notification:", error);
-                  }
-                }
-              );
             }
           });
         });
@@ -1071,6 +1326,24 @@ app.post("/api/send-email", async (req, res) => {
     console.error("Error sending email:", error);
     res.status(500).send("Failed to send emails");
   }
+});
+
+app.post("/api/update-notification", (req, res) => {
+  const { subject, body } = req.body;
+
+  console.log("Received request to update notification:", { subject, body });
+
+  const queryupdate =
+    "INSERT INTO CRBN.notification (notification_subject, notification_message) VALUES (?, ?)";
+  mysqlConnection.query(queryupdate, [subject, body], (err, result) => {
+    if (err) {
+      console.error("Error inserting into notification table:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    console.log("Notification updated successfully");
+    res.status(200).json({ message: "Notification updated successfully" });
+  });
 });
 
 app.get("/api/enquiry_main_fetch_waiting_for_response", (req, res) => {
@@ -1179,9 +1452,7 @@ app.post("/api/sendCustomerEnquiryEmail", (req, res) => {
 // Define a route to retrieve questions with a specific flag from the database
 app.get("/api/questionsuser", cors(), (req, res) => {
   const sql =
-    "SELECT * FROM CRBN.questionsTable WHERE enabled = 1 ORDER BY CASE WHEN label = 'Personal' THEN 1 ELSE 2 END, label, id";
-
-
+    "SELECT * FROM CRBN.questionsTable  WHERE enabled = 1  ORDER BY  CASE  WHEN label = 'InfoPersonal' THEN 1 WHEN label = 'Household' THEN 2 WHEN label = 'Air Travel' THEN 3 WHEN label = 'Personal Vehicles' THEN 4 WHEN label = 'Public Transit' THEN 5 WHEN label = 'Shopping' THEN 6 ELSE 7 END,  id;";
 
   // Execute the SQL query using the MySQL connection
   mysqlConnection.query(sql, (error, results) => {
@@ -1214,40 +1485,6 @@ app.get("/api/questions/:id", cors(), async (req, res) => {
     console.error("Error fetching specific question:", error);
     res.status(500).send("Server error");
   }
-});
-
-app.post("/api/ContactUs", cors(), (req, res) => {
-  const { email, query, firstName, lastName } = req.body;
-
-  // 1) Adding query to the Enquiry table
-  const insertEnquirySql =
-    "INSERT INTO CRBN.Enquiry (enquiry_question, enquiry_flag) VALUES (?, ?)";
-  mysqlConnection.query(insertEnquirySql, [query, 1], (err, result) => {
-    if (err) {
-      console.error("Error inserting into Enquiry table:", err);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-
-    const enquiryId = result.insertId;
-
-    // 2) Inserting a new entry into the Customer table
-    const insertCustomerSql = `INSERT INTO CRBN.Customer (date_answered, session_id, first_name, last_name,age, email, total_carbon_footprint, answers, number_of_trees, enquiry_id) 
-      VALUES (CURDATE(), "N/A", ?, ?, ?, ?, 0, "N/A", 0, ?)`;
-    mysqlConnection.query(
-      insertCustomerSql,
-      [firstName, lastName, email, enquiryId],
-      (err, insertResult) => {
-        if (err) {
-          console.error("Error inserting into Customer table:", err);
-          return res.status(500).json({ error: "Internal Server Error" });
-        }
-
-        return res
-          .status(200)
-          .json({ message: "Enquiry and Customer added successfully" });
-      }
-    );
-  });
 });
 
 // API for random fact fetching
@@ -1745,9 +1982,89 @@ app.get("/api/getCategories", async (req, res) => {
   }
 });
 
+async function getUtilityValue(utilityName, zipcode) {
+  try {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+      "SELECT Utility_Value FROM utilities WHERE Utility = ? AND Zipcode = ?",
+      [utilityName, zipcode]
+    );
+    const [avg] = await connection.query(
+      "SELECT Avg(Utility_Value) as av FROM utilities WHERE Utility = ? ",
+      [utilityName]
+    );
+    connection.release();
+
+    if (rows.length === 0) {
+      // Handle the case where the utility value is not found
+      return avg[0].av; // or any default value as needed
+    }
+
+    return rows[0].Utility_Value;
+  } catch (error) {
+    console.error("Error fetching utility value:", error);
+    throw error;
+  }
+}
+
+// Your existing route handler
+app.post("/api/calculateFormula", async (req, res) => {
+  try {
+    //sjjsjsjs
+    const { formulaName, zipcode } = req.body;
+
+    // Fetch the formula from the database based on the formulaName
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+      "SELECT var1, var2, var3, var4 FROM formulasTable WHERE formulaName = ?",
+      [formulaName]
+    );
+    const [utilRows] = await connection.query(
+      "SELECT utility_name FROM Utility"
+    );
+    connection.release();
+
+    if (rows.length === 0) {
+      res.status(404).json({ error: "Formula not found" });
+      return;
+    }
+    if (utilRows.length === 0) {
+      res.status(404).json({ error: "No Utilities found" });
+      return;
+    }
+
+    // Extract variables from the database response
+    const { var1, var2, var3, var4 } = rows[0];
+    const utilities = utilRows.map((row) => row.utility_name);
+    console.log(var1, var2, var3, var4);
+    // Check if var1 is present in the conversion_table, if not, parse as float
+    const parsedVar1 = utilities.includes(var1)
+      ? await getUtilityValue(var1, zipcode)
+      : await getVariableValue(var1);
+    const parsedVar2 = utilities.includes(var2)
+      ? await getUtilityValue(var2, zipcode)
+      : await getVariableValue(var2);
+    const parsedVar3 = utilities.includes(var3)
+      ? await getUtilityValue(var3, zipcode)
+      : await getVariableValue(var3);
+    const parsedVar4 = utilities.includes(var4)
+      ? await getUtilityValue(var4, zipcode)
+      : await getVariableValue(var4);
+
+    // Perform the calculation based on the parsed variables
+    console.log(parsedVar1, parsedVar2, parsedVar3, parsedVar4);
+    const result = (parsedVar1 * parsedVar2) / (parsedVar3 * parsedVar4);
+
+    res.json({ result });
+  } catch (error) {
+    console.error("Error calculating formula:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 // app.post("/api/calculateFormula", async (req, res) => {
 //   try {
-//     const { formulaName, zipcode, utility } = req.body;
+//     const { formulaName, zipcode } = req.body;
 
 //     // Fetch the formula from the database based on the formulaName
 //     const connection = await pool.getConnection();
@@ -1755,24 +2072,42 @@ app.get("/api/getCategories", async (req, res) => {
 //       "SELECT var1, var2, var3, var4 FROM formulasTable WHERE formulaName = ?",
 //       [formulaName]
 //     );
+//     const [utilRows] = await connection.query(
+//       "SELECT utility_name FROM Utility"
+//     );
 //     connection.release();
-
+//     console.log(formulaName, zipcode, utility);
 //     if (rows.length === 0) {
-//       // Formula not found
 //       res.status(404).json({ error: "Formula not found" });
+//       return;
+//     }
+//     if (utilRows.length === 0) {
+//       res.status(404).json({ error: "No Utilities found" });
 //       return;
 //     }
 
 //     // Extract variables from the database response
 //     const { var1, var2, var3, var4 } = rows[0];
+//     // const utils = utilRows;
+//     const utilities = utilRows.map((row) => row.utility_name);
+//     console.log(var1, var2, var3, var4);
+//     console.log("This is utils", utilities);
 
 //     // Check if var1 is present in the conversion_table, if not, parse as float
-//     const parsedVar1 = await getVariableValue(var1);
-//     // Repeat for var2, var3, and var4
-//     const parsedVar2 = await getVariableValue(var2);
-//     const parsedVar3 = await getVariableValue(var3);
-//     const parsedVar4 = await getVariableValue(var4);
 
+//     const parsedVar1 = utilities.includes(var1)
+//       ? await getUtilityValue(var1)
+//       : await getVariableValue(var1);
+//     const parsedVar2 = utilities.includes(var2)
+//       ? 1.5
+//       : await getVariableValue(var2);
+//     const parsedVar3 = utilities.includes(var3)
+//       ? 1
+//       : await getVariableValue(var3);
+//     const parsedVar4 = utilities.includes(var4)
+//       ? 1
+//       : await getVariableValue(var4);
+//     console.log(parsedVar1, parsedVar2, parsedVar3, parsedVar4);
 //     // Perform the calculation based on the parsed variables
 //     const result = (parsedVar1 * parsedVar2) / (parsedVar3 * parsedVar4);
 
@@ -1783,45 +2118,154 @@ app.get("/api/getCategories", async (req, res) => {
 //   }
 // });
 
-app.post("/api/calculateFormula", async (req, res) => {
-  try {
-    const { formulaName, zipcode, utility } = req.body;
+// app.post("/api/calculateFormula", async (req, res) => {
+//   try {
+//     const { formulaName, zipcode, utility } = req.body;
+//     console.log(formulaName, zipcode, utility);
 
-    // Fetch the formula from the database based on the formulaName
-    const connection = await pool.getConnection();
-    const [rows] = await connection.query(
-      "SELECT var1, var2, var3, var4 FROM formulasTable WHERE formulaName = ?",
-      [formulaName]
-    );
-    connection.release();
+//     // Fetch the formula from the database based on the formulaName
+//     const connection = await pool.getConnection();
+//     const [rows] = await connection.query(
+//       "SELECT var1, var2, var3, var4 FROM formulasTable WHERE formulaName = ?",
+//       [formulaName]
+//     );
+//     console.log()
+//     connection.release();
 
-    if (rows.length === 0) {
-      // Formula not found, return 0 as the result
-      res.json({ result: 0 });
-      return;
-    }
+//     if (rows.length === 0) {
+//       // Formula not found, return 0 as the result
+//       res.json({ result: 0 });
+//       return;
+//     }
 
-    // Extract variables from the database response
-    const { var1, var2, var3, var4 } = rows[0];
+//     // Extract variables from the database response
+//     const { var1, var2, var3, var4 } = rows[0];
 
-    // Check if var1 is present in the conversion_table, if not, parse as float
-    const parsedVar1 = await getVariableValue(var1);
-    // Repeat for var2, var3, and var4
-    const parsedVar2 = await getVariableValue(var2);
-    const parsedVar3 = await getVariableValue(var3);
-    const parsedVar4 = await getVariableValue(var4);
+//     const parsedVar1 =
+//       var1 && var1 === utility
+//         ? await getUtilityValue(zipcode, utility)
+//         : var1
+//         ? await getVariableValue(var1)
+//         : 1;
+//     const parsedVar2 =
+//       var2 && var2 === utility
+//         ? await getUtilityValue(zipcode, utility)
+//         : var2
+//         ? await getVariableValue(var2)
+//         : 1;
+//     const parsedVar3 =
+//       var3 && var3 === utility
+//         ? await getUtilityValue(zipcode, utility)
+//         : var3
+//         ? await getVariableValue(var3)
+//         : 1;
+//     const parsedVar4 =
+//       var4 && var4 === utility
+//         ? await getUtilityValue(zipcode, utility)
+//         : var4
+//         ? await getVariableValue(var4)
+//         : 1;
+//     console.log("Debugging vars:", parsedVar1, var2, var3, var4); // Add this line
+//     // Fetch utility information from the utilities table based on the given zipcode and utility
+//     const [utilityRows] = await connection.query(
+//       "SELECT Utility_Value FROM utilities WHERE Zipcode = ? AND Utility = ?",
+//       [zipcode, utility]
+//     );
 
-    // Perform the calculation based on the parsed variables
-    const result = (parsedVar1 * parsedVar2) / (parsedVar3 * parsedVar4);
+//     connection.release();
 
-    res.json({ result });
-    multiplyingFactor = result;
-    console.log("multiplying Factor", result);
-  } catch (error) {
-    console.error("Error calculating formula:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//     if (utilityRows.length === 0) {
+//       // Utility information not found, return an error or handle it appropriately
+//       const [averageUtilityRows] = await connection.query(
+//         "SELECT AVG(Utility_Value) AS avgUtilityValue FROM utilities WHERE Utility = ?",
+//         [utility]
+//       );
+
+//       if (
+//         averageUtilityRows.length === 0 ||
+//         averageUtilityRows[0].avgUtilityValue === null
+//       ) {
+//         // No utility information found, return an error or handle it appropriately
+//         res.status(404).json({ error: "Utility information not found" });
+//         connection.release();
+//         return;
+//       }
+
+//       const averageUtilityValue = parseFloat(
+//         averageUtilityRows[0].avgUtilityValue
+//       );
+
+//       return;
+//     }
+
+//     // Extract utility values from the database response
+//     const { Utility_Value } = utilityRows[0];
+
+//     // Convert utility values to appropriate data types if needed
+//     const parsedUtilityValue = parseFloat(Utility_Value);
+//     // Perform the calculation based on the parsed variables
+//     const result = (parsedVar1 * parsedVar2) / (parsedVar3 * parsedVar4);
+
+//     res.json({ result });
+//     multiplyingFactor = result;
+//     console.log("multiplying Factor", result);
+//   } catch (error) {
+//     console.error("Error calculating formula:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+
+// async function getUtilityValue(zipcode, utility) {
+//   try {
+//     // Establish a database connection
+//     const connection = await pool.getConnection();
+
+//     // Fetch utility information from the utilities table based on the given zipcode and utility
+//     const [utilityRows] = await connection.query(
+//       "SELECT Utility_Value FROM utilities WHERE Zipcode = ? AND Utility = ?",
+//       [zipcode, utility]
+//     );
+
+//     if (utilityRows.length === 0) {
+//       // Utility information not found for the specified zipcode and utility
+//       // Calculate the average utility value for all rows where utility = utility name
+//       const [averageUtilityRows] = await connection.query(
+//         "SELECT AVG(Utility_Value) AS avgUtilityValue FROM utilities WHERE Utility = ?",
+//         [utility]
+//       );
+
+//       connection.release();
+
+//       if (
+//         averageUtilityRows.length === 0 ||
+//         averageUtilityRows[0].avgUtilityValue === null
+//       ) {
+//         // No utility information found, return null or handle it appropriately
+//         return null;
+//       }
+
+//       // Extract the average utility value from the database response
+//       const averageUtilityValue = parseFloat(
+//         averageUtilityRows[0].avgUtilityValue
+//       );
+
+//       return averageUtilityValue;
+//     }
+
+//     // Extract utility value from the database response
+//     const { Utility_Value } = utilityRows[0];
+
+//     // Convert utility value to the appropriate data type if needed
+//     const parsedUtilityValue = parseFloat(Utility_Value);
+
+//     connection.release();
+
+//     return parsedUtilityValue;
+//   } catch (error) {
+//     console.error("Error fetching utility value:", error);
+//     return null;
+//   }
+// }
 
 // app.get("/formulas", async (req, res) => {
 //   try {
@@ -1845,7 +2289,7 @@ app.post("/api/calculateFormula", async (req, res) => {
 //   }
 // });
 
-app.post('/api/calculateFootprint', cors(), async (req, res) => {
+app.post("/api/calculateFootprint", cors(), async (req, res) => {
   console.log("Answers Array", req.body.answersArr);
   console.log("Indexes Array", req.body.unitIndexArr);
   console.log("Formula Values Array", req.body.formulaValArr);
@@ -1866,26 +2310,26 @@ app.post('/api/calculateFootprint', cors(), async (req, res) => {
 
       for (let arr of unitIndexes) {
         if (arr.id == id) {
-
           if (arr.index === undefined) {
             unit_Index = arr.unitIndex;
-          }
-          else {
+          } else {
             unit_Index = arr.index;
           }
-
         }
       }
 
       for (let arr of formulaVals) {
         if (arr.id == id) {
-          formulaValue = arr.formulaVal
+          formulaValue = arr.formulaVal;
         }
       }
       // Fetch refs (constants or formulas) for the question based on questionType and choiceAns
-      const [results] = await mysqlConnection.promise().query("SELECT refs, questionType, household, choiceAns FROM CRBN.questionsTable WHERE id = ?", [id]);
-
-
+      const [results] = await mysqlConnection
+        .promise()
+        .query(
+          "SELECT refs, questionType, household, choiceAns FROM CRBN.questionsTable WHERE id = ?",
+          [id]
+        );
 
       if (results.length === 0) {
         continue; // Skip the rest of this iteration and proceed to the next id in the loop
@@ -1894,15 +2338,21 @@ app.post('/api/calculateFootprint', cors(), async (req, res) => {
       let household = results[0].household;
       const questionType = results[0].questionType;
       const choiceAns = results[0].choiceAns;
-
+      if (familyMembers === undefined) {
+        familyMembers = 1;
+      }
       // Calculate carbon footprint based on questionType and choiceAns using the dynamically set familyMembers
       let carbonValue = 0;
       if (questionType === 1) {
         if (choiceAns === "1") {
-          carbonValue = household ? (refs * userValue) / familyMembers : (refs * userValue); // Use the user-selected choice's refValue
+          carbonValue = household
+            ? (refs * userValue) / familyMembers
+            : refs * userValue; // Use the user-selected choice's refValue
         } else if (choiceAns === "2") {
           if (userValue >= 0 && userValue < refs[0].length) {
-            carbonValue = household ? (refs[0][userValue]) / familyMembers : refs[0][userValue];
+            carbonValue = household
+              ? refs[0][userValue] / familyMembers
+              : refs[0][userValue];
           } else {
             console.error("Invalid user-selected choice index:", userValue);
           }
@@ -1913,36 +2363,45 @@ app.post('/api/calculateFootprint', cors(), async (req, res) => {
             // Calculate footprint based on selected choices
             for (const choiceIndex of selectedChoices) {
               if (choiceIndex >= 0 && choiceIndex < refs[0].length) {
-                carbonValue += household ? (refs[0][choiceIndex]) / familyMembers : (refs[0][choiceIndex]);
+                carbonValue += household
+                  ? refs[0][choiceIndex] / familyMembers
+                  : refs[0][choiceIndex];
               } else {
-                console.error("Invalid user-selected choice index:", choiceIndex);
+                console.error(
+                  "Invalid user-selected choice index:",
+                  choiceIndex
+                );
               }
             }
           } else {
             console.error("Invalid user-selected choices:", userValue);
           }
         }
-      }
-      else {
+      } else {
         if (choiceAns === "1") {
           console.log("family members", familyMembers);
           carbonValue = (userValue * formulaValue) / familyMembers;
-        }
-        else if (choiceAns === "2") {
+        } else if (choiceAns === "2") {
           if (unit_Index >= 0 && userValue >= 0) {
-            carbonValue = (refs[unit_Index][userValue] * formulaValue) / familyMembers;
+            carbonValue =
+              (refs[unit_Index][userValue] * formulaValue) / familyMembers;
           }
-        }
-        else if (choiceAns === "3") {
+        } else if (choiceAns === "3") {
           // User can select multiple choices
           if (Array.isArray(userValue)) {
             const selectedChoices = userValue;
             // Calculate footprint based on selected choices
             for (const choiceIndex of selectedChoices) {
               if (choiceIndex >= 0 && choiceIndex < refs[0].length) {
-                carbonValue += household ? ((refs[unit_Index][choiceIndex]) * formulaValue) / familyMembers : ((refs[unit_Index][choiceIndex]) * formulaValue);
+                carbonValue += household
+                  ? (refs[unit_Index][choiceIndex] * formulaValue) /
+                    familyMembers
+                  : refs[unit_Index][choiceIndex] * formulaValue;
               } else {
-                console.error("Invalid user-selected choice index:", choiceIndex);
+                console.error(
+                  "Invalid user-selected choice index:",
+                  choiceIndex
+                );
               }
             }
           } else {
@@ -1955,11 +2414,13 @@ app.post('/api/calculateFootprint', cors(), async (req, res) => {
     }
 
     const CO2_PER_TREE_PER_YEAR = 48;
-    const totalTreesRequired = Math.ceil(totalCarbonFootprint / CO2_PER_TREE_PER_YEAR);
+    const totalTreesRequired = Math.ceil(
+      totalCarbonFootprint / CO2_PER_TREE_PER_YEAR
+    );
 
     res.json({
       carbonFootprint: totalCarbonFootprint,
-      numberOfTrees: totalTreesRequired
+      numberOfTrees: totalTreesRequired,
     });
   } catch (error) {
     console.error("Error calculating values:", error);
@@ -1967,11 +2428,10 @@ app.post('/api/calculateFootprint', cors(), async (req, res) => {
   }
 });
 
-
 app.post("/api/forgotpassword", cors(), async (req, res) => {
   const { email } = req.body;
   // Check if the email exists in the 'admin' table
-  const sql = `SELECT * FROM CRBN.admin WHERE email = ?`;
+  const sql = `SELECT * FROM CRBN.admin WHERE email = ? and flag=1`;
   try {
     const [user] = await mysqlConnection.promise().query(sql, [email]);
 
@@ -1988,7 +2448,7 @@ app.post("/api/forgotpassword", cors(), async (req, res) => {
     await mysqlConnection.promise().query(updateTokenSql, [resetToken, email]);
 
     // Send a password reset email with a link to a reset page
-    const resetLink = `http://localhost:5173/resetpassword?token=${resetToken}`;
+    const resetLink = `http://${hostmain}:${codeport}/resetpassword?token=${resetToken}`;
     await sendPasswordResetEmail(email, resetLink);
 
     return res
@@ -2051,6 +2511,7 @@ let familyMembers; // Declare a module-scoped variable
 
 app.post("/api/setFamilyMembers", cors(), (req, res) => {
   familyMembers = req.body.familyMembers; // Assign the value to the module-scoped variable
+  ageGroup = req.body.ageGroup;
   console.log("Received familyMembers:", familyMembers);
   res.status(200).json({ message: "Family members set successfully" });
 });
@@ -2113,6 +2574,72 @@ const getVariableValue = async (variableName) => {
   // If the variable is present in the conversion_table, return its value, otherwise parse as float
   return rows.length > 0 ? rows[0].value : parseFloat(variableName);
 };
+
+app.post("/api/resetpassword", cors(), (req, res) => {
+  const { password, reset_token } = req.body;
+
+  const updateSql = `UPDATE CRBN.admin SET password = ? WHERE reset_token = ?`;
+
+  mysqlConnection.query(
+    updateSql,
+    [password, reset_token],
+    (updateErr, updateResults) => {
+      if (updateErr) {
+        console.error("Database update query error:", updateErr);
+        return res
+          .status(500)
+          .json({ error: "Internal Server Error", details: updateErr.message });
+      }
+
+      if (updateResults.affectedRows > 0) {
+        return res.status(200).json({ message: "Successfully reset password" });
+      } else {
+        return res.status(500).json({
+          error: "Failed to update password",
+          details: "No rows affected",
+        });
+      }
+    }
+  );
+});
+
+app.get("/api/get-notifications", cors(), (req, res) => {
+  const sql = "SELECT * FROM CRBN.notification";
+
+  // Execute the SQL query using the MySQL connection
+  mysqlConnection.query(sql, (error, results) => {
+    if (error) {
+      console.error("Error executing SQL query:", error.message);
+      res
+        .status(500)
+        .json({ error: "Error retrieving utility data from the database" });
+      return;
+    }
+    // Send the retrieved utility data as a JSON response
+    res.json(results);
+  });
+});
+
+app.post("/api/utilityzipcode", (req, res) => {
+  const { zipcode } = req.body; // Assuming the zipcode is sent in the request body
+  // Perform a query to retrieve the data based on the utility_id
+  const query = "SELECT * FROM CRBN.utilities WHERE Zipcode = ?";
+  mysqlConnection.query(query, [zipcode], (error, rows) => {
+    if (error) {
+      console.error(
+        `Error fetching utility data for zipcode ${zipcode}:`,
+        error
+      );
+      res.status(500).json({ error: "Internal server error" });
+    } else {
+      if (rows.length === 0) {
+        res.status(404).json({ error: "Zipcode not found" });
+      } else {
+        res.json(rows[0]);
+      }
+    }
+  });
+});
 
 // Start the server
 app.listen(port, () => {
