@@ -141,29 +141,30 @@ export default function AboutUs() {
           </div>
         </div>
 
-        <div className='info_details'>
-          <p className='heading_contactus'>Contact Details:</p>
-          <div className='aboutus_details_info'>
-            <div className='Emailinfo'>
-              <img className='emailpicture' src="email.png" alt="Email Icon" />
-              <div className='email_info_from_db'>
-                <p>{email}</p>
-              </div>
-            </div>
-            <div className='phonoInfo'>
-              <img className='phonepicture' src="phone.jpeg" alt="Phone Icon" />
-              <div className='phone_info_from_db'>
-                <p>{phone}</p>
-              </div>
-            </div>
-            <div className='Pininfo'>
-              <img className='pinpicture' src="pin.png" alt="Location Icon" />
-              <div className='pin_info_from_db'>
-                <p>{address}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div className='info_details' style={{ display: 'flex', flexDirection: 'column' }}>
+  <p className='heading_contactus'>Contact Details:</p>
+  <div className='aboutus_details_info' style={{ display: 'flex', gap: '20px' }}>
+    <div className='Emailinfo' style={{ width: '30%', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+      <img className='emailpicture' src="email.png" alt="Email Icon" />
+      <div className='email_info_from_db'>
+        <p style={{ fontSize: "24px" }}>{email}</p>
+      </div>
+    </div>
+    <div className='phonoInfo' style={{ width: "30%", overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+      <img className='phonepicture' src="phone.jpeg" alt="Phone Icon" />
+      <div className='phone_info_from_db'>
+        <p style={{ fontSize: "24px" }}>{phone}</p>
+      </div>
+    </div>
+    <div className='Pininfo' style={{ width: '30%', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+      <img className='pinpicture' src="pin.png" alt="Location Icon" />
+      <div className='pin_info_from_db'>
+        <p style={{ fontSize: "24px" }}>{address}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       </div>
     </div>

@@ -937,7 +937,9 @@ const DynamicQuestionPage2 = () => {
                     }}
                     onClick={() => {
                       console.log(savedData);
+                      window.location.href = "https://www.offsetcrbn.com/";
                     }}
+                    
                   >
                     Plant Trees{" "}
                   </button>
