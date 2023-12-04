@@ -917,12 +917,13 @@ const DynamicQuestionPage2 = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     width: "90%",
-                    height: "60px",
+                    height: "7vh",
                     margin: "0 auto",
-                    paddingTop: "20px",
+                    paddingTop: "2vh",
                     paddingLeft: "10%",
                     borderRadius: "20px",
                     paddingRight: "10%",
+                    // paddingBottom:"2vh",
                     //   marginBottom:"20px"
                   }}
                 >
