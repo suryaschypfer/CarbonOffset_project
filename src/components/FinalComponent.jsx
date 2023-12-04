@@ -219,7 +219,7 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
       
       <div style={{ paddingTop: '3vh', textAlign: 'center', display: 'flex', justifyContent: 'space-between' }}>
       
-      <div style={{ marginLeft: '10%',marginRight:"", background: 'white', width: '37%', borderRadius: '20px', height: '27vh', padding: '20px' }}>
+      <div style={{ marginLeft: '10%',marginRight:"", background: 'white', width: '37%', borderRadius: '20px', height: '28vh', padding: '20px' }}>
         {/* <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '10px', justifyContent:"center" }}>Carbon Footprint Distribution</div> */}
         <Pie data={pieData} options={enhancedOptions} />
       </div>
@@ -229,7 +229,7 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
     <div>By planting {carbonCount/48} trees you can offset the total carbon footprint of {carbonCount}</div> 
     }
       </div> */}
-      <div style={{ marginLeft: "", marginRight: "10%", background: 'white', width: '37%', borderRadius: '20px', height: '27vh', padding: '20px', textAlign: 'center', fontSize: '18px' }}>
+      <div style={{ marginLeft: "", marginRight: "10%", background: 'white', width: '37%', borderRadius: '20px', height: '28vh', padding: '20px', textAlign: 'center', fontSize: '18px' }}>
   {earlierCarbonFootprint > 0 ? (
     (earlierCarbonFootprint - carbonCount) > 0 ?
       <div>
