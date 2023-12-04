@@ -133,13 +133,15 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
     },
   };
   return (
-    <div style={{ paddingTop: "50px" }}>
+    <div style={{ paddingTop: "5vh" }}>
       <div
         style={{
           width: "40%",
-          height: "100px",
+          height: "13vh",
           background: "white",
-          margin: "25px auto",
+          margin: "0 auto",
+          marginTop:"2vh",
+          marginBottom:"2vh",
           borderRadius: "10px",
           display: "flex",
           flexDirection: "column",
@@ -176,9 +178,11 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
       <div
         style={{
           width: "40%",
-          height: "100px",
+          height: "13vh",
           background: "white",
-          margin: "25px auto",
+          margin: "0 auto",
+          marginTop:"2vh",
+          marginBottom:"2vh",
           borderRadius: "10px",
           display: "flex",
           flexDirection: "column",
@@ -213,9 +217,9 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
         </div>
       </div>
       
-      <div style={{ paddingTop: '50px', textAlign: 'center', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ paddingTop: '3vh', textAlign: 'center', display: 'flex', justifyContent: 'space-between' }}>
       
-      <div style={{ marginLeft: '10%',marginRight:"", background: 'white', width: '37%', borderRadius: '20px', height: '25vh', padding: '20px' }}>
+      <div style={{ marginLeft: '10%',marginRight:"", background: 'white', width: '37%', borderRadius: '20px', height: '27vh', padding: '20px' }}>
         {/* <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '10px', justifyContent:"center" }}>Carbon Footprint Distribution</div> */}
         <Pie data={pieData} options={enhancedOptions} />
       </div>
@@ -225,7 +229,7 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
     <div>By planting {carbonCount/48} trees you can offset the total carbon footprint of {carbonCount}</div> 
     }
       </div> */}
-      <div style={{ marginLeft: "", marginRight: "10%", background: 'white', width: '37%', borderRadius: '20px', height: '25vh', padding: '20px', textAlign: 'center', fontSize: '18px' }}>
+      <div style={{ marginLeft: "", marginRight: "10%", background: 'white', width: '37%', borderRadius: '20px', height: '27vh', padding: '20px', textAlign: 'center', fontSize: '18px' }}>
   {earlierCarbonFootprint > 0 ? (
     (earlierCarbonFootprint - carbonCount) > 0 ?
       <div>
@@ -245,7 +249,7 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
         </div>
   ) : 
   <div>
-    <p style={{ color: '#2196F3', fontSize: '1.5rem', fontWeight: 'bold' }}>Offset Your Carbon Footprint!</p>
+    <p style={{ color: '#2196F3', fontSize: '26px', fontWeight: 'bold' }}>Offset Your Carbon Footprint!</p>
     <p>By planting {Math.round(carbonCount / 48)} trees, you can offset the total carbon footprint of {carbonCount} lbs.</p>
   </div>
   }
