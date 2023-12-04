@@ -308,6 +308,7 @@ const DynamicQuestionPage2 = () => {
   const handleDeleteSavedData = () => {
     // Remove savedData from local storage and update state
     localStorage.removeItem('savedData');
+    localStorage.removeItem("carbonCount");
     setSavedData({});
 
     // Close popup
@@ -620,6 +621,16 @@ const DynamicQuestionPage2 = () => {
   //     }
   //   }
   // }, [currentQuestionIndex]);
+  const [isFinal,setIsFinal] = useState(false);
+  useEffect(()=>{
+    console.log(currentQuestionIndex, "currentQuestionIndex");
+    console.log(filteredQuestions.length, "Filtered QUestions");
+    if(currentQuestionIndex==filteredQuestions.length){
+      setIsFinal(true);
+    }else{
+      setIsFinal(false);
+    }
+  },[currentQuestionIndex]);
 
   useEffect(() => {
     const calculateAndSaveFormula = async () => {
@@ -898,7 +909,7 @@ const DynamicQuestionPage2 = () => {
             {questionsCompleted ? (
               // Render the new component when questions are completed
               <div style={{ height: "80vh" }}>
-                <FinalComponent carbonCount={carbonCount} categoryFootprints={categoryFootprints} />
+                <FinalComponent carbonCount={carbonCount} categoryFootprints={categoryFootprints} isFinal={isFinal}/>
                 <div
                   className="backSaveButton"
                   style={{

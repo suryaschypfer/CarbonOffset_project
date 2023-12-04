@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import tree from "./../assets/tree.png";
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie , Bar} from 'react-chartjs-2';
@@ -6,8 +6,8 @@ import { Pie , Bar} from 'react-chartjs-2';
 Chart.register(ArcElement, Tooltip, Legend);
 
 
-const FinalComponent = ({ carbonCount, categoryFootprints }) => {
-
+const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
+  const [final,updateFinal] = useState(false);
   const pieData = {
     labels: Object.keys(categoryFootprints),
     datasets: [
@@ -33,7 +33,32 @@ const FinalComponent = ({ carbonCount, categoryFootprints }) => {
       },
     ],
   };
-  console.log("Category foot prints", categoryFootprints)
+  const [earlierCarbonFootprint, setEarlierCarbonFootprint] = useState(0);
+  useEffect(()=>{
+
+  
+  if (isFinal) {
+    // Check if there is a saved value in localStorage
+    const savedCarbon = localStorage.getItem('carbonCount');
+
+    // If there is a saved value, parse it and save it in earlierCarbon
+    const earlierCarbon = savedCarbon ? parseInt(savedCarbon, 10) : null;
+
+    // Save the latest carbonCount to localStorage
+    localStorage.setItem('carbonCount', carbonCount);
+
+    // Set earlierCarbonFootprint if it exists
+    if (earlierCarbon !== null) {
+      setEarlierCarbonFootprint(earlierCarbon);
+    }
+
+    console.log("Earlier Carbon Value:", earlierCarbon);
+    console.log("Latest Carbon Value Saved:", carbonCount);
+  }
+}, [isFinal, carbonCount]);
+
+  console.log("Category foot prints", categoryFootprints);
+  // console.log("The value of final component is ", isFinal);
 
   const options = {
     maintainAspectRatio: true, // Set to false if you want to define custom dimensions
@@ -187,15 +212,46 @@ const FinalComponent = ({ carbonCount, categoryFootprints }) => {
           </div>
         </div>
       </div>
+      
       <div style={{ paddingTop: '50px', textAlign: 'center', display: 'flex', justifyContent: 'space-between' }}>
       
       <div style={{ marginLeft: '10%',marginRight:"", background: 'white', width: '37%', borderRadius: '20px', height: '25vh', padding: '20px' }}>
         {/* <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '10px', justifyContent:"center" }}>Carbon Footprint Distribution</div> */}
         <Pie data={pieData} options={enhancedOptions} />
       </div>
-      <div style={{ marginLeft: "",marginRight:"10%", background: 'white', width: '37%', borderRadius: '20px', height: '25vh', padding: '20px' }}>
-       
-      </div>
+      {/* <div style={{ marginLeft: "",marginRight:"10%", background: 'white', width: '37%', borderRadius: '20px', height: '25vh', padding: '20px' }}>
+      {earlierCarbonFootprint>0?(earlierCarbonFootprint-carbonCount)>0?
+    <div>you are saving carbon</div>:(earlierCarbonFootprint-carbonCount)<0?<div>You are creating more carbon</div>:<div>Same carbon as earlier</div> :
+    <div>By planting {carbonCount/48} trees you can offset the total carbon footprint of {carbonCount}</div> 
+    }
+      </div> */}
+      <div style={{ marginLeft: "", marginRight: "10%", background: 'white', width: '37%', borderRadius: '20px', height: '25vh', padding: '20px', textAlign: 'center', fontSize: '18px' }}>
+  {earlierCarbonFootprint > 0 ? (
+    (earlierCarbonFootprint - carbonCount) > 0 ?
+      <div>
+        <p style={{ color: '#4CAF50', fontSize: '26px', fontWeight: 'bold' }}>Congratulations!</p>
+        <p>You've reduced your carbon footprint by <span style={{ color: '#4CAF50', fontWeight: 'bold' }}>{earlierCarbonFootprint - carbonCount} lbs</span>.</p>
+        <p>Your earlier carbon footprint was {earlierCarbonFootprint} lbs.</p>
+      </div> : 
+      (earlierCarbonFootprint - carbonCount) < 0 ?
+        <div>
+          <p style={{ color: '#FF5252', fontSize: '26px', fontWeight: 'bold' }}>Unfortunately!</p>
+          <p>Your carbon footprint has increased by <span style={{ color: '#FF5252', fontWeight: 'bold' }}>{Math.abs(earlierCarbonFootprint - carbonCount)} lbs</span>.</p>
+          <p>Your earlier carbon footprint was {earlierCarbonFootprint} lbs.</p>
+        </div> :
+        <div>
+          <p style={{ color: '#3F51B5', fontSize: '26px', fontWeight: 'bold' }}>Great news!</p>
+          <p>Your carbon footprint remains the same as earlier, at {carbonCount} lbs.</p>
+        </div>
+  ) : 
+  <div>
+    <p style={{ color: '#2196F3', fontSize: '1.5rem', fontWeight: 'bold' }}>Offset Your Carbon Footprint!</p>
+    <p>By planting {Math.round(carbonCount / 48)} trees, you can offset the total carbon footprint of {carbonCount} lbs.</p>
+  </div>
+  }
+</div>
+
+      
       </div>
 
     </div>
