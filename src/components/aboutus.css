@@ -110,25 +110,33 @@ body {
     margin: 20px auto;
 }
 
-.Emailinfo,
-.phonoInfo,
+.Emailinfo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-right: 920px;
+}
+
+/* .phonoInfo,
 .Pininfo {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    /* Adjust the margin for spacing between items */
+} */
+
+.emailpicture {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
 }
 
-.emailpicture,
-.phonepicture,
+
+/* .phonepicture,
 .pinpicture {
     width: 40px;
-    /* Adjust the width as needed */
     height: 40px;
-    /* Adjust the height as needed */
-    margin-right: 10px;
-    /* Adjust the margin for spacing between icon and text */
-}
+    margin-right: 100px;
+} */
 
 .email_info_from_db,
 .phone_info_from_db,
