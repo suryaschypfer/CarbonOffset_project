@@ -7,8 +7,37 @@ import person from "../assets/person.webp";
 // import logoImg from "../logo2.png";
 import logoImg from "../assets/logo.svg";
 import './ContactUsNew.css'
+import Modal from
 
+  'react-bootstrap/Modal';
 
+const NavigationModal = ({ show, onHide, handleNavigation }) => {
+    const navigate = useNavigate();
+    const handleaboutus = () => {
+      navigate('/aboutus'); // Use navigate to go to the desired route
+    };
+    const navigateToHome = () => {
+      navigate('/');
+    }
+    const handleContactUs = () => {
+      navigate('/ContactUs'); // Use navigate to go to the desired route
+    };
+    return (
+      <Modal show={show} onHide={onHide}>
+        <Modal.Header closeButton>
+          <Modal.Title>Navigation Options</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ul >
+            <li onClick={navigateToHome} >Home</li>
+            <li onClick={handleaboutus }>About Us</li>
+            
+            <li onClick={handleContactUs }>Contact Us</li>
+          </ul>
+        </Modal.Body>
+      </Modal>
+    );
+  };
 
 export const ContactUs = () => {
     const navigate = useNavigate();
@@ -23,6 +52,25 @@ export const ContactUs = () => {
     // const [age, setAge] = useState('');
     const [email, setEmail] = useState('');
     const [query, setQuery] = useState('');
+    const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobileDevice = window.innerWidth <= 800; // You can adjust the threshold based on your needs
+      setIsMobile(isMobileDevice);
+    };
+
+    // Initial check on component mount
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
     const handlelandingpage = () => {
         navigate('/');
@@ -181,8 +229,93 @@ export const ContactUs = () => {
                 }, 3000);
             });
     };
+    const [showNavigationModal, setShowNavigationModal] = useState(false);
+
+  const toggleSideNav = () => {
+    setShowNavigationModal(!showNavigationModal);
+  };
+
+  const handleNavigation = (destination) => {
+    // Add logic to handle navigation based on the selected option (e.g., using React Router)
+    console.log(`Navigating to ${destination}`);
+  };
 
     return (
+        <>
+        {isMobile&&<div>
+            <div>
+        
+
+        {/* Navigation modal */}
+        <NavigationModal
+          show={showNavigationModal}
+          onHide={() => setShowNavigationModal(false)}
+          handleNavigation={handleNavigation}
+        />
+
+        {/* Overlay backdrop */}
+        {showNavigationModal && <div className="overlay" onClick={toggleSideNav}></div>}
+
+        {/* Navigation bar */}
+        <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
+          <div className="leftnav">
+            <img className="mainlogo" style={{ width: "205px" }} src="/logo.svg" alt="OFFSET CRBN" onClick={handleNavigation} />
+          </div>
+          <div className="leftnav" style={{fontSize:"40px", fontWeight:"lighter"}} onClick={toggleSideNav}>
+          ☰
+            </div>
+          
+        </nav>
+        <div className="page" >
+                <div className='container1_main' >
+                    <div className='contactusvedio_start_gif'>
+                        <img className="image_in_contact_us" src={person} alt="fact logo" ></img>
+                        <div className='contactustext_overlay'>
+                            <div className='contactusvedio_heading'>Contact Us</div>
+                            <div className='contactusvedio_paragragh'> Let’s work together on your journey and align our goals to create a sustainable world with environmental, economic, and social benefits. <br />
+                                Fill the form with your query and someone from our team will reach out to you soon.</div>
+                        </div>
+                    </div>
+                </div>
+                <div className='customerdetails'>
+                    <div className='first_name'>
+                        <div className='fname_heading'>First Name*</div>
+                        <input className='input_text_contactus' type="text" placeholder="Enter your first name" onChange={handleFNameChange} />
+                        {FErrorMessage && <div className="error-message">{FErrorMessage}</div>}
+                    </div>
+                    <div className='last_name'>
+                        <div className='lname_heading'>Last Name*</div>
+                        <input className='input_text_contactus' type="text" placeholder="Enter your last name" onChange={handleLNameChange} />
+                        {LErrorMessage && <div className="error-message">{LErrorMessage}</div>}
+                    </div>
+                    <div className='Email_address'>
+                        <div className='Email_heading'>Email*</div>
+                        <input className='input_text_contactus' type="text" placeholder="Your email please" />
+                        {EErrorMessage && <div className="error-message">{EErrorMessage}</div>}
+                    </div>
+                    <div className='query_message'>
+                        <div className='query_heading'>Query</div>
+                        <textarea
+                            type="text"
+                            placeholder="What is your query"
+                            className='textarea_contact_us'
+                            rows={5}
+                            required
+                        />
+                         {QErrorMessage && <div className="error-message">{QErrorMessage}</div>}
+                    </div>
+                    <div className="send">
+                        <button onClick={handleSend} className="send-button">Send</button>
+                        {SuccessMessage && <div className="success-message">{SuccessMessage}</div>}
+                    </div>
+
+                </div>
+            </div>
+
+      </div>
+
+            </div>}
+        {!isMobile&&
         <div className="contact">
             <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
                 <div className="leftnav">
@@ -240,7 +373,7 @@ export const ContactUs = () => {
 
                 </div>
             </div>
-        </div>
+        </div>}</>
     );
 };
 

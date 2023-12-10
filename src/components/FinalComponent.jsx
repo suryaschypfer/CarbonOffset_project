@@ -6,7 +6,7 @@ import { Pie , Bar} from 'react-chartjs-2';
 Chart.register(ArcElement, Tooltip, Legend);
 
 
-const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
+const FinalComponent = ({ carbonCount, categoryFootprints, isFinal, isMobile}) => {
   const [final,updateFinal] = useState(false);
   const pieData = {
     labels: Object.keys(categoryFootprints),
@@ -133,6 +133,145 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
     },
   };
   return (
+    <>
+    {isMobile&&
+    <div>
+      <div
+                      style={{
+                        width: "80%",
+                        height: "290px",
+                        marginTop: "40px",
+                        marginLeft: "50px",
+                        // background:"gold",
+                        marginRight: "50px",
+                        borderRadius: "20px",
+                        paddingBottom: "20px",
+                        // display: "flex",
+                        justifyContent: "space-between",
+                        // paddingLeft: "10%",
+                        // paddingRight: "10%",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "80%",
+                          height: "120px",
+                          background: "white",
+                          marginTop: "20px",
+                          marginLeft: "50px",
+                          borderRadius: "10px",
+                          // display: "flex",
+                          marginBottom: "20px",
+                          margin:"0 auto",
+                          // flexDirection: "column", // Arrange items vertically
+                          alignItems: "center", // Align items to the center horizontally
+
+                        }}
+                      >
+                        <p style={{ paddingLeft:"20px",marginBottom: "1vh", paddingTop: "10px", height: "30px", fontWeight: "bold", fontSize: "18px" }}>No. of Trees to be planted</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            height: "100px",
+                            alignItems: "center", // Align items in the center vertically
+                            justifyContent: "space-between", // Space items equally
+                            width: "100%", // Occupy the full width of the container
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: "40px",
+                              width: "50%", // Adjust the width as needed
+                              textAlign: "center", // Center text within the div
+                              fontWeight: "bold",
+                              margin: "0 auto"
+                            }}
+                          >
+                            {Math.round(carbonCount / 48)}
+                          </div>
+                          <div style={{ margin: "0 auto" }}><img src={tree} alt="Tree" style={{ width: "60px" }} /></div>
+
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          width: "80%",
+                          height: "120px",
+                          background: "white",
+                          marginTop: "20px",
+                          // marginLeft: "50px",
+                          borderRadius: "10px",
+                          marginTop:"30px",
+                          margin:"20px auto",
+                          // display: "flex",
+                          marginBottom: "20px",
+                          // margin:"0 auto",
+                          
+                          // flexDirection: "column", // Arrange items vertically
+                          alignItems: "center", // Align items to the center horizontally
+
+                        }}
+                      >
+                        <p style={{ paddingLeft:"20px", marginBottom: "1vh", paddingTop: "10px", height: "30px", fontWeight: "bold", fontSize: "18px" }}>Your Carbon Footprint</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            height: "100px",
+                            alignItems: "center", // Align items in the center vertically
+                            justifyContent: "space-between", // Space items equally
+                            width: "100%", // Occupy the full width of the container
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: "40px",
+                              width: "50%", // Adjust the width as needed
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center", // Center text within the div
+                              fontWeight: "bold",
+                              margin: "0 auto"
+                            }}
+                          >
+                            {Math.round(carbonCount)}
+                          </div>
+                          <div style={{ margin: "0 auto", fontSize: "40px", fontWeight: "bold", display: "flex", alignItems: "center" }}>lbs</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ marginLeft: '10%',marginRight:"10%", background: 'white', width: '80%', borderRadius: '20px', height: '220px', padding: '20px' }}>
+        {/* <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '10px', justifyContent:"center" }}>Carbon Footprint Distribution</div> */}
+        <Pie data={pieData} options={enhancedOptions} />
+      </div>
+      <div style={{ marginTop:"10px", marginLeft: "10%", marginRight: "10%", background: 'white', width: '80%', borderRadius: '20px', height: '220px', padding: '20px', textAlign: 'center', fontSize: '18px' }}>
+  {earlierCarbonFootprint > 0 ? (
+    (earlierCarbonFootprint - carbonCount) > 0 ?
+      <div>
+        <p style={{ color: '#4CAF50', fontSize: '26px', fontWeight: 'bold' }}>Congratulations!</p>
+        <p>You've reduced your carbon footprint by <span style={{ color: '#4CAF50', fontWeight: 'bold' }}>{earlierCarbonFootprint - carbonCount} lbs</span>.</p>
+        <p>Your earlier carbon footprint was {earlierCarbonFootprint} lbs.</p>
+      </div> : 
+      (earlierCarbonFootprint - carbonCount) < 0 ?
+        <div>
+          <p style={{ color: '#FF5252', fontSize: '26px', fontWeight: 'bold' }}>Unfortunately!</p>
+          <p>Your carbon footprint has increased by <span style={{ color: '#FF5252', fontWeight: 'bold' }}>{Math.abs(earlierCarbonFootprint - carbonCount)} lbs</span>.</p>
+          <p>Your earlier carbon footprint was {earlierCarbonFootprint} lbs.</p>
+        </div> :
+        <div>
+          <p style={{ color: '#3F51B5', fontSize: '26px', fontWeight: 'bold' }}>Great news!</p>
+          <p>Your carbon footprint remains the same as earlier, at {carbonCount} lbs.</p>
+        </div>
+  ) : 
+  <div>
+    <p style={{ color: '#2196F3', fontSize: '26px', fontWeight: 'bold' }}>Offset Your Carbon Footprint!</p>
+    <p>By planting {Math.round(carbonCount / 48)} trees, you can offset the total carbon footprint of {carbonCount} lbs.</p>
+  </div>
+  }
+</div>
+    </div>
+    }
+    {!isMobile&&
     <div style={{ paddingTop: "5vh" }}>
       <div
         style={{
@@ -258,7 +397,7 @@ const FinalComponent = ({ carbonCount, categoryFootprints, isFinal}) => {
       
       </div>
 
-    </div>
+    </div>}</>
   );
 };
 
