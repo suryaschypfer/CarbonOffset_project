@@ -18,7 +18,33 @@ import Button from
   'react-bootstrap/Button';
 import "./ContactUs.css"
 
-
+const NavigationModal = ({ show, onHide, handleNavigation }) => {
+  const navigate = useNavigate();
+  const handleaboutus = () => {
+    navigate('/aboutus'); // Use navigate to go to the desired route
+  };
+  const navigateToHome = () => {
+    navigate('/');
+  }
+  const handleContactUs = () => {
+    navigate('/ContactUs'); // Use navigate to go to the desired route
+  };
+  return (
+    <Modal show={show} onHide={onHide}>
+      <Modal.Header closeButton>
+        <Modal.Title>Navigation Options</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <ul >
+          <li onClick={navigateToHome} >Home</li>
+          <li onClick={handleaboutus }>About Us</li>
+          
+          <li onClick={handleContactUs }>Contact Us</li>
+        </ul>
+      </Modal.Body>
+    </Modal>
+  );
+};
 const DynamicQuestionPage2 = () => {
   const [questions, setQuestions] = useState([]);
   const [fact, setFact] = useState("");
@@ -89,6 +115,25 @@ const DynamicQuestionPage2 = () => {
   const [choiceIndex, setChoiceIndex] = useState(-1);
   const [carbonCount, updateCarbonCount] = useState(0);
   const [categoryFootprints, setCategoryFootprints] = useState({});
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobileDevice = window.innerWidth <= 800; // You can adjust the threshold based on your needs
+      setIsMobile(isMobileDevice);
+    };
+
+    // Initial check on component mount
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -803,9 +848,902 @@ const DynamicQuestionPage2 = () => {
     }
 
   }, [filteredQuestions]);
+  const [showNavigationModal, setShowNavigationModal] = useState(false);
+
+  const toggleSideNav = () => {
+    setShowNavigationModal(!showNavigationModal);
+  };
+
+  const handleNavigation = (destination) => {
+    // Add logic to handle navigation based on the selected option (e.g., using React Router)
+    console.log(`Navigating to ${destination}`);
+  };
 
   return (
-    <><nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
+    
+    <>
+    {isMobile&&
+    <div>
+      <div>
+        
+
+        {/* Navigation modal */}
+        <NavigationModal
+          show={showNavigationModal}
+          onHide={() => setShowNavigationModal(false)}
+          handleNavigation={handleNavigation}
+        />
+
+        {/* Overlay backdrop */}
+        {showNavigationModal && <div className="overlay" onClick={toggleSideNav}></div>}
+
+        {/* Navigation bar */}
+        <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
+          <div className="leftnav">
+            <img className="mainlogo" style={{ width: "205px" }} src="/logo.svg" alt="OFFSET CRBN" onClick={handleNavigation} />
+          </div>
+          <div className="leftnav" style={{fontSize:"40px", fontWeight:"lighter"}} onClick={toggleSideNav}>
+          ☰
+            </div>
+          
+        </nav>
+      </div>
+      <div
+        className="container-fluid d-flex justify-content-center"
+        style={{ paddingLeft: "2%", paddingRight: "2%"}}
+      >
+<div>
+      
+    </div>
+        <div
+          className="b1"
+          style={{
+            width: "100%",
+            height: "100%",
+            // background: "red",
+            // flexDirection: "column"
+            //   paddingTop:"0px"
+            // marginTop: "100px",
+          }}
+        >
+          <div>
+            <div style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", textAlign: "center", height: "25px", marginBottom: "10px" }}>
+              {isNaN(prog) ? "0%" : `${prog.toFixed(1)}%`}
+            </div>
+            <div
+              className="progress"
+
+              style={{
+                // marginTop: "20px",
+                // marginRight: "55px",
+                // marginLeft: "55px",
+                height: "15px",
+                // background:"black"
+              }}
+            >
+              <div
+                className="progress-bar progress-bar-striped progress-bar-animated bg-orange"
+                role="progressbar"
+                aria-valuenow={prog}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                style={{ width: `${prog}%`, backgroundColor: "#FF5701" }}
+              >
+
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              position: 'relative', // This makes sure that the video is positioned relatively to this div
+              marginTop: "15px",
+              borderRadius: "20px",
+              height: "850px",
+              // background:"black",
+              borderRadius: '20px', // The border radius for rounded corners
+              overflow: 'hidden', // This ensures the video does not flow outside the border radius
+            }}
+          >
+            <video
+              autoPlay
+              muted
+              loop
+              style={{
+                position: 'absolute', // Position absolutely to stretch over the div area
+                width: '100%', // Ensure it covers the entire parent div
+                height: '100%', // Ensure it covers the entire parent div
+                objectFit: 'cover', // Ensure it covers the area without stretching
+                top: 0, // Align to the top
+                left: 0, // Align to the left
+                zIndex: -1, // Position it behind any other content
+              }}
+            >
+              <source
+                src="https://video.wixstatic.com/video/11062b_a05955ed1c70427da0c0da8b85a42836/1080p/mp4/file.mp4"
+                type="video/mp4"
+              />
+            </video>
+
+            {!questionsCompleted && (
+              <OverlayTrigger
+                placement="bottom"
+                delay={{ show: 25, hide: 40 }}
+                overlay={renderTooltip}
+              >
+                <button
+                  onClick={() => window.open(dataSourceLink, '_blank')}
+                  className="data-source-button"
+                  // style={{ position: 'absolute', top: '130px', left: '720px',marginTop:"10px" }}
+                  style={{ position: 'absolute', top: "130px", right: '5%', margin: '10px' }}
+
+
+                >
+                  Data Source
+
+                </button>
+              </OverlayTrigger>
+            )}
+
+
+
+            {questionsCompleted ? (
+              // Render the new component when questions are completed
+              <div style={{ height: "80vh" }}>
+                <FinalComponent isMobile={isMobile} carbonCount={carbonCount} categoryFootprints={categoryFootprints} isFinal={isFinal}/>
+                <div
+                  className="backSaveButton"
+                  style={{
+                    marginTop: "auto",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "90%",
+                    height: "7vh",
+                    margin: "0 auto",
+                    paddingTop: "2vh",
+                    paddingLeft: "10%",
+                    borderRadius: "20px",
+                    paddingRight: "10%",
+                    // paddingBottom:"2vh",
+                    //   marginBottom:"20px"
+                  }}
+                >
+                  <button
+                    className="btn btn-primary"
+                    style={{
+                      background: "black",
+                      fontWeight: "bold",
+                      border: "None",
+                      width: "120px",
+                    }}
+                    onClick={handlePreviousQuestion}
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    style={{
+                      background: "black",
+                      border: "None",
+                      fontWeight: "bold",
+                      width: "120px",
+                    }}
+                    onClick={() => {
+                      console.log(savedData);
+                      window.location.href = "https://www.offsetcrbn.com/";
+                    }}
+                    
+                  >
+                    Plant Trees{" "}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              filteredQuestions.map((question, index) =>
+                index === currentQuestionIndex ? (
+                  <div key={index}>
+                    {/* <div
+                  style={{
+                    width: "90%",
+                    height: "100px",
+                    background: "#FF5701 ",
+                    margin: "0 auto",
+                    marginTop: "50px",
+                    borderRadius: "20px",
+                    paddingTop: "20px",
+                  }}
+                > */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column", // Vertical alignment
+                        alignItems: "center", // Horizontal alignment
+                        justifyContent: "center", // Vertical and horizontal centering
+                        margin: "0 auto",
+                        fontWeight: "bold",
+                        paddingBottom: "10px",
+                        paddingTop: "20px",
+                        height: "45px",
+                        background:""
+                      }}
+                    >
+                      Category: {question.label}
+                    </div>
+                    <div
+                      style={{
+                        width: "90%",
+                        height: "85px",
+                        background: "white",
+                        margin: "0 auto",
+                        paddingTop: "2px",
+                        paddingLeft: "20px",
+                        borderRadius: "20px",
+                        fontWeight: "bold",
+                        // marginBottom:"20px"
+                        display: "flex",  // Add display: flex
+                        alignItems: "center",
+                        // alignItems:"center"
+                      }}
+                    >
+                      {question.questionContent}
+                    </div>
+                    {notAnswered ? 
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          height: "1vh", // Adjust the height as needed
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "red",
+                        }}
+                      >
+                        Please answer this question to proceed!
+                      </div>:<div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          height: "1vh", // Adjust the height as needed
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "red",
+                        }}
+                      >
+                        {/* Please answer this question to proceed! */}
+                      </div>
+}
+
+                    {/* </div> */}
+                    <div
+                      className="userInput"
+                      style={{
+                        width: "80%",
+                        margin: "0 auto",
+                        height: "40vh",
+                        color: "black",
+                        // background:"yellow",
+                        fontWeight: "bold",
+                        borderRadius: "10px",
+
+
+                      }}
+                    >
+                      {question.questionType == 1 && question.choiceAns == "1" ? (
+                        <div
+                          style={{
+                            width: "300px",
+                            margin: "0 auto",
+                            paddingTop: "50px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {/* <p style={{}}>Enter the value in numbers</p> */}
+                          <input
+                            value={type1Ans1}
+                            type="number"
+                            className="form-control rounded"
+                            onChange={handleInputChange1}
+                          />
+                        </div>
+                      ) : null}
+
+                      {question.questionType == 2 && question.choiceAns == "1" ? (
+                        <>
+                          <div
+                            style={{
+                              width: "300px",
+                              paddingTop: "50px",
+                              margin: "0 auto",
+
+                              textAlign: "center",
+                            }}
+                          >
+                            {/* <p style={{}}>Enter the value in numbers</p> */}
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center", // Align items vertically in the center
+                              width: "400px", // Adjust the width as needed
+                              margin: "0 auto",
+
+                              textAlign: "center",
+                            }}
+                          >
+                            <input
+                              value={type2Ans1}
+                              type="number"
+                              className="form-control rounded"
+                              //   value={type2Ans1}
+                              onChange={handleInputChange2}
+                            />
+                            <Form.Select
+                              //   className="mb-3 ms-2" // Add margin to the left to create space between the input and the select
+                              aria-label="Select unit"
+                              value={currentSelectedUnit}
+                              onChange={(e) => {
+                                const selectedIndex =
+                                  currentSelectedUnits?.findIndex(
+                                    (unit) => unit === e.target.value
+                                  );
+                                setCurrentUnitIndex(
+                                  selectedIndex !== -1 ? selectedIndex : -1
+                                );
+                                setCurrentSelectedUnit(e.target.value);
+                              }}
+                              style={{ marginLeft: "20px" }}
+                            >
+                              {/* <option value="" disabled>
+                            Select the unit
+                          </option> */}
+                              {currentSelectedUnits?.map((unit, ind) => (
+                                <option key={ind} value={unit}>
+                                  {unit}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </div>
+                        </>
+                      ) : null}
+
+                      
+
+                      {question.questionType === 1 &&
+                        question.choiceAns === "2" ? (
+                        <div
+                          style={{
+                            width: "400px",
+                            margin: "0 auto",
+                            paddingTop: "20px",
+                          }}
+                        >
+                          <div style={{ marginTop: "20px" }}>
+                            <p style={{}}>Select Single Option</p>
+                            {Array.isArray(question.choices[0]) &&
+                              question.choices[0]?.map((choice, choiceIndex) => (
+                                <div
+                                  key={choiceIndex}
+                                  className="form-check"
+                                  style={{ marginBottom: "10px" }}
+                                >
+                                  {savedData[currentQuestionIndex] ? <input
+                                    type="radio"
+                                    className="form-check-input"
+                                    id={`choice_${choiceIndex}`}
+                                    name="singleAnswer"
+                                    checked={choiceIndex === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                    //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
+                                    onChange={(e) => {
+                                      setChoiceIndex(choiceIndex);
+                                      handleSingleAnswerChange(e, choice, choiceIndex);
+
+                                    }}
+                                  /> : <input
+                                    type="radio"
+                                    className="form-check-input"
+                                    id={`choice_${choiceIndex}`}
+                                    name="singleAnswer"
+                                    // checked={choiceIndex === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                    //   checked={savedData.length===0? false:choiceIndex===savedData[currentQuestionIndex].choiceIndex || }
+                                    onChange={(e) => {
+                                      setChoiceIndex(choiceIndex);
+                                      handleSingleAnswerChange(e, choice, choiceIndex);
+
+                                    }}
+                                  />}
+                                 
+
+
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor={`choice_${choiceIndex}`}
+                                  >
+                                    {choice}
+                                  </label>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {question.questionType == 2 && question.choiceAns == "2" ? (
+                        <div
+                          style={{
+                            width: "400px",
+                            margin: "0 auto",
+                            paddingTop: "20px",
+                          }}
+                        >
+                          <p style={{}}>Choose Single Option</p>
+                          <Form.Select
+                            // ref={selectRef} 
+                            className="q2t2"
+                            //   className="mb-3 ms-2" // Add margin to the left to create space between the input and the select
+                            aria-label="Select unit"
+                            value={currentSelectedUnit}
+                            onChange={(e) => {
+                              const selectedIndex =
+                                currentSelectedUnits?.findIndex(
+                                  (unit) => unit === e.target.value
+                                );
+                              setCurrentUnitIndex(
+                                selectedIndex !== -1 ? selectedIndex : -1
+                              );
+                              setCurrentSelectedUnit(e.target.value);
+
+                            }}
+                            style={{ marginLeft: "20px" }}
+                          >
+                            <option value="" disabled>
+                              Choose the suitable unit
+                            </option>
+                            {currentSelectedUnits?.map((unit, ind) => (
+                              <option key={ind} value={unit}>
+                                {unit}
+                              </option>
+                            ))}
+                          </Form.Select>
+
+                          {currentUnitIndex !== -1 && (
+                            <div style={{ marginTop: "20px" }}>
+                              {question.choices[currentUnitIndex]?.map(
+                                (choice, choiceInd) => (
+                                  <div
+                                    key={choiceInd}
+                                    className="form-check"
+                                    style={{ marginBottom: "10px" }}
+                                  >
+                                    {savedData[currentQuestionIndex] ? <input
+                                      type="radio"
+                                      className="form-check-input"
+                                      id={`choice_${choiceInd}`}
+                                      name="singleAnswer"
+                                      value={choice}
+                                      checked={choiceInd === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                      onChange={(e) => {
+                                        setChoiceIndex(choiceInd);
+                                        handleSingleAnswerChange(e, choice, choiceInd);
+
+                                      }}
+                                    /> : <input
+                                      type="radio"
+                                      className="form-check-input"
+                                      id={`choice_${choiceInd}`}
+                                      name="singleAnswer"
+                                      value={choice}
+                                      // checked={choiceInd === savedData[currentQuestionIndex]?.choiceIndex ? true : false}
+                                      onChange={(e) => {
+                                        setChoiceIndex(choiceInd);
+                                        handleSingleAnswerChange(e, choice, choiceInd);
+
+                                      }}
+                                    />}
+
+
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor={`choice_${choiceIndex}`}
+                                    >
+                                      {choice}
+                                    </label>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ) : null}
+
+                      {question.questionType == 2 && question.choiceAns == "3" ? (
+                        <div
+                          style={{
+                            width: "400px",
+                            margin: "0 auto",
+                            paddingTop: "20px",
+                          }}
+                        >
+                          <p style={{}}>Choose Multiple Answers</p>
+                          <Form.Select
+                            //   className="mb-3 ms-2" // Add margin to the left to create space between the input and the select
+                            aria-label="Select unit"
+                            value={currentSelectedUnit}
+                            onChange={(e) => {
+                              const selectedIndex =
+                                currentSelectedUnits?.findIndex(
+                                  (unit) => unit === e.target.value
+                                );
+                              setCurrentUnitIndex(
+                                selectedIndex !== -1 ? selectedIndex : -1
+                              );
+                              setCurrentSelectedUnit(e.target.value);
+                            }}
+                            style={{ marginLeft: "20px" }}
+                          >
+                            <option value="" disabled>
+                              Select the unit
+                            </option>
+                            {currentSelectedUnits?.map((unit, ind) => (
+                              <option key={ind} value={unit}>
+                                {unit}
+                              </option>
+                            ))}
+                          </Form.Select>
+                          {currentUnitIndex !== -1 && (
+                            <div style={{ marginTop: "20px" }}>
+                              {question.choices[currentUnitIndex]?.map(
+                                (choice, choiceIndex) => (
+                                  <div
+                                    key={choiceIndex}
+                                    className="form-check"
+                                    style={{ marginBottom: "10px" }}
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      className="form-check-input"
+                                      id={`choice_${choiceIndex}`}
+                                      name={`choice_${choiceIndex}`}
+                                      value={choice}
+                                      onChange={(e) =>
+                                        handleMultipleAnswerChange(e, choiceIndex)
+                                      }
+                                      checked={selectedChoiceIndexes.includes(
+                                        choiceIndex
+                                      )}
+                                    />
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor={`choice_${choiceIndex}`}
+                                    >
+                                      {choice}
+                                    </label>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ) : null}
+
+                      {question.questionType === 1 &&
+                        question.choiceAns === "3" ? (
+                        <div
+                          style={{
+                            width: "400px",
+                            margin: "0 auto",
+                            paddingTop: "20px",
+                          }}
+                        >
+                          <div style={{ marginTop: "20px" }}>
+                            <p style={{}}>Choose Multiple Options</p>
+                            {Array.isArray(question.choices[0]) &&
+                              question.choices[0].map((choice, choiceIndex) => (
+                                <div
+                                  key={choiceIndex}
+                                  className="form-check"
+                                  style={{ marginBottom: "10px" }}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id={`choice_${choiceIndex}`}
+                                    name={`choice_${choiceIndex}`}
+                                    value={choice}
+                                    onChange={(e) =>
+                                      handleMultipleAnswerChange(e, choiceIndex)
+                                    }
+                                    checked={selectedChoiceIndexes.includes(
+                                      choiceIndex
+                                    )}
+                                  />
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor={`choice_${choiceIndex}`}
+                                  >
+                                    {choice}
+                                  </label>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {/* {question.questionType == 1 && question.choiceAns == "3" ? (
+                  <div
+                    style={{
+                      width: "400px",
+                      margin: "0 auto",
+                      paddingTop: "20px",
+                    }}
+                  >
+                    {
+                      <div style={{ marginTop: "20px" }}>
+                        {question.choices[0].map((choice, choiceIndex) => (
+                          <div
+                            key={choiceIndex}
+                            className="form-check"
+                            style={{ marginBottom: "10px" }}
+                          >
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              id={`choice_${choiceIndex}`}
+                              name={`choice_${choiceIndex}`}
+                              value={choice}
+                              onChange={(e) =>
+                                handleMultipleAnswerChange(e, choiceIndex)
+                              }
+                              checked={selectedChoiceIndexes.includes(
+                                choiceIndex
+                              )}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor={`choice_${choiceIndex}`}
+                            >
+                              {choice}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    }
+                  </div>
+                ) : null} */}
+                
+                    </div>
+                    {/* buttons save and back */}
+                    <div
+                      className="backSaveButton"
+                      style={{
+                        // marginTop: "3vh",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "90%",
+
+                        height: "6vh",
+                        margin: "0 auto",
+                        paddingTop: "10px",
+                        paddingLeft: "10%",
+                        borderRadius: "20px",
+                        paddingRight: "10%",
+                      }}
+                    >
+                      <button
+                        className="btn btn-primary"
+                        style={{
+                          background: "black",
+                          fontWeight: "bold",
+                          border: "None",
+                          width: "150px",
+                        }}
+                        onClick={handlePreviousQuestion}
+                      >
+                        Back
+                      </button>
+                      <button
+                        className="btn btn-primary"
+                        style={{
+                          background: "black",
+                          border: "None",
+                          fontWeight: "bold",
+                          width: "150px",
+                        }}
+                        onClick={handleNextQuestion}
+                      >
+                        Next{" "}
+                      </button>
+                    </div>
+
+                    <div
+                      style={{
+                        width: "80%",
+                        height: "290px",
+                        marginTop: "40px",
+                        marginLeft: "50px",
+                        // background:"gold",
+                        marginRight: "50px",
+                        borderRadius: "20px",
+                        paddingBottom: "20px",
+                        // display: "flex",
+                        justifyContent: "space-between",
+                        // paddingLeft: "10%",
+                        // paddingRight: "10%",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "80%",
+                          height: "120px",
+                          background: "white",
+                          marginTop: "20px",
+                          marginLeft: "50px",
+                          borderRadius: "10px",
+                          // display: "flex",
+                          marginBottom: "20px",
+                          margin:"0 auto",
+                          // flexDirection: "column", // Arrange items vertically
+                          alignItems: "center", // Align items to the center horizontally
+
+                        }}
+                      >
+                        <p style={{ paddingLeft:"20px",marginBottom: "1vh", paddingTop: "10px", height: "30px", fontWeight: "bold", fontSize: "18px" }}>No. of Trees to be planted</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            height: "100px",
+                            alignItems: "center", // Align items in the center vertically
+                            justifyContent: "space-between", // Space items equally
+                            width: "100%", // Occupy the full width of the container
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: "40px",
+                              width: "50%", // Adjust the width as needed
+                              textAlign: "center", // Center text within the div
+                              fontWeight: "bold",
+                              margin: "0 auto"
+                            }}
+                          >
+                            {Math.round(carbonCount / 48)}
+                          </div>
+                          <div style={{ margin: "0 auto" }}><img src={tree} alt="Tree" style={{ width: "60px" }} /></div>
+
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          width: "80%",
+                          height: "120px",
+                          background: "white",
+                          marginTop: "20px",
+                          // marginLeft: "50px",
+                          borderRadius: "10px",
+                          marginTop:"30px",
+                          margin:"20px auto",
+                          // display: "flex",
+                          marginBottom: "20px",
+                          // margin:"0 auto",
+                          
+                          // flexDirection: "column", // Arrange items vertically
+                          alignItems: "center", // Align items to the center horizontally
+
+                        }}
+                      >
+                        <p style={{ paddingLeft:"20px", marginBottom: "1vh", paddingTop: "10px", height: "30px", fontWeight: "bold", fontSize: "18px" }}>Your Carbon Footprint</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            height: "100px",
+                            alignItems: "center", // Align items in the center vertically
+                            justifyContent: "space-between", // Space items equally
+                            width: "100%", // Occupy the full width of the container
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: "40px",
+                              width: "50%", // Adjust the width as needed
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center", // Center text within the div
+                              fontWeight: "bold",
+                              margin: "0 auto"
+                            }}
+                          >
+                            {Math.round(carbonCount)}
+                          </div>
+                          <div style={{ margin: "0 auto", fontSize: "40px", fontWeight: "bold", display: "flex", alignItems: "center" }}>lbs</div>
+                        </div>
+                      </div>
+
+                      {/* <div
+                      style={{
+                        width: "40%",
+                        height: "100px",
+                        background: "white",
+                        marginTop: "25px",
+                        marginRight: "50px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      {" "}
+                      <div
+                        style={{
+                          fontSize: "30px",
+                          width: "100px",
+                          paddingLeft: "30px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {carbonCount}
+                      </div>
+                    </div> */}
+                    </div>
+                    {/* <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    console.log(answers);
+                    console.log(selectedChoiceIndexes);
+                    console.log(prog);
+                  }}
+                >
+                  Answers
+                </button> */}
+                  </div>
+                ) : null
+              )
+            )}
+          </div>
+        </div>
+        
+
+
+
+      </div>
+      <div
+          style={{
+            // background: "black",
+            width: "100%",
+            paddingTop: "20px",
+            paddingLeft: "30px",
+            
+            // paddingRight: "30px",
+            // height: "90vh",
+            // display: "flex",
+            // flexDirection: "column",
+          }}
+        >
+          <img src={factLogo} style={{ width: "100%"}} alt="fact logo"></img>
+          <div style={{ position: "relative", background: "", flex: 1, borderRadius: "20px", overflow: "hidden" }}>
+            <img
+              src={image}
+              alt="Your Alt Text"
+              style={{ width: "100%", height: "500px", objectFit: "cover", borderRadius: "20px" }}
+            />
+
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                padding: "20px",
+                fontWeight: "bold",
+                color: "black",
+                backdropFilter: "blur(5px)", // Adjust the blur amount as needed
+                backgroundColor: "rgba(255, 255, 255, 0.5)", // Adjust the background color and opacity
+              }}
+            >
+              {fact}
+            </div>
+          </div>
+
+        </div>
+    </div>
+    }
+    
+    {!isMobile&&<div><nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
       <div className="leftnav">
         <img className="mainlogo" src="/logo.svg" alt="OFFSET CRBN" onClick={navigateToHome} />
       </div>
@@ -818,11 +1756,15 @@ const DynamicQuestionPage2 = () => {
       </div>
 
     </nav>
+    
+    
       <div
         className="container-fluid d-flex justify-content-center"
         style={{ paddingLeft: "2%", paddingRight: "2%", height: "90vh" }}
       >
-
+<div>
+      
+    </div>
         <div
           className="b1"
           style={{
@@ -1738,7 +2680,7 @@ const DynamicQuestionPage2 = () => {
       </Modal>
 
 
-
+      </div>}
     </>
   );
 };
