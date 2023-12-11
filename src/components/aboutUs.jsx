@@ -136,11 +136,11 @@ export default function AboutUs() {
           
         </nav>
         <div className='aboutus_startcontainer'>
-        <div className='block1'>
-          <div className='information_1'>
+        
+          <div style={{textAlign:"justify", marginBottom:"10px"}}>
             At Offset CRBN, we are driven by a shared vision of a cleaner, greener world. Our journey began with a simple yet profound realization: the choices we make in our daily lives have a direct impact on the health of our planet. This realization ignited our passion to create a platform that empowers individuals to take meaningful action against climate change.
           </div>
-          <div className='Vedio_1'>
+          <div>
             <video
               autoPlay
               muted
@@ -152,12 +152,12 @@ export default function AboutUs() {
               />
             </video>
           </div>
-        </div>
-        <div className='block2'>
-          <div className='infomation_2'>
+        
+        
+          <div style={{textAlign:"justify", marginBottom:"10px"}}>
             Our mission is clear: to combat climate change, one tree at a time. We believe that every person has the power to make a positive environmental impact. By providing tools, resources, and a supportive community, we aim to make sustainable living accessible and rewarding for everyone.
           </div>
-          <div className='Vedio_2'>
+          <div >
             <video
               autoPlay
               muted
@@ -169,13 +169,13 @@ export default function AboutUs() {
               />
             </video>
           </div>
-        </div>
+        
 
-        <div className='block3'>
-          <div className='information_3'>
+        
+          <div style={{textAlign:"justify", marginBottom:"10px"}}>
             Since our inception, Offset CRBN has made a significant impact on the fight against climate change. Our community members have collectively planted thousands of trees, offsetting tons of carbon emissions. But we're just getting started. With your support, we can make an even greater difference.
           </div>
-          <div className='Vedio_3' >
+          <div  >
             <video
               autoPlay
               muted
@@ -186,16 +186,16 @@ export default function AboutUs() {
                 type="video/mp4"
               />
             </video>
-          </div>
+        
         </div>
 
-        <div className='block4'>
-          <div className='information_4'>
+        
+          <div style={{textAlign:"justify", marginBottom:"10px"}}>
             We invite you to join us on this journey towards a more sustainable and environmentally conscious future. Whether you're an individual looking to offset your carbon footprint, a company seeking to make a corporate impact, or an advocate for positive change, there's a place for you here at Offset CRBN.
             <br />
             Thank you for being part of our mission to offset carbon and create a greener, more sustainable world. Together, we can make a lasting impact.
           </div>
-          <div className='Vedio_4'>
+          <div >
             <video
               autoPlay
               muted
@@ -207,16 +207,15 @@ export default function AboutUs() {
               />
             </video>
           </div>
-        </div>
+        
 
-        <div className='info_details' style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className='info_details' style={{ }}>
   <p className='heading_contactus'>Contact Details:</p>
-  <div className='aboutus_details_info' style={{ display: 'flex', gap: '20px' }}>
     <div className='Emailinfo' style={{ width: '100%', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
       <img className='emailpicture' src="email.png" alt="Email Icon" />
       <div className='email_info_from_db'>
-        <p style={{ fontSize: "24px" }}>{email}</p>
-      </div>
+        <p style={{ fontSize: "20px" }}>{email}</p>
+    
     </div>
     {/* <div className='phonoInfo' style={{ width: "30%", overflowWrap: 'break-word', wordBreak: 'break-word' }}>
       <img className='phonepicture' src="phone.jpeg" alt="Phone Icon" />
