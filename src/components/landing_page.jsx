@@ -190,21 +190,23 @@ export function Landing_Page(props) {
           
         </nav>
         <div className='landingpage_start'>
-        <div className='container_main'>
+        <div className='container_mai'>
           <div className='vedio_start_gif'>
             <video autoPlay muted loop style={{ opacity: 1 }}>
               {/* <source src="https://video.wixstatic.com/video/c253c4_51f0cf76ff124d7783cc34c394893ed3/720p/mp4/file.mp4" type="video/mp4" /> */}
               <source src="https://video.wixstatic.com/video/11062b_d578b9d4ffba48c68d086ec29fe9e6f0/720p/mp4/file.mp4" type="video/mp4" />
             </video>
             <div className='text_overlay'>
-              <div className='vedio_heading'>Empowering You to Plant a Greener Future</div>
-              <div className='vedio_paragragh'>At Offset CRBN, we're on a mission to make a positive impact on our planet's health. We understand that in today's world, it's essential to take responsibility for our carbon footprint. That's why we've created a simple yet powerful platform that empowers individuals like you to take action and make a difference.</div>
+              <div className='vedio_headin' style={{height:"50px", fontSize:"20px", fontWeight:"bold"}}>Empowering You to Plant a Greener Future</div>
+              <div className='vedio_paragrag' style={{height:"100px", fontSize:"15px", paddingLeft:"10px", paddingRight:"10px"}}>At Offset CRBN, we're on a mission to make a positive impact on our planet's health. We understand that in today's world, it's essential to take responsibility for our carbon footprint. That's why we've created a simple yet powerful platform that empowers individuals like you to take action and make a difference.</div>
             </div>
           </div>
         </div>
 
 
-        <div className='form_to_questions'>
+        
+      </div>
+      <div className='form_to_questions' style={{marginTop:"20px"}}>
           <div className='form_start'>Answer below questions to start calculating your carbon footprint</div>
           <div className='zipcode_information'>
             <div className='zipcode_heading'>Enter your Zipcode</div>
@@ -272,7 +274,6 @@ export function Landing_Page(props) {
 
 
         </div>
-      </div>
       </div>}
     {!isMobile&&
     <div style={{ background: 'white' }}>

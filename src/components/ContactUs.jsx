@@ -266,31 +266,39 @@ export const ContactUs = () => {
             </div>
           
         </nav>
-        <div className="page" >
-                <div className='container1_main' >
-                    <div className='contactusvedio_start_gif'>
-                        <img className="image_in_contact_us" src={person} alt="fact logo" ></img>
-                        <div className='contactustext_overlay'>
-                            <div className='contactusvedio_heading'>Contact Us</div>
-                            <div className='contactusvedio_paragragh'> Let’s work together on your journey and align our goals to create a sustainable world with environmental, economic, and social benefits. <br />
+        <div>
+        <div  style={{width:"90%", height:"300px", margin:"0 auto"}}>
+                        {/* <img className="image_in_contact_us" src={person} alt="fact logo" ></img>
+                        <div >
+                            <div >Contact Us</div>
+                            <div > Let’s work together on your journey and align our goals to create a sustainable world with environmental, economic, and social benefits. <br />
                                 Fill the form with your query and someone from our team will reach out to you soon.</div>
-                        </div>
+                        </div> */}
+                        <img className="image_in_contact_us" src={person} alt="fact logo" />
+  <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%, -50%)", color: "white", textAlign: "center" }}>
+    <div style={{ fontSize: "24px", fontWeight: "bold" }}>Contact Us</div>
+    <div style={{ fontSize: "16px" }}>
+      Let’s work together on your journey and align our goals to create a sustainable world with environmental, economic, and social benefits.
+      <br />
+      Fill the form with your query, and someone from our team will reach out to you soon.
+    </div>
+  </div>
                     </div>
-                </div>
-                <div className='customerdetails'>
+        </div>
+        <div style={{height:"350px" ,paddingLeft:"50px", background:"#EEF2F4", borderRadius:"20px", width:"90%", margin:"30px auto"}}>
                     <div className='first_name'>
                         <div className='fname_heading'>First Name*</div>
-                        <input className='input_text_contactus' type="text" placeholder="Enter your first name" onChange={handleFNameChange} />
+                        <input className='input_text_contactus' type="text" placeholder="Enter your first name" onChange={handleFNameChange} style={{width:"80%", height:"30px"}} />
                         {FErrorMessage && <div className="error-message">{FErrorMessage}</div>}
                     </div>
                     <div className='last_name'>
                         <div className='lname_heading'>Last Name*</div>
-                        <input className='input_text_contactus' type="text" placeholder="Enter your last name" onChange={handleLNameChange} />
+                        <input className='input_text_contactus' type="text" placeholder="Enter your last name" onChange={handleLNameChange} style={{width:"80%", height:"30px"}} />
                         {LErrorMessage && <div className="error-message">{LErrorMessage}</div>}
                     </div>
                     <div className='Email_address'>
                         <div className='Email_heading'>Email*</div>
-                        <input className='input_text_contactus' type="text" placeholder="Your email please" />
+                        <input className='input_text_contactus' type="text" placeholder="Your email please" style={{width:"80%", height:"30px"}}/>
                         {EErrorMessage && <div className="error-message">{EErrorMessage}</div>}
                     </div>
                     <div className='query_message'>
@@ -301,16 +309,29 @@ export const ContactUs = () => {
                             className='textarea_contact_us'
                             rows={5}
                             required
+                            style={{width:"80%", height:"30px"}}
                         />
                          {QErrorMessage && <div className="error-message">{QErrorMessage}</div>}
                     </div>
                     <div className="send">
-                        <button onClick={handleSend} className="send-button">Send</button>
+                        <button onClick={handleSend} className="btn btn-primary" style={{background:"black", borderColor:"black"}}>Send</button>
                         {SuccessMessage && <div className="success-message">{SuccessMessage}</div>}
                     </div>
 
                 </div>
-            </div>
+        {/* <div className="page" >
+                <div className='container1_main' >
+                    <div className='contactusvedio_start_gif'>
+                        <img className="image_in_contact_us" src={person} alt="fact logo" ></img>
+                        <div className='contactustext_overlay'>
+                            <div className='contactusvedio_heading'>Contact Us</div>
+                            <div className='contactusvedio_paragragh'> Let’s work together on your journey and align our goals to create a sustainable world with environmental, economic, and social benefits. <br />
+                                Fill the form with your query and someone from our team will reach out to you soon.</div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div> */}
 
       </div>
 
