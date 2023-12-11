@@ -279,7 +279,7 @@ export function Landing_Page(props) {
     <div style={{ background: 'white' }}>
       <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
         <div className="leftnav">
-          <img className="mainlogo" src="/logo.svg" alt="OFFSET CRBN" style={{height:"70px"}}/>
+          <img className="mainlogo" src="/logo.svg" alt="OFFSET CRBN"/>
         </div>
         <div className="rightnav">
           <a href="#" className="selected">Home</a>
