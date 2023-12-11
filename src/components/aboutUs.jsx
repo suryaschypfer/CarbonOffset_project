@@ -73,7 +73,9 @@ export default function AboutUs() {
 
     fetchData();
   }, []); // Empty dependency array ensures this effect runs once on mount
-
+  const navigateToHome = () => {
+    navigate('/');
+  }
   const handlelandingpage = () => {
     navigate('/');
   };
@@ -128,7 +130,7 @@ export default function AboutUs() {
         {/* Navigation bar */}
         <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
           <div className="leftnav">
-            <img className="mainlogo" style={{ width: "205px" }} src="/logo.svg" alt="OFFSET CRBN" onClick={handleNavigation} />
+            <img className="mainlogo" style={{ width: "205px" }} src="/logo.svg" alt="OFFSET CRBN" onClick={navigateToHome} />
           </div>
           <div className="leftnav" style={{fontSize:"40px", fontWeight:"lighter"}} onClick={toggleSideNav}>
           ☰
