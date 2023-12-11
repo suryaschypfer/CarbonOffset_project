@@ -239,7 +239,9 @@ export const ContactUs = () => {
     // Add logic to handle navigation based on the selected option (e.g., using React Router)
     console.log(`Navigating to ${destination}`);
   };
-
+  const navigateToHome = () => {
+    navigate('/');
+  }
     return (
         <>
         {isMobile&&<div>
@@ -259,7 +261,7 @@ export const ContactUs = () => {
         {/* Navigation bar */}
         <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
           <div className="leftnav">
-            <img className="mainlogo" style={{ width: "205px" }} src="/logo.svg" alt="OFFSET CRBN" onClick={handleNavigation} />
+            <img className="mainlogo" style={{ width: "205px" }} src="/logo.svg" alt="OFFSET CRBN" onClick={navigateToHome} />
           </div>
           <div className="leftnav" style={{fontSize:"40px", fontWeight:"lighter"}} onClick={toggleSideNav}>
           ☰
