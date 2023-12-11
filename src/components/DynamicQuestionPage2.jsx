@@ -1809,7 +1809,7 @@ const DynamicQuestionPage2 = () => {
               position: 'relative', // This makes sure that the video is positioned relatively to this div
               marginTop: "2.25vh",
               borderRadius: "20px",
-              height: "82.5vh",
+              height: "87vh",
               // background:"black",
               borderRadius: '20px', // The border radius for rounded corners
               overflow: 'hidden', // This ensures the video does not flow outside the border radius
@@ -2630,7 +2630,7 @@ const DynamicQuestionPage2 = () => {
             paddingTop: "20px",
             paddingLeft: "30px",
             // paddingRight: "30px",
-            height: "90vh",
+            height: "94.5vh",
             display: "flex",
             flexDirection: "column",
           }}
