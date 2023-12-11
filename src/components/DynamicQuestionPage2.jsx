@@ -1745,7 +1745,7 @@ const DynamicQuestionPage2 = () => {
     
     {!isMobile&&<div><nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
       <div className="leftnav">
-        <img className="mainlogo" src="/logo.svg" alt="OFFSET CRBN" onClick={navigateToHome} />
+        <img className="mainlogo" src="/logo.svg" alt="OFFSET CRBN" onClick={navigateToHome} style={{height:"70px"}} />
       </div>
       <div className="rightnav">
         <a href="#" onClick={navigateToHome}>Home</a>
@@ -1777,7 +1777,7 @@ const DynamicQuestionPage2 = () => {
           }}
         >
           <div>
-            <div style={{ fontSize: "18px", fontWeight: "bold", marginTop: "1.75vh", textAlign: "center", height: "2.8125vh", marginBottom: "0.5vh" }}>
+            <div style={{ fontSize: "18px", fontWeight: "bold", marginTop: "0.25vh", textAlign: "center", height: "2.8125vh", marginBottom: "0.5vh" }}>
               {isNaN(prog) ? "0%" : `${prog.toFixed(1)}%`}
             </div>
             <div
@@ -1809,7 +1809,7 @@ const DynamicQuestionPage2 = () => {
               position: 'relative', // This makes sure that the video is positioned relatively to this div
               marginTop: "2.25vh",
               borderRadius: "20px",
-              height: "81vh",
+              height: "82.5vh",
               // background:"black",
               borderRadius: '20px', // The border radius for rounded corners
               overflow: 'hidden', // This ensures the video does not flow outside the border radius
@@ -1859,7 +1859,7 @@ const DynamicQuestionPage2 = () => {
 
             {questionsCompleted ? (
               // Render the new component when questions are completed
-              <div style={{ height: "80vh" }}>
+              <div style={{ height: "81.5vh" }}>
                 <FinalComponent carbonCount={carbonCount} categoryFootprints={categoryFootprints} isFinal={isFinal}/>
                 <div
                   className="backSaveButton"
@@ -1989,7 +1989,7 @@ const DynamicQuestionPage2 = () => {
                       style={{
                         width: "80%",
                         margin: "0 auto",
-                        height: "40vh",
+                        height: "45.5vh",
                         color: "black",
                         // background:"yellow",
                         fontWeight: "bold",
@@ -2120,10 +2120,10 @@ const DynamicQuestionPage2 = () => {
                           style={{
                             width: "400px",
                             margin: "0 auto",
-                            paddingTop: "20px",
+                            paddingTop: "10px",
                           }}
                         >
-                          <div style={{ marginTop: "20px" }}>
+                          <div style={{ marginTop: "10px" }}>
                             <p style={{}}>Select Single Option</p>
                             {Array.isArray(question.choices[0]) &&
                               question.choices[0]?.map((choice, choiceIndex) => (
