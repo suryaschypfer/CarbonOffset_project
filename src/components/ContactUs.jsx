@@ -319,7 +319,7 @@ export const ContactUs = () => {
         <div className="contact">
             <nav className="nav-bar" style={{ borderBottom: '1px solid #000', display: 'flex', width: '100%' }}>
                 <div className="leftnav">
-                    <img className="mainlogo" src={logoImg} alt="OFFSET CRBN" onClick={handlelandingpage} />
+                    <img className="mainlogo" src={logoImg} alt="OFFSET CRBN" onClick={handlelandingpage}  style={{height:"70px"}}/>
                 </div>
                 <div className="rightnav">
                     <a href="#" onClick={handlelandingpage}>Home</a>
